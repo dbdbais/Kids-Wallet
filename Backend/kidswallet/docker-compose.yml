@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mysql:8.0  # MySQL 이미지
+    container_name: test-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: user
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    networks:
+      - my-network
+  app:
+    image: rain5191/kidswallet:latest  # 앱 이미지
+    container_name: kidswallet-container
+    ports:
+      - "8000:7000"
+    depends_on:
+      - db  # db 서비스가 먼저 실행되도록 설정
+    networks:
+      - my-network
+volumes:
+  mysql_data:
+
+networks:
+  my-network:
+    driver: bridge
