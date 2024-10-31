@@ -3,13 +3,14 @@ package com.e201.kidswallet.beg.entity;
 import com.e201.kidswallet.mission.entity.Mission;
 import com.e201.kidswallet.user.entity.Relation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Getter
 @Entity
 @AllArgsConstructor
@@ -28,6 +29,7 @@ public class Beg {
     @Column(name="beg_content",nullable = false)
     private String begContent;
 
+    @CreatedDate
     @Column(name="create_at",nullable = false)
     private LocalDateTime createAt;
 
@@ -35,6 +37,6 @@ public class Beg {
     @JoinColumn(name="relation_id",referencedColumnName = "relation_id")
     private Relation relation;
 
-    @OneToMany(mappedBy = "beg")
-    private List<Mission> missions;
+    @OneToOne(mappedBy = "beg")
+    private Mission mission;
 }
