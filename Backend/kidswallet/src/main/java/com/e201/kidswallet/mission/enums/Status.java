@@ -1,4 +1,4 @@
-package com.e201.kidswallet.mission.model.dto.entity;
+package com.e201.kidswallet.mission.enums;
 
 public enum Status {
     request, proceed, complete
