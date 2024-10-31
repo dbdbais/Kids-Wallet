@@ -1,5 +1,7 @@
-package com.e201.kidswallet.user.model.dto.entity;
+package com.e201.kidswallet.user.entity;
 
+import com.e201.kidswallet.user.enums.Gender;
+import com.e201.kidswallet.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
