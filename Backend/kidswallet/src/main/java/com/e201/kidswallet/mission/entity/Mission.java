@@ -1,6 +1,7 @@
-package com.e201.kidswallet.mission.model.dto.entity;
+package com.e201.kidswallet.mission.entity;
 
-import com.e201.kidswallet.beg.model.dto.entity.Beg;
+import com.e201.kidswallet.beg.entity.Beg;
+import com.e201.kidswallet.mission.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
