@@ -75,35 +75,31 @@ pipeline {
      post{
         success {
             script {
-                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
-                mattermostSend (color: 'good', 
-                message: "# :jenkins1: \n ### 빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})(<${env.BUILD_URL}|Details>)", 
-                endpoint: 'https://meeting.ssafy.com/hooks/wie4oueox3dwjpa58rk5mpf9ac', 
-                channel: 'E201-Build'
-                )
-            }
+                // 최근 커밋의 작성자 정보 가져오기
+                def Author_ID = sh(script: "git log -1 --pretty=format:'%an'", returnStdout: true).trim()
+                def Author_Name = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
+                mattermostSend (
+                    color: 'good',
+                    message: "# :jenkins1: \n ### 빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})(<${env.BUILD_URL}|Details>)",
+                    endpoint: 'https://meeting.ssafy.com/hooks/wie4oueox3dwjpa58rk5mpf9ac',
+                    channel: 'E201-Build'
+            )
         }
+    }
+
         failure {
             script {
-                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
-                mattermostSend (color: 'danger', 
-                message: "# :jenkins5: \n ### 빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)", 
-                endpoint: 'https://meeting.ssafy.com/hooks/wie4oueox3dwjpa58rk5mpf9ac', 
-                channel: 'E201-Build'
+                // 최근 커밋의 작성자 정보 가져오기
+                def Author_ID = sh(script: "git log -1 --pretty=format:'%an'", returnStdout: true).trim()
+                def Author_Name = sh(script: "git log -1 --pretty=format:'%ae'", returnStdout: true).trim()
+                mattermostSend (
+                    color: 'danger',
+                    message: "# :jenkins5: \n ### 빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                    endpoint: 'https://meeting.ssafy.com/hooks/wie4oueox3dwjpa58rk5mpf9ac',
+                    channel: 'E201-Build'
                 )
             }
         }
     }
-    
-    // post {
-    //     success {
-    //       echo 'Build, Docker image creation, and deployment were successful!'
-    //     }
-    //     failure {
-    //    echo 'Build or Docker image creation failed!'
-    //     }
-    // }
     
 }
