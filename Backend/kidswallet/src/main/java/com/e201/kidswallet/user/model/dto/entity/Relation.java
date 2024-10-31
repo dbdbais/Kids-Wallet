@@ -1,6 +1,6 @@
 package com.e201.kidswallet.user.model.dto.entity;
 
-//import com.e201.kidswallet.beg.model.dto.entity.Beg;
+import com.e201.kidswallet.beg.model.dto.entity.Beg;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class Relation {
     @JoinColumn(name = "children_id", referencedColumnName = "user_id")
     private User child;
 
-//    @OneToMany(mappedBy = "relation")
-//    private List<Beg> begList;
+    @OneToMany(mappedBy = "relation")
+    private List<Beg> begList;
 
 }
