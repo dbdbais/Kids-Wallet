@@ -1,4 +1,4 @@
-package com.e201.kidswallet.beg.dto;
+package com.e201.kidswallet.mission.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

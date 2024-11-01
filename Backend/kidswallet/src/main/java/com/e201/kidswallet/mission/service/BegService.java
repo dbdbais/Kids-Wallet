@@ -1,12 +1,9 @@
-package com.e201.kidswallet.beg.service;
+package com.e201.kidswallet.mission.service;
 
-import com.e201.kidswallet.beg.dto.BeggingRequestDto;
-import com.e201.kidswallet.beg.entity.Beg;
-import com.e201.kidswallet.beg.repository.BegRepository;
-import com.e201.kidswallet.common.exception.RestApiException;
+import com.e201.kidswallet.mission.dto.BeggingRequestDto;
+import com.e201.kidswallet.mission.entity.Beg;
+import com.e201.kidswallet.mission.repository.BegRepository;
 import com.e201.kidswallet.common.exception.StatusCode;
-import com.e201.kidswallet.user.entity.Relation;
-import com.e201.kidswallet.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BegService {
 
 
-    private BegRepository begRepository;
+    private final BegRepository begRepository;
 
     @Autowired
     public BegService(BegRepository begRepository) {

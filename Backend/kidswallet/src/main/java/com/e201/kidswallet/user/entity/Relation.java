@@ -1,13 +1,10 @@
 package com.e201.kidswallet.user.entity;
 
-import com.e201.kidswallet.beg.entity.Beg;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
