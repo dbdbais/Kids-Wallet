@@ -3,6 +3,7 @@ package com.e201.kidswallet.user.entity;
 import com.e201.kidswallet.beg.entity.Beg;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
+@Builder
 public class Relation {
     @Id
     @Column(name="relation_id")
@@ -29,8 +31,8 @@ public class Relation {
     @ManyToOne
     @JoinColumn(name = "children_id", referencedColumnName = "user_id")
     private User child;
-
-    @OneToMany(mappedBy = "relation")
-    private List<Beg> begList;
+//    TODO: relation 작업 완료되면 주석 해제
+//    @OneToMany(mappedBy = "relation")
+//    private List<Beg> begList;
 
 }

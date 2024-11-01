@@ -33,7 +33,7 @@ public class Mission {
     @Column(name="created_at",nullable = false)
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "beg_id", referencedColumnName = "beg_id")
     private Beg beg;
 

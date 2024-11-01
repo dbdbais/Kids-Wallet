@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 
 import java.time.LocalDateTime;
@@ -49,6 +50,7 @@ public class User
     @Column(name="user_role")
     private Role userRole;
 
+    @CreatedDate
     @Column(name="created_at",nullable = false)
     private LocalDateTime createdAt;
 
