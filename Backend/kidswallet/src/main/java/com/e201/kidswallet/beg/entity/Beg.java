@@ -5,6 +5,7 @@ import com.e201.kidswallet.user.entity.Relation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name="Beg")
 public class Beg {
 
@@ -30,12 +32,13 @@ public class Beg {
     private String begContent;
 
     @CreatedDate
-    @Column(name="create_at",nullable = false)
+    @Column(name = "create_at", nullable = false, updatable = false)
     private LocalDateTime createAt;
 
-    @ManyToOne
-    @JoinColumn(name="relation_id",referencedColumnName = "relation_id")
-    private Relation relation;
+//    TODO: relation 작업 완료 되면 주석해제
+//    @ManyToOne
+//    @JoinColumn(name="relation_id",referencedColumnName = "relation_id")
+//    private Relation relation;
 
     @OneToOne(mappedBy = "beg")
     private Mission mission;
