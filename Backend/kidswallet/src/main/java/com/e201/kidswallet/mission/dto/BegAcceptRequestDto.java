@@ -5,9 +5,10 @@ import lombok.*;
 @Data
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BegAcceptRequestDto {
     private long begId;
-    //이거 왜 Boolean으로 해야지 정상적으로 받아와 짐? boolean이 안됨;;;
     private Boolean isAccept;
 
 }
