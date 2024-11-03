@@ -1,6 +1,7 @@
 package com.e201.kidswallet.mission.service;
 
 import com.e201.kidswallet.mission.dto.AssignMissionRequestDto;
+import com.e201.kidswallet.mission.dto.MissionCompleteRequestDto;
 import com.e201.kidswallet.mission.entity.Mission;
 import com.e201.kidswallet.mission.repository.MissionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,12 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
+
 
 @Slf4j
 @Service
 public class MissionService {
-
-
+    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
     private final BegRepository begRepository;
     private final MissionRepository missionRepository;
     @Autowired
@@ -71,7 +73,21 @@ public class MissionService {
                 .build();
 
         missionRepository.save(mission);
+        return StatusCode.SUCCESS;
+    }
 
+    @Transactional
+    public StatusCode uploadCompleteImage(MissionCompleteRequestDto requestDto) {
+        //base64를 byte배열로 인코딩
+        byte[] imageBytes = Base64.getDecoder().decode(requestDto.getBase64Image());
+        long missionId = requestDto.getMissionId();
+
+        //TODO: SIZE CHECKING 로직 추가
+        log.info("imageBytes.length: "+imageBytes.length);
+        log.info("imageBytes.length > MAX_LONGBLOB_SIZE: "+ (imageBytes.length > MAX_LONGBLOB_SIZE));
+
+        //image update
+        missionRepository.uploadCompleteImage(imageBytes,missionId);
         return StatusCode.SUCCESS;
 
     }
