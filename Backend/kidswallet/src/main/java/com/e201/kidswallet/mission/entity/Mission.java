@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "Mission")
 public class Mission {
 
@@ -28,8 +30,9 @@ public class Mission {
     @Column(name="mission_status",nullable = false)
     private Status missionStatus=Status.request;
 
-    @Column(name="completion_photo",nullable = true)
-    private String completionPhoto;
+    @Column(name="completion_photo",nullable = true,columnDefinition = "LONGBLOB")
+    @Lob // 큰 데이터 저장을 위한 어노테이션
+    private byte[] completionPhoto;
 
     @Column(name="completed_at",nullable = true)
     private LocalDateTime completedAt;
