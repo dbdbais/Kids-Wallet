@@ -1,5 +1,6 @@
 package com.e201.kidswallet.user.entity;
 
+import com.e201.kidswallet.mission.entity.Beg;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
