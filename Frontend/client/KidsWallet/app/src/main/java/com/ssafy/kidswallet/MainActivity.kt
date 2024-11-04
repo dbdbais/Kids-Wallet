@@ -1,22 +1,25 @@
 package com.ssafy.kidswallet
-
+import LoginRoutingScreen
+import QuizScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
-import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ssafy.kidswallet.ui.screens.run.RunParentsScreen
+import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
 import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
+import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
-import com.ssafy.kidswallet.ui.screens.quize.QuizScreen
-import com.ssafy.kidswallet.ui.screens.login.LoginRoutingScreen
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +30,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    val navController = rememberNavController() // NavController 생성
+                    MainScreen(navController) // NavController를 MainScreen에 전달
                 }
             }
         }
@@ -35,70 +39,66 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
-    var showLoginRoutingScreen by remember { mutableStateOf(false) }
-    var showMyWalletScreen by remember { mutableStateOf(false) }
-    var showCardScreen by remember { mutableStateOf(false) }
-    var showRunParentsScreen by remember { mutableStateOf(false) }
-    var showBeggingScreen by remember { mutableStateOf(false) }
-    var showQuizScreen by remember { mutableStateOf(false) }
-
-    when {
-        showLoginRoutingScreen -> LoginRoutingScreen()
-        showMyWalletScreen -> MyWalletScreen()
-        showCardScreen -> CardScreen()
-        showRunParentsScreen -> RunParentsScreen()
-        showBeggingScreen -> BeggingScreen()
-        showQuizScreen -> QuizScreen()
-        else -> {
+fun MainScreen(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "로그인",
-                    modifier = Modifier
-                        .clickable { showLoginRoutingScreen = true }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "내지갑",
-                    modifier = Modifier
-                        .clickable { showMyWalletScreen = true }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "카드신청",
-                    modifier = Modifier
-                        .clickable { showCardScreen = true }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "행복달리기",
-                    modifier = Modifier
-                        .clickable { showRunParentsScreen = true }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "용돈 조르기",
-                    modifier = Modifier
-                        .clickable { showBeggingScreen = true }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "퀴즈 ",
-                    modifier = Modifier
-                        .clickable { showQuizScreen = true }
-                        .padding(16.dp)
-                )
+                Button(
+                    onClick = { navController.navigate("loginRouting") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("로그인")
+                }
+                Button(
+                    onClick = { navController.navigate("mainPage") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("메인페이지")
+                }
+                Button(
+                    onClick = { navController.navigate("myWallet") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("내지갑")
+                }
+                Button(
+                    onClick = { navController.navigate("card") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("카드신청")
+                }
+                Button(
+                    onClick = { navController.navigate("runParents") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("행복달리기")
+                }
+                Button(
+                    onClick = { navController.navigate("begging") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("용돈 조르기")
+                }
+                Button(
+                    onClick = { navController.navigate("quiz") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("퀴즈")
+                }
             }
         }
+
+        composable("loginRouting") { LoginRoutingScreen(navController) }
+        composable("mainPage") { MainPageScreen(navController) }
+        composable("myWallet") { MyWalletScreen(navController) }
+        composable("card") { CardScreen(navController) }
+        composable("runParents") { RunParentsScreen(navController) }
+        composable("begging") { BeggingScreen(navController) }
+        composable("quiz") { QuizScreen(navController) }
     }
 }

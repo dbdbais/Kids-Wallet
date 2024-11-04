@@ -1,5 +1,9 @@
-package com.ssafy.kidswallet.ui.screens.run.parents
+package com.ssafy.kidswallet.ui.screens.run
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,14 +25,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.ui.components.Top
+
 
 @Composable
-fun RunParentsScreen() {
+fun RunParentsScreen(navController: NavController) {
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,14 +49,9 @@ fun RunParentsScreen() {
     ) {
         // Header
         Row(
-            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_back),
-                contentDescription = "Back",
-                modifier = Modifier.size(24.dp)
-            )
+            Top(title = "행복달리기", navController = navController) // 수정: navController 인스턴스 전달
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "행복 달리기",
@@ -123,18 +131,38 @@ fun RunParentsScreen() {
             Image(
                 painter = painterResource(id = R.drawable.icon_alert),
                 contentDescription = "Notifications",
-                modifier = Modifier.size(24.dp)
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center,
+                modifier = Modifier.size(50.dp)
             )
             Image(
                 painter = painterResource(id = R.drawable.home),
                 contentDescription = "K Icon",
-                modifier = Modifier.size(40.dp)
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center,
+                modifier = Modifier.size(60.dp)
             )
             Image(
                 painter = painterResource(id = R.drawable.icon_regular),
                 contentDescription = "Menu",
-                modifier = Modifier.size(24.dp)
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center,
+                modifier = Modifier.size(40.dp)
             )
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun RunParentsScreenPreview() {
+    val navController = rememberNavController()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(WindowInsets.systemBars.asPaddingValues()) // 시스템 UI 여백 추가
+    ) {
+        RunParentsScreen(navController = navController)
+    }
+}
+
