@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class User
     private String userPassword;
 
     @Column(name = "user_birth",nullable = false)
-    private LocalDateTime userBirth;
+    private LocalDate userBirth;
 
     @Column(name="user_email",nullable = false)
     private String userEmail;
