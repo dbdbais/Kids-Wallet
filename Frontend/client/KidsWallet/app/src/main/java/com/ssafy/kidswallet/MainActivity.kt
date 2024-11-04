@@ -16,6 +16,7 @@ import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.quize.QuizScreen
+import com.ssafy.kidswallet.ui.screens.login.LoginRoutingScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    var showLoginRoutingScreen by remember { mutableStateOf(false) }
     var showMyWalletScreen by remember { mutableStateOf(false) }
     var showCardScreen by remember { mutableStateOf(false) }
     var showRunParentsScreen by remember { mutableStateOf(false) }
@@ -42,6 +44,7 @@ fun MainScreen() {
     var showQuizScreen by remember { mutableStateOf(false) }
 
     when {
+        showLoginRoutingScreen -> LoginRoutingScreen()
         showMyWalletScreen -> MyWalletScreen()
         showCardScreen -> CardScreen()
         showRunParentsScreen -> RunParentsScreen()
@@ -54,6 +57,13 @@ fun MainScreen() {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
+                Text(
+                    text = "로그인",
+                    modifier = Modifier
+                        .clickable { showLoginRoutingScreen = true }
+                        .padding(16.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "내지갑",
                     modifier = Modifier
