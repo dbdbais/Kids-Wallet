@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Builder
@@ -13,11 +13,12 @@ public class DonationResponseDTO {
 
     private String name;
 
-    private String organ_name;
+    private String organName;
 
     private int target;
 
-    private LocalDateTime targetDate;
+    private LocalDate targetDate;
 
     private String description;
+
 }
