@@ -50,4 +50,10 @@ public class Mission {
     @OneToOne
     @JoinColumn(name = "beg_id", referencedColumnName = "beg_id")
     private Beg beg;
+
+
+    public void changeMissionStatusAndCompleteTime(Status status) {
+        this.completedAt = LocalDateTime.now();
+        this.missionStatus = status;
+    }
 }
