@@ -2,10 +2,7 @@ package com.e201.kidswallet.mission;
 
 import com.e201.kidswallet.AbstractTest;
 import com.e201.kidswallet.common.exception.StatusCode;
-import com.e201.kidswallet.mission.dto.AssignMissionRequestDto;
-import com.e201.kidswallet.mission.dto.BegAcceptRequestDto;
-import com.e201.kidswallet.mission.dto.BeggingRequestDto;
-import com.e201.kidswallet.mission.dto.MissionCompleteRequestDto;
+import com.e201.kidswallet.mission.dto.*;
 import com.e201.kidswallet.mission.entity.Beg;
 import com.e201.kidswallet.mission.entity.Mission;
 import com.e201.kidswallet.mission.repository.MissionRepository;
@@ -87,5 +84,18 @@ public class MissionTest extends AbstractTest {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Test
+    public void completeMissionCheck(){
+        MissionCompleteCheckRequestDto requestDto = new MissionCompleteCheckRequestDto(1L,false);
+        StatusCode result = service.missionCompleteCheck(requestDto);
+        System.out.println(missionRepository.findById(1L).get().getMissionStatus());
+
+        assertEquals(StatusCode.SUCCESS,result);
+
+
+
+
     }
 }
