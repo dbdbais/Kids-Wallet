@@ -48,9 +48,12 @@ public class MissionController {
 
     @PutMapping("/complete/check")
     public ResponseEntity<?> checkMissionComplete(@RequestBody MissionCompleteCheckRequestDto requestDto){
-
         return ResponseDto.response(service.missionCompleteCheck(requestDto));
+    }
 
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<?> getBegMissionList(@PathVariable String userId, @RequestParam("start" )long start, @RequestParam("end") long end){
+        return ResponseDto.response(service.getBegMissionList(userId, start, end));
     }
 
 }
