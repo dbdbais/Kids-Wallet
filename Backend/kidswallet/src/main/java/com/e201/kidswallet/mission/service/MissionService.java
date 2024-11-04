@@ -112,4 +112,10 @@ public class MissionService {
 
         return StatusCode.SUCCESS;
     }
+
+    public StatusCode getBegMissionList(String userId, long start, long end) {
+        //TODO: 유저 ID를 사용하여 relation을 조회 후 beg 조회
+        //TODO: 조회 된 Beg의 mission조회
+        return StatusCode.SUCCESS;
+    }
 }
