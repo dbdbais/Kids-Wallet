@@ -1,12 +1,10 @@
 package com.e201.kidswallet.mission.service;
 
-import com.e201.kidswallet.mission.dto.AssignMissionRequestDto;
-import com.e201.kidswallet.mission.dto.MissionCompleteRequestDto;
+import com.e201.kidswallet.mission.dto.*;
 import com.e201.kidswallet.mission.entity.Mission;
+import com.e201.kidswallet.mission.enums.Status;
 import com.e201.kidswallet.mission.repository.MissionRepository;
 import lombok.extern.slf4j.Slf4j;
-import com.e201.kidswallet.mission.dto.BegAcceptRequestDto;
-import com.e201.kidswallet.mission.dto.BeggingRequestDto;
 import com.e201.kidswallet.mission.entity.Beg;
 import com.e201.kidswallet.mission.repository.BegRepository;
 import com.e201.kidswallet.common.exception.StatusCode;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 
@@ -90,5 +89,27 @@ public class MissionService {
         missionRepository.uploadCompleteImage(imageBytes,missionId);
         return StatusCode.SUCCESS;
 
+    }
+
+    @Transactional
+    public StatusCode missionCompleteCheck(MissionCompleteCheckRequestDto requestDto) {
+        Status status;
+
+        if(requestDto.getIsComplete()==true) {
+            status = Status.complete;
+            log.info("requestDto.isComplete: " + requestDto.getIsComplete());
+            log.info("status: " + status);
+        }
+        else
+            status=Status.fail;
+
+//        missionRepository.updateMissionStatus(requestDto.getMissionId(),status.toString(),LocalDateTime.now());
+        Mission mission = missionRepository.findById(requestDto.getMissionId()).get();
+        mission.changeMissionStatusAndCompleteTime(status);
+
+        log.info("Updating mission status: missionId=" + requestDto.getMissionId() + ", status=" + status + ", updateTime=" + LocalDateTime.now());
+        //TODO: 계좌로 입금 로직 추가
+
+        return StatusCode.SUCCESS;
     }
 }
