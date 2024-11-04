@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // GitLab에서 소스 코드 체크아웃 (자격 증명 추가)
-                git credentialsId: 'kidswallet', branch: 'master', url: 'https://lab.ssafy.com/s11-final/S11P31E201.git'
+                git credentialsId: 'kidswallet', branch: 'develop/be', url: 'https://lab.ssafy.com/s11-final/S11P31E201.git'
             }
         }
 
@@ -76,8 +76,8 @@ pipeline {
         success {
             script {
                 // 최근 커밋의 작성자 정보 가져오기
-                def Author_ID = env.GITLAB_USER_NAME ?: "이름 정보 없음"
-                def Author_Name = env.GITLAB_USER_EMAIL ?: "이메일 정보 없음"
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend (
                     color: 'good',
                     message: "# :jenkins1: \n ### 빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})(<${env.BUILD_URL}|Details>)",
@@ -90,10 +90,8 @@ pipeline {
         failure {
             script {
                 // 최근 커밋의 작성자 정보 가져오기
-                // def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
-                // def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
-                def Author_ID = env.GITLAB_USER_NAME ?: "이름 정보 없음"
-                def Author_Name = env.GITLAB_USER_EMAIL ?: "이메일 정보 없음"
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 mattermostSend (
                     color: 'danger',
                     message: "# :jenkins5: \n ### 빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
