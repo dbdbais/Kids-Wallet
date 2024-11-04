@@ -13,9 +13,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ssafy.kidswallet.ui.screens.login.Login
-import com.ssafy.kidswallet.ui.screens.signup.SignUp
+import com.ssafy.kidswallet.ui.screens.run.RunParentsScreen
 import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
+import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
+import com.ssafy.kidswallet.ui.screens.card.CardScreen
+import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
+import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
+
 
 //import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 //import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
@@ -51,56 +55,57 @@ fun MainScreen(navController: NavHostController) {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "로그인",
-                    modifier = Modifier
-                        .clickable { navController.navigate("loginRouting") }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "내지갑",
-                    modifier = Modifier
-                        .clickable { navController.navigate("myWallet") }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "카드신청",
-                    modifier = Modifier
-                        .clickable { navController.navigate("card") }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "행복달리기",
-                    modifier = Modifier
-                        .clickable { navController.navigate("runParents") }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "용돈 조르기",
-                    modifier = Modifier
-                        .clickable { navController.navigate("begging") }
-                        .padding(16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "퀴즈 ",
-                    modifier = Modifier
-                        .clickable { navController.navigate("quize") }
-                        .padding(16.dp)
-                )
+                Button(
+                    onClick = { navController.navigate("loginRouting") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("로그인")
+                }
+                Button(
+                    onClick = { navController.navigate("mainPage") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("메인페이지")
+                }
+                Button(
+                    onClick = { navController.navigate("myWallet") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("내지갑")
+                }
+                Button(
+                    onClick = { navController.navigate("card") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("카드신청")
+                }
+                Button(
+                    onClick = { navController.navigate("runParents") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("행복달리기")
+                }
+                Button(
+                    onClick = { navController.navigate("begging") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("용돈 조르기")
+                }
+                Button(
+                    onClick = { navController.navigate("quiz") },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text("퀴즈")
+                }
             }
         }
 
-        composable("loginRouting") { Login(navController) }
-        composable("signup") {SignUp(navController)}
-//        composable("myWallet") { MyWalletScreen(navController) }
-//        composable("card") { CardScreen(navController) }
-//        composable("runParents") { RunParentsScreen(navController) }
-//        composable("begging") { BeggingScreen(navController) }
-//        composable("quize") { QuizScreen(navController) }
+        composable("loginRouting") { LoginRoutingScreen(navController) }
+        composable("mainPage") { MainPageScreen(navController) }
+        composable("myWallet") { MyWalletScreen(navController) }
+        composable("card") { CardScreen(navController) }
+        composable("runParents") { RunParentsScreen(navController) }
+        composable("begging") { BeggingScreen(navController) }
+        composable("quiz") { QuizScreen(navController) }
     }
 }

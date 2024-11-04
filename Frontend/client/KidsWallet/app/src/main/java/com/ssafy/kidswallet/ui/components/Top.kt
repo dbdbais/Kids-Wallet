@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.ssafy.kidswallet.R
 
 @Composable
@@ -32,7 +33,9 @@ fun Top(title: String, navController: NavController) {
             contentDescription = "Back",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { navController.popBackStack() }
+                .clickable {
+                    navController.popBackStack() // 이전 화면으로 돌아가기
+                }
         )
         Spacer(modifier = Modifier.weight(1f))
 
