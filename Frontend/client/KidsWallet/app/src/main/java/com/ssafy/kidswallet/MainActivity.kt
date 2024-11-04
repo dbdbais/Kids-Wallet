@@ -1,9 +1,9 @@
 package com.ssafy.kidswallet
-import LoginRoutingScreen
-import QuizScreen
+//import QuizScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,6 +19,13 @@ import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
+
+
+//import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
+//import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
+//import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
+//import com.ssafy.kidswallet.ui.screens.card.CardScreen
+//import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 
 
 class MainActivity : ComponentActivity() {
