@@ -1,6 +1,5 @@
-package com.e201.kidswallet.beg.entity;
+package com.e201.kidswallet.mission.entity;
 
-import com.e201.kidswallet.mission.entity.Mission;
 import com.e201.kidswallet.user.entity.Relation;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,8 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @Getter
@@ -25,8 +22,9 @@ public class Beg {
     @Column(name="beg_id",nullable = false)
     private Long begId;
 
+    @Builder.Default
     @Column(name="beg_money",nullable=false)
-    private int begMoney= 0;
+    private int begMoney=0;
 
     @Column(name="beg_content",nullable = false)
     private String begContent;
@@ -34,6 +32,10 @@ public class Beg {
     @CreatedDate
     @Column(name = "create_at", nullable = false, updatable = false)
     private LocalDateTime createAt;
+
+    @Builder.Default
+    @Column(name="beg_accept",nullable = true)
+    private Boolean begAccept=null;
 
 //    TODO: relation 작업 완료 되면 주석해제
 //    @ManyToOne
