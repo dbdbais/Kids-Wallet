@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.ui.components.FontSizes
 
 @Composable
 fun Login(navController: NavHostController) {
@@ -127,13 +128,13 @@ fun Login(navController: NavHostController) {
         Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = "아직 키즈월렛 회원이 아니신가요?",
-            fontSize = 14.sp,
+            style = FontSizes.h16,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "회원가입",
-            fontSize = 16.sp,
+            style = FontSizes.h16,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF6DCEF5),
             textDecoration = TextDecoration.Underline,

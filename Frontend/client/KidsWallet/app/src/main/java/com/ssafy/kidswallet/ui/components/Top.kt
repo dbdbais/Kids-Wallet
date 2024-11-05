@@ -41,7 +41,7 @@ fun Top(title: String, navController: NavController) {
 
         Text(
             text = title,
-            fontSize = 20.sp,
+            style = FontSizes.h24,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.align(Alignment.CenterVertically)
