@@ -1,11 +1,13 @@
 package com.ssafy.kidswallet
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -23,8 +25,10 @@ import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             KidsWalletTheme {
                 Surface(
@@ -38,6 +42,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -95,7 +100,7 @@ fun MainScreen(navController: NavHostController) {
         }
 
         composable("loginRouting") { Login(navController) }
-        composable("signup") {SignUp(navController)}
+        composable("signup") { SignUp(navController) }
         composable("mainPage") { MainPageScreen(navController) }
         composable("myWallet") { MyWalletScreen(navController) }
         composable("card") { CardScreen(navController) }

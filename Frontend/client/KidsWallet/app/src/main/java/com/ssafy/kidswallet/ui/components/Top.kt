@@ -25,7 +25,7 @@ fun Top(title: String, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp), // 상단과 하단 패딩을 줄임
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -41,7 +41,7 @@ fun Top(title: String, navController: NavController) {
 
         Text(
             text = title,
-            fontSize = 20.sp,
+            style = FontSizes.h20,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             modifier = Modifier.align(Alignment.CenterVertically)
