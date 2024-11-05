@@ -44,6 +44,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import com.ssafy.kidswallet.ui.components.FontSizes
 import java.util.Calendar
 
 @Composable
@@ -88,12 +89,21 @@ fun SignUp(navController: NavController) {
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ){
-            IdInputWithDuplicateCheck(
-                id = id,
-                onIdChange = { id = it },
-                idError = idError,
-                onIdErrorChange = { idError = it }, // 오류 상태 업데이트
-                onDuplicateCheck = { /* 중복 체크 로직 구현 */ }
+            OutlinedTextField(
+                value = id,
+                onValueChange = {
+                    id = it
+                    idError = it.isEmpty() // 이름이 비었는지 체크
+                },
+                label = { Text("아이디", color = if (idError) Color.Red else Color(0xFF8C8595)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                shape = RoundedCornerShape(15.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = if (idError) Color.Red else Color(0xFF6DCEF5),
+                    unfocusedBorderColor = if (idError) Color.Red else Color(0xFFD3D0D7)
+                )
             )
             OutlinedTextField(
                 value = password,
@@ -135,7 +145,7 @@ fun SignUp(navController: NavController) {
                 Text(
                     text = "비밀번호가 일치하지 않습니다.",
                     color = Color.Red,
-                    fontSize = 12.sp,
+                    style = FontSizes.h12,
                     modifier = Modifier.align(Alignment.Start)
                 )
             }
@@ -317,47 +327,6 @@ fun RoleButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
             color = if (isSelected) Color.White else Color.Black,
             fontWeight = FontWeight.Bold
         )
-    }
-}
-
-@Composable
-fun IdInputWithDuplicateCheck(
-    id: String,
-    onIdChange: (String) -> Unit,
-    idError: Boolean,
-    onIdErrorChange: (Boolean) -> Unit,
-    onDuplicateCheck: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        OutlinedTextField(
-            value = id,
-            onValueChange = {
-                onIdChange(it)
-                onIdErrorChange(it.isEmpty()) // 입력이 비어 있을 때 오류 상태로 변경
-            },
-            label = { Text("아이디", color = if (idError) Color.Red else Color(0xFF8C8595)) },
-            modifier = Modifier
-                .weight(1f)
-                .padding(bottom = 8.dp),
-            shape = RoundedCornerShape(15.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = if (idError) Color.Red else Color(0xFF6DCEF5),
-                unfocusedBorderColor = if (idError) Color.Red else Color(0xFFD3D0D7)
-            )
-        )
-
-        Button(
-            onClick = onDuplicateCheck,
-            modifier = Modifier.height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6DCEF5)),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            Text("중복확인", color = Color.White, fontWeight = FontWeight.Bold)
-        }
     }
 }
 
