@@ -121,7 +121,7 @@ fun Login(navController: NavHostController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         GradientButton(
-            onClick = { /* 로그인 로직 추가 */ },
+            onClick = { navController.navigate("mainPage") },
             text = "확인"
         )
         Spacer(modifier = Modifier.height(32.dp))
