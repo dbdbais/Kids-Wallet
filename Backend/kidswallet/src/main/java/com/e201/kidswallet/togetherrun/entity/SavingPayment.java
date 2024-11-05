@@ -1,4 +1,4 @@
-package com.e201.kidswallet.together.entity;
+package com.e201.kidswallet.togetherrun.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

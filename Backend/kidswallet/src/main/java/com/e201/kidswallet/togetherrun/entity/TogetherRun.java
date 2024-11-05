@@ -1,4 +1,4 @@
-package com.e201.kidswallet.together.entity;
+package com.e201.kidswallet.togetherrun.entity;
 
 import com.e201.kidswallet.user.model.dto.entity.Relation;
 import jakarta.persistence.*;
@@ -20,7 +20,11 @@ public class TogetherRun {
     @JoinColumn(name = "relation_id")
     private Relation relation;
 
+    @Column(name = "created_at")
     private LocalDate createdAt;
+
+    @Column(name = "target_image")
+    private String targetImage;
 
 
 }

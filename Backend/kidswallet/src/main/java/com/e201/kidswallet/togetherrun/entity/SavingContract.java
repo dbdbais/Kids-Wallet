@@ -1,4 +1,4 @@
-package com.e201.kidswallet.together.entity;
+package com.e201.kidswallet.togetherrun.entity;
 
 import com.e201.kidswallet.user.model.dto.entity.User;
 import jakarta.persistence.*;

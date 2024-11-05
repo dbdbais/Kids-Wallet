@@ -1,7 +1,7 @@
 package com.e201.kidswallet.user.model.dto.entity;
 
 //import com.e201.kidswallet.beg.model.dto.entity.Beg;
-import com.e201.kidswallet.together.entity.TogetherRun;
+import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
