@@ -72,3 +72,4 @@ fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavControl
         )
     }
 }
+
