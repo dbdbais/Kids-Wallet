@@ -162,7 +162,7 @@ fun RunParentsScreen(navController: NavController) {
 
         // Bottom navigation
         BottomNavigationBar(
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter), navController
         )
     }
 }
