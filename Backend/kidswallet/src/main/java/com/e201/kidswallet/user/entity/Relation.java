@@ -1,9 +1,9 @@
-package com.e201.kidswallet.user.model.dto.entity;
+package com.e201.kidswallet.user.entity;
 
-//import com.e201.kidswallet.beg.model.dto.entity.Beg;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
+@Builder
 public class Relation {
     @Id
     @Column(name="relation_id")
@@ -35,6 +36,7 @@ public class Relation {
     @OneToMany()
     private List<TogetherRun> togetherRunList = new ArrayList<>();
 
+//    TODO: relation 작업 완료되면 주석 해제
 //    @OneToMany(mappedBy = "relation")
 //    private List<Beg> begList;
 

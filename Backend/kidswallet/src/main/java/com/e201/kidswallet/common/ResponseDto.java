@@ -4,10 +4,12 @@ import com.e201.kidswallet.common.exception.StatusCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class ResponseDto {
     private final Object data;
     private final String message;

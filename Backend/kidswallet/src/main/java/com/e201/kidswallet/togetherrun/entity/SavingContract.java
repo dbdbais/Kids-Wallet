@@ -1,6 +1,6 @@
 package com.e201.kidswallet.togetherrun.entity;
 
-import com.e201.kidswallet.user.model.dto.entity.User;
+import com.e201.kidswallet.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;

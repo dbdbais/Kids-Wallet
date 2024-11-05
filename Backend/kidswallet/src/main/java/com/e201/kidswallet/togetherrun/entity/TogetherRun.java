@@ -1,6 +1,6 @@
 package com.e201.kidswallet.togetherrun.entity;
 
-import com.e201.kidswallet.user.model.dto.entity.Relation;
+import com.e201.kidswallet.user.entity.Relation;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

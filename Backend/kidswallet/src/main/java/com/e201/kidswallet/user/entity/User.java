@@ -1,11 +1,15 @@
-package com.e201.kidswallet.user.model.dto.entity;
+package com.e201.kidswallet.user.entity;
 
+import com.e201.kidswallet.user.enums.Gender;
+import com.e201.kidswallet.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +32,7 @@ public class User
     private String userPassword;
 
     @Column(name = "user_birth",nullable = false)
-    private LocalDateTime userBirth;
+    private LocalDate userBirth;
 
     @Column(name="user_email",nullable = false)
     private String userEmail;
@@ -47,6 +51,7 @@ public class User
     @Column(name="user_role")
     private Role userRole;
 
+    @CreatedDate
     @Column(name="created_at",nullable = false)
     private LocalDateTime createdAt;
 
