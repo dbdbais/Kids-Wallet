@@ -15,13 +15,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ssafy.kidswallet.ui.screens.run.RunParentsScreen
 import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
 import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
+import com.ssafy.kidswallet.ui.screens.run.RunScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 
 class MainActivity : ComponentActivity() {
@@ -68,7 +70,10 @@ fun MainScreen(navController: NavHostController) {
         composable("mainPage") { MainPageScreen(navController) }
         composable("myWallet") { MyWalletScreen(navController) }
         composable("card") { CardScreen(navController) }
+        // run
+        composable("run") { RunScreen(navController) }
         composable("runParents") { RunParentsScreen(navController) }
+        composable("runParentsDetail") { RunParentsDetailScreen(navController) }
         composable("begging") { BeggingScreen(navController) }
         composable("quiz") { QuizScreen(navController) }
     }
