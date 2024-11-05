@@ -13,16 +13,15 @@ class PersonViewModel : ViewModel() {
     private val _peopleList = MutableStateFlow<List<PersonModel>>(emptyList())
     val peopleList: StateFlow<List<PersonModel>> = _peopleList
 
-    init {
-        loadPeople() // 뷰모델 초기화 시 데이터 로드
+    fun fetchPeople() {
+        loadPeople()
     }
 
     private fun loadPeople() {
         viewModelScope.launch {
             // 예시: 직접 데이터 생성
             val people = listOf(
-
-
+                PersonModel(id = 1, name = "John Dou", gender = "남"),
                 PersonModel(id = 2, name = "Sarah Corner", gender = "여"),
             )
             _peopleList.value = people
