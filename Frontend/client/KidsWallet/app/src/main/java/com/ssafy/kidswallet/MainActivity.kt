@@ -1,9 +1,8 @@
 package com.ssafy.kidswallet
-//import QuizScreen
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,16 +16,11 @@ import com.ssafy.kidswallet.ui.screens.run.RunParentsScreen
 import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
 import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
+import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
+import com.ssafy.kidswallet.ui.screens.main.QuizScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
-
-
-//import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
-//import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
-//import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
-//import com.ssafy.kidswallet.ui.screens.card.CardScreen
-//import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
-
+import com.ssafy.kidswallet.ui.screens.signup.SignUp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +94,8 @@ fun MainScreen(navController: NavHostController) {
             }
         }
 
-        composable("loginRouting") { LoginRoutingScreen(navController) }
+        composable("loginRouting") { Login(navController) }
+        composable("signup") {SignUp(navController)}
         composable("mainPage") { MainPageScreen(navController) }
         composable("myWallet") { MyWalletScreen(navController) }
         composable("card") { CardScreen(navController) }
