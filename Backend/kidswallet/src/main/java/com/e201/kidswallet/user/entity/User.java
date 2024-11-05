@@ -4,18 +4,23 @@ import com.e201.kidswallet.user.enums.Gender;
 import com.e201.kidswallet.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Entity
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name="User")
 public class User
 {
@@ -31,20 +36,18 @@ public class User
     private String userPassword;
 
     @Column(name = "user_birth",nullable = false)
-    private LocalDateTime userBirth;
-
-    @Column(name="user_email",nullable = false)
-    private String userEmail;
+    private LocalDate userBirth;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name="user_gender",nullable = false)
     private Gender userGender;
 
-    @Column(name="user_realname",nullable = false)
-    private String userRealname;
+    @Column(name="user_real_name",nullable = false)
+    private String userRealName;
 
-    @Column(name="user_point",nullable = false)
-    private int userPoint=0;
+    @Builder.Default
+    @Column(name="user_money",nullable = false)
+    private int userMoney=0;
 
     @Enumerated(value=EnumType.STRING)
     @Column(name="user_role")
@@ -57,11 +60,27 @@ public class User
     @Column(name="delete_at",nullable = true)
     private LocalDateTime deleteAt;
 
-    @OneToMany(mappedBy = "parent")
-    private List<Relation> parentsRelations;  // 수정: parentId -> parent
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Relation> parentsRelations;
 
-    @OneToMany(mappedBy = "child")
-    private List<Relation> childsRelations;  // 수정: childId -> chil
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "child", cascade = CascadeType.ALL)
+    private List<Relation> childsRelations;
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userBirth=" + userBirth +
+                ", userGender=" + userGender +
+                ", userRealName='" + userRealName + '\'' +
+                ", userMoney=" + userMoney +
+                ", userRole=" + userRole +
+                ", createdAt=" + createdAt +
+                ", deleteAt=" + deleteAt +
+                ", parentsRelations=" + parentsRelations +
+                ", childsRelations=" + childsRelations +
+                '}';
+    }
 }
