@@ -1,6 +1,7 @@
 package com.ssafy.kidswallet
 
 import android.os.Build
+import QuizScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +21,6 @@ import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
-import com.ssafy.kidswallet.ui.screens.main.QuizScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "main") {
+    NavHost(navController = navController, startDestination = "loginRouting") {
         composable("main") {
             Column(
                 modifier = Modifier
@@ -55,46 +55,10 @@ fun MainScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { navController.navigate("loginRouting") },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("로그인")
-                }
-                Button(
-                    onClick = { navController.navigate("mainPage") },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("메인페이지")
-                }
-                Button(
-                    onClick = { navController.navigate("myWallet") },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("내지갑")
-                }
-                Button(
                     onClick = { navController.navigate("card") },
                     modifier = Modifier.padding(8.dp)
                 ) {
                     Text("카드신청")
-                }
-                Button(
-                    onClick = { navController.navigate("runParents") },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("행복달리기")
-                }
-                Button(
-                    onClick = { navController.navigate("begging") },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("용돈 조르기")
-                }
-                Button(
-                    onClick = { navController.navigate("quiz") },
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    Text("퀴즈")
                 }
             }
         }
