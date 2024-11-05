@@ -51,6 +51,7 @@ android {
 
 dependencies {
 
+    implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha10")
     val nav_version = "2.7.4"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
