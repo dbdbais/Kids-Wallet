@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -98,13 +99,18 @@ fun RunParentsScreen(navController: NavController) {
         // 다음 버튼
         Button(
             onClick = { /* 다음 동작 구현 */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(Color(0xFF6DCEF5), RoundedCornerShape(16.dp)),
-            contentPadding = PaddingValues()
+            modifier = Modifier.fillMaxWidth().height(50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF6DCEF5),
+                contentColor = Color.White
+            ),
+            shape = RoundedCornerShape(24.dp)
         ) {
-            Text(text = "다음", fontSize = 18.sp, color = Color.White)
+            Text(
+                text = "다음",
+                style = FontSizes.h16,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
