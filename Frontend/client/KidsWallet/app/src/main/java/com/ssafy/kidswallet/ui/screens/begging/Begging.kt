@@ -93,7 +93,7 @@ fun BeggingMoney(navController: NavController, boxHeight: androidx.compose.ui.un
             painter = painterResource(id = R.drawable.character_young_man),
             contentDescription = "Character",
             modifier = Modifier
-                .size(180.dp) // 이미지 크기 조절
+                .size(150.dp) // 이미지 크기 조절
                 .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
         )
     }
@@ -127,7 +127,7 @@ fun BeggingMission(navController: NavController, boxHeight: androidx.compose.ui.
             painter = painterResource(id = R.drawable.character_young_girl),
             contentDescription = "Character",
             modifier = Modifier
-                .size(180.dp) // 이미지 크기 조절
+                .size(150.dp) // 이미지 크기 조절
                 .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
         )
     }

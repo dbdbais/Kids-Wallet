@@ -192,7 +192,7 @@ fun SignUp(navController: NavController) {
             GenderSelection(selectedGender) { selectedGender = it }
             RoleSelection(selectedRole) { selectedRole = it }
 
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             GradientButton(
                 onClick = {
