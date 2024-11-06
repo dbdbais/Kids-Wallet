@@ -14,7 +14,9 @@ public enum StatusCode {
     FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "권한이 없는 사용자입니다."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "NOT FOUND."),
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 Request Method 호출입니다."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류"),
+    DUPLICATE_USER(HttpStatus.UNAUTHORIZED,"중복된 사용자입니다."),
+    NO_USER(HttpStatus.METHOD_NOT_ALLOWED,"허용되지 않은 사용자입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
