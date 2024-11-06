@@ -10,14 +10,10 @@ object FontSizes {
     val h20 = TextStyle(fontSize = 20.sp)
     val h16 = TextStyle(fontSize = 16.sp)
     val h12 = TextStyle(fontSize = 12.sp)
-<<<<<<< HEAD
-}
 
 /*
     0xFFD9D9D9 탭 - 선택된 버튼
     0xFFF7F7F7 탭 - 선택안된 버튼
     0xFF8C8595 탭 - 버튼 안에 글씨
  */
-=======
-}
->>>>>>> 09fb23aaa00ba01e7979a72f1341d6aebf4cfb2f
+
