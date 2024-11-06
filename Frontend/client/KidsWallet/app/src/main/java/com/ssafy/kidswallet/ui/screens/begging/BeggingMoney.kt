@@ -58,11 +58,12 @@ import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.PersonViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssafy.kidswallet.data.model.PersonModel
+import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.viewmodel.BeggingListViewModel
 
 @Composable
-fun BeggingMoneyScreen(navController: NavController) {
-    var selectedPerson by remember { mutableStateOf<PersonModel?>(null) }
+fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel = viewModel()) {
+    val selectedPerson by viewModel.selectedPerson.collectAsState()
 
     Box(
         modifier = Modifier
@@ -88,7 +89,7 @@ fun BeggingMoneyScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(16.dp))
                 PeopleSelect(onPersonSelected = { person ->
-                    selectedPerson = person
+                    viewModel.setSelectedPerson(person)
                 })
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -101,21 +102,17 @@ fun BeggingMoneyScreen(navController: NavController) {
                             clip = false
                         )
                 ) {
-                    Button(
+                    BlueButton(
                         onClick = {
                             selectedPerson?.let { person ->
                                 navController.navigate("beggingRequest?name=${person.name}")
                             }
                         },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF6DCEF5), // 버튼 배경색 설정
-                            contentColor = Color.White // 텍스트 색상 설정
-                        ),
-                        shape = RoundedCornerShape(24.dp) // 버튼 모양과 그림자의 모양을 일치
-                    ) {
-                        Text("선택하기")
-                    }
+                        modifier = Modifier.width(400.dp), // 원하는 너비 설정
+                        height = 50,
+                        text = "선택하기",
+                        elevation = 0
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(48.dp))
