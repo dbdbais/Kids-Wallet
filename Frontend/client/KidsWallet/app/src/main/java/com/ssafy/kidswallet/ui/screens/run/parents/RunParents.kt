@@ -1,43 +1,72 @@
 package com.ssafy.kidswallet.ui.screens.run.parents
 
+import android.app.DatePickerDialog
+import android.net.Uri
+import android.widget.DatePicker
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale // `java.util.Locale`만 남김
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RunParentsScreen(navController: NavController) {
+    var text by remember { mutableStateOf("") }
+    val maxChar = 30
+
+    // 사진 선택
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri = uri
+    }
+
+    // 날짜 상태를 관리하는 변수
+    val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 7) } // 7일 후 날짜로 초기화
+    var selectedDate by remember { mutableStateOf(calendar.timeInMillis) }
+    val context = LocalContext.current
+
+    // DatePickerDialog 설정
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+            calendar.set(year, month, dayOfMonth)
+            selectedDate = calendar.timeInMillis
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    ).apply {
+        datePicker.minDate = calendar.timeInMillis
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +85,6 @@ fun RunParentsScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // 목표 입력 및 날짜 설정
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,40 +98,66 @@ fun RunParentsScreen(navController: NavController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            // 흰색 배경의 Row 컨테이너
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .background(Color.White, RoundedCornerShape(10.dp))
-                    .padding(horizontal = 16.dp, vertical = 12.dp) // 내부 패딩
+                    .padding(horizontal = 8.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween, // 텍스트를 양 끝에 배치
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "목표를 세워봐요",
-                        style = FontSizes.h16,
-                        color = Color(0xFF8C8595),
-                        fontWeight = FontWeight.Bold
+                    TextField(
+                        value = text,
+                        onValueChange = { newText ->
+                            if (newText.length <= maxChar) {
+                                text = newText
+                            }
+                        },
+                        placeholder = {
+                            Text(
+                                text = "목표를 세워봐요",
+                                style = FontSizes.h16,
+                                color = Color(0xFF8C8595),
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                            .background(Color.Transparent)
+                            .padding(horizontal = 0.dp),
+                        textStyle = FontSizes.h16.copy(fontWeight = FontWeight.Bold),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = Color.White,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        ),
+                        singleLine = true
                     )
 
-                    Text(
-                        text = "0/20",
-                        style = FontSizes.h16,
-                        color = Color(0xFF8C8595),
-                        fontWeight = FontWeight.Bold
-                    )
+                    Box(
+                        modifier = Modifier
+                            .wrapContentWidth(Alignment.Start)
+                            .align(Alignment.CenterVertically),
+                    ) {
+                        Text(
+                            text = "${text.length}/$maxChar",
+                            style = FontSizes.h16,
+                            color = Color(0xFF8C8595),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 날짜 정보 Row
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { datePickerDialog.show() },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -116,7 +170,7 @@ fun RunParentsScreen(navController: NavController) {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "2024.10.30",
+                    text = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date(selectedDate)),
                     style = FontSizes.h16,
                     color = Color(0xFFFFFFFF),
                     fontWeight = FontWeight.Bold
@@ -135,7 +189,6 @@ fun RunParentsScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // 사진 첨부 박스
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,22 +201,35 @@ fun RunParentsScreen(navController: NavController) {
             Text(
                 text = "사진을 첨부할 수 있어요",
                 style = FontSizes.h16,
-                fontWeight = FontWeight.Bold)
+                fontWeight = FontWeight.Bold
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.icon_plus2),
-                contentDescription = "사진 첨부",
-                modifier = Modifier.size(25.dp)
-            )
+            if (imageUri == null) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_plus2),
+                    contentDescription = "사진 첨부",
+                    modifier = Modifier
+                        .size(25.dp)
+                        .clickable { launcher.launch("image/*") }
+                )
+            } else {
+                AsyncImage(
+                    model = imageUri,
+                    contentDescription = "첨부된 사진",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(160.dp)
+                        .clickable { launcher.launch("image/*") }
+                )
+            }
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 다음 버튼
         BlueButton(
-            onClick = { navController.navigate("mainPage") },
+            onClick = { navController.navigate("runParentsMoney") },
             text = "다음",
             modifier = Modifier.width(400.dp).padding(bottom = 20.dp)
         )

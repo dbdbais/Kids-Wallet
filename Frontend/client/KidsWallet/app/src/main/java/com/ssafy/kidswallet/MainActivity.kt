@@ -26,6 +26,7 @@ import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMoneyScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 
@@ -76,6 +77,7 @@ fun MainScreen(navController: NavHostController) {
         // run
         composable("run") { RunScreen(navController) }
         composable("runParents") { RunParentsScreen(navController) }
+        composable("runParentsMoney") { RunParentsMoneyScreen(navController) }
         composable("runParentsDetail") { RunParentsDetailScreen(navController) }
         composable("begging") { BeggingScreen(navController) }
         composable("beggingMission") { BeggingMissionScreen(navController) }
