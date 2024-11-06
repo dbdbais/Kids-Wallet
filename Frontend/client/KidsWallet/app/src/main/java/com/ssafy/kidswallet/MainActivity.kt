@@ -15,7 +15,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMoneyScreen
 import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
