@@ -63,8 +63,9 @@ public class User
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Relation> parentsRelations;
 
+
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "child", cascade = CascadeType.ALL)
-    private List<Relation> childsRelations;
+    private List<Relation> childrenRelations;
 
     @Override
     public String toString() {
@@ -80,7 +81,7 @@ public class User
                 ", createdAt=" + createdAt +
                 ", deleteAt=" + deleteAt +
                 ", parentsRelations=" + parentsRelations +
-                ", childsRelations=" + childsRelations +
+                ", childrenRelations=" + childrenRelations +
                 '}';
     }
 }
