@@ -210,7 +210,7 @@ fun TogetherApplicationBox(navController: NavController) {
     Box(
         modifier = Modifier
             .size(200.dp)
-            .clickable { navController.navigate("runParents") }
+            .clickable { navController.navigate("run") }
     ) {
 
         Image(
