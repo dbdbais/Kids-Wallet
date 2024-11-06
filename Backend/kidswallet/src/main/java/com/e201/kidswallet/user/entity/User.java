@@ -1,5 +1,6 @@
 package com.e201.kidswallet.user.entity;
 
+import com.e201.kidswallet.account.entity.Account;
 import com.e201.kidswallet.user.enums.Gender;
 import com.e201.kidswallet.user.enums.Role;
 import jakarta.persistence.*;
@@ -59,6 +60,9 @@ public class User
 
     @Column(name="delete_at",nullable = true)
     private LocalDateTime deleteAt;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Account> accounts;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Relation> parentsRelations;
