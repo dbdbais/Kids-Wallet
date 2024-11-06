@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Entity
 @Getter
@@ -55,5 +56,19 @@ public class Mission {
     public void changeMissionStatusAndCompleteTime(Status status) {
         this.completedAt = LocalDateTime.now();
         this.missionStatus = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "MissionId=" + MissionId +
+                ", missionStatus=" + missionStatus +
+                ", completionPhoto=" + Arrays.toString(completionPhoto) +
+                ", completedAt=" + completedAt +
+                ", createdAt=" + createdAt +
+                ", missionContent='" + missionContent + '\'' +
+                ", deadLine=" + deadLine +
+                ", beg=" + beg +
+                '}';
     }
 }
