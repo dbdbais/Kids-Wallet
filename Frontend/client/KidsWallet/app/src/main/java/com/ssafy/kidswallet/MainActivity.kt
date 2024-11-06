@@ -12,9 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMoneyScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestScreen
@@ -80,7 +83,15 @@ fun MainScreen(navController: NavHostController) {
         composable("begging") { BeggingScreen(navController) }
         composable("beggingMission") { BeggingMissionScreen(navController) }
         composable("beggingMoney") { BeggingMoneyScreen(navController) }
-        composable("beggingRequest") { BeggingRequestScreen(navController) }
+
+        composable(
+            route = "beggingRequest?name={name}",
+            arguments = listOf(navArgument("name") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name")
+            BeggingRequestScreen(navController, name)
+        }
+
         composable("quiz") { QuizScreen(navController) }
     }
 }

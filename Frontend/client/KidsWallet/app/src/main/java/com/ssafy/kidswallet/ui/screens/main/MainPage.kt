@@ -39,7 +39,7 @@ fun MainPageScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.TopCenter)
-                .offset(y = (-200).dp)
+                .offset(y = (-135).dp)
         )
 
         // 콘텐츠 레이아웃
@@ -61,7 +61,7 @@ fun MainPageScreen(navController: NavController) {
                     painter = painterResource(id = R.drawable.logo_coin),
                     contentDescription = "Coin with Amount",
                     modifier = Modifier
-                        .width(60.dp) // 가로 크기 조절
+                        .width(50.dp) // 가로 크기 조절
                         .height(50.dp) // 세로 크기 조절
                 )
                 Text(
@@ -84,12 +84,12 @@ fun MainPageScreen(navController: NavController) {
                     painter = painterResource(id = R.drawable.icon_add),
                     contentDescription = "Waiting Message",
                     modifier = Modifier
-                        .size(80.dp) // 이미지 크기 조절 (80 x 80)
+                        .size(60.dp) // 이미지 크기 조절 (80 x 80)
                 )
                 Text(
                     text = "아이를 추가해주세요",
                     fontWeight = FontWeight.W900,
-                    style = FontSizes.h24,
+                    style = FontSizes.h20,
                     color = Color.Gray,
                     modifier = Modifier.padding(start = 8.dp)
                 )
@@ -115,7 +115,7 @@ fun MainPageScreen(navController: NavController) {
                 TogetherApplicationBox(navController)
                 QuizApplicationBox(navController)
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // 메모장 이미지
             Image(
@@ -123,7 +123,7 @@ fun MainPageScreen(navController: NavController) {
                 contentDescription = "Memo Pad",
                 modifier = Modifier
                     .padding(16.dp)
-                    .height(250.dp)
+                    .height(170.dp)
                     .width(450.dp)
             )
         }
@@ -137,7 +137,7 @@ fun MainPageScreen(navController: NavController) {
 fun CardApplicationBox(navController: NavController) {
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .size(180.dp)
             .clickable { navController.navigate("myWallet") }
     ) {
         Image(
@@ -149,7 +149,7 @@ fun CardApplicationBox(navController: NavController) {
 
         Text(
             text = "내 지갑",
-            style = FontSizes.h24,
+            style = FontSizes.h20,
             fontWeight = FontWeight.W900,
             color = Color.White,
             modifier = Modifier
@@ -173,7 +173,7 @@ fun CardApplicationBox(navController: NavController) {
 fun BeggingApplicationBox(navController: NavController) {
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .size(180.dp)
             .clickable { navController.navigate("begging") }
     ) {
         Image(
@@ -185,7 +185,7 @@ fun BeggingApplicationBox(navController: NavController) {
 
         Text(
             text = "용돈 조르기",
-            style = FontSizes.h24,
+            style = FontSizes.h20,
             fontWeight = FontWeight.Black,
             color = Color.White,
             modifier = Modifier
@@ -209,7 +209,7 @@ fun BeggingApplicationBox(navController: NavController) {
 fun TogetherApplicationBox(navController: NavController) {
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .size(180.dp)
             .clickable { navController.navigate("run") }
     ) {
 
@@ -222,7 +222,7 @@ fun TogetherApplicationBox(navController: NavController) {
 
         Text(
             text = "행복 달리기",
-            style = FontSizes.h24,
+            style = FontSizes.h20,
             fontWeight = FontWeight.Black,
             color = Color.White,
             modifier = Modifier
@@ -247,7 +247,7 @@ fun TogetherApplicationBox(navController: NavController) {
 fun QuizApplicationBox(navController: NavController) {
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .size(180.dp)
             .clickable { navController.navigate("quiz") }
     ) {
 
@@ -260,14 +260,13 @@ fun QuizApplicationBox(navController: NavController) {
 
         Text(
             text = "퀴즈",
-            style = FontSizes.h24,
+            style = FontSizes.h20,
             fontWeight = FontWeight.Black,
             color = Color.White,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(start = 40.dp, top = 16.dp)
         )
-
         Image(
             painter = painterResource(id = R.drawable.logo_quiz),
             contentDescription = "Quiz Icon",
