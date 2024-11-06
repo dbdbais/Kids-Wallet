@@ -84,7 +84,7 @@ public class UserService {
                     .build();
 
             cUser.getParentsRelations().add(userRelation);
-            pUser.getChildsRelations().add(userRelation);
+            pUser.getChildrenRelations().add(userRelation);
 
             return StatusCode.SUCCESS;
         }
