@@ -1,5 +1,6 @@
 package com.e201.kidswallet.mission.controller;
 
+import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.mission.dto.*;
 import com.e201.kidswallet.mission.service.MissionService;
 import com.e201.kidswallet.common.ResponseDto;
@@ -21,7 +22,6 @@ public class MissionController {
         this.service = begsService;
     }
 
-    //TODO: 어느 어른에게 조르기할지 수정
     //아이가 어른에게 조르기
     @PostMapping("/beg")
     public ResponseEntity<?> begging(@RequestBody BeggingRequestDto requestDto){
@@ -52,8 +52,10 @@ public class MissionController {
     }
 
     @GetMapping("/list/{userId}")
-    public ResponseEntity<?> getBegMissionList(@PathVariable String userId, @RequestParam("start" )long start, @RequestParam("end") long end){
-        return ResponseDto.response(service.getBegMissionList(userId, start, end));
+    public ResponseEntity<?> getBegMissionList(@PathVariable(name="userId") long userId, @RequestParam(name="start")long start, @RequestParam(name="end") long end){
+//        return ResponseDto.response(service.getBegMissionList(userId, start, end));
+        return ResponseDto.response(StatusCode.SUCCESS, service.getBegMissionList(userId, start, end));
+
     }
 
 }
