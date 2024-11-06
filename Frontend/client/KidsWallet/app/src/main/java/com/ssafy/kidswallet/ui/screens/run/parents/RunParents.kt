@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 
@@ -97,21 +99,13 @@ fun RunParentsScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // 다음 버튼
-        Button(
-            onClick = { /* 다음 동작 구현 */ },
-            modifier = Modifier.fillMaxWidth().height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF6DCEF5),
-                contentColor = Color.White
-            ),
-            shape = RoundedCornerShape(24.dp)
-        ) {
-            Text(
-                text = "다음",
-                style = FontSizes.h16,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        BlueButton(
+            onClick = { navController.navigate("mainPage") },
+            text = "다음",
+            modifier = Modifier.width(400.dp), // 원하는 너비 설정
+            height = 50,
+            elevation = 8
+        )
     }
 }
 
