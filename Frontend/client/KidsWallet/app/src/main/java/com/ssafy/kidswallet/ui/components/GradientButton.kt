@@ -14,15 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun BlueButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -37,12 +42,13 @@ fun BlueButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color.White,
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
@@ -52,9 +58,11 @@ fun BlueButton(
 fun LightBlueButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -67,12 +75,13 @@ fun LightBlueButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color(0xFF6DCEF5),
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
@@ -82,9 +91,11 @@ fun LightBlueButton(
 fun GrayButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -99,12 +110,13 @@ fun GrayButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color.White,
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
@@ -114,9 +126,11 @@ fun GrayButton(
 fun LightGrayButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -129,12 +143,13 @@ fun LightGrayButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color(0xFF8C8595),
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
@@ -144,9 +159,11 @@ fun LightGrayButton(
 fun YellowButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -161,12 +178,13 @@ fun YellowButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color.White,
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
@@ -176,9 +194,11 @@ fun YellowButton(
 fun GreenButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -193,12 +213,13 @@ fun GreenButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color.White,
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
@@ -208,9 +229,11 @@ fun GreenButton(
 fun PinkButton(
     onClick: () -> Unit,
     text: String,
-    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
-    height: Int = 50, // 기본 버튼 높이를 50dp로 설정
-    elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
+    modifier: Modifier = Modifier,
+    height: Int = 50,
+    elevation: Int = 8,
+    textStyle: TextStyle = FontSizes.h16,
+    fontWeight: FontWeight = FontWeight.Bold
 ) {
     Box(
         modifier = modifier
@@ -225,14 +248,16 @@ fun PinkButton(
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable(onClick = onClick)
-            .height(height.dp), // 높이 설정
+            .height(height.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = Color.White,
+            style = textStyle.copy(fontWeight = fontWeight),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
+
 
