@@ -4,16 +4,22 @@ import com.e201.kidswallet.mission.dto.*;
 import com.e201.kidswallet.mission.entity.Mission;
 import com.e201.kidswallet.mission.enums.Status;
 import com.e201.kidswallet.mission.repository.MissionRepository;
+import com.e201.kidswallet.mission.dto.MissionListResponseDto;
+import com.e201.kidswallet.user.entity.Relation;
+import com.e201.kidswallet.user.repository.RelationRepository;
+import com.e201.kidswallet.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import com.e201.kidswallet.mission.entity.Beg;
 import com.e201.kidswallet.mission.repository.BegRepository;
 import com.e201.kidswallet.common.exception.StatusCode;
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Base64;
+import java.util.*;
 
 
 @Slf4j
@@ -22,31 +28,37 @@ public class MissionService {
     private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
     private final BegRepository begRepository;
     private final MissionRepository missionRepository;
+    private final UserRepository userRepository;
+    private final RelationRepository relationRepository;
     @Autowired
-    public MissionService(BegRepository begRepository, MissionRepository missionRepository) {
+    public MissionService(BegRepository begRepository, MissionRepository missionRepository, UserRepository userRepository, RelationRepository relationRepository) {
 
         this.begRepository = begRepository;
         this.missionRepository = missionRepository;
+        this.userRepository = userRepository;
+        this.relationRepository = relationRepository;
     }
 
     //Transactional은 runtime err일 때만 롤백가능
     @Transactional
     public StatusCode begging(BeggingRequestDto beggingRequestDto){
 
-//        TODO: 사용자 ID를 사용하여 relation엔티티 조회
-//        Relation relation =null;
+        //사용자 ID를 사용하여 relation엔티티 조회
+        List<Relation> relations =userRepository.findById(beggingRequestDto.getToUserId()).get().getParentsRelations();
+        Relation relation=null;
+        for(Relation r:relations){
+            if(r.getParent().getUserId() == beggingRequestDto.getToUserId()) {
+                relation = r;
+                break;
+            }
+        }
 
-//        TODO: user,relation추가 하면 테스팅하기
-//        Beg beg =Beg.builder()
-//                        .begContent(beggingRequestDto.getBeggingMessage())
-//                        .begMoney(beggingRequestDto.getBeggingMoney())
-//                        .relation(relation).build();
+        //TODO: 부모 없으면 예외처리
 
-        //임시 코드
         Beg beg =Beg.builder()
-                .begContent(beggingRequestDto.getBeggingMessage())
-                .begMoney(beggingRequestDto.getBeggingMoney())
-                .build();
+                        .begContent(beggingRequestDto.getBeggingMessage())
+                        .begMoney(beggingRequestDto.getBeggingMoney())
+                        .relation(relation).build();
 
         log.info(beg.toString());
         //여기서 실패하면 jpa가 RUNTIMEEXCEPTION을 throw함 == transactional이 됨
@@ -113,9 +125,48 @@ public class MissionService {
         return StatusCode.SUCCESS;
     }
 
-    public StatusCode getBegMissionList(String userId, long start, long end) {
-        //TODO: 유저 ID를 사용하여 relation을 조회 후 beg 조회
-        //TODO: 조회 된 Beg의 mission조회
-        return StatusCode.SUCCESS;
+    @Transactional
+    public List<MissionListResponseDto> getBegMissionList(long userId, long start, long end) {
+
+        List<Relation> relations = relationRepository.findRelation(userId);
+        List<MissionListResponseDto> missionListResponseDtos = new ArrayList<>();
+
+        for(Relation r:relations){
+            log.info("info: "+r.toString());
+            List<Beg> begs = r.getBegs();
+            log.info("begs.size(): "+begs.size());
+            for(Beg beg:begs){
+                if (beg instanceof HibernateProxy) {
+                    Hibernate.initialize(beg);
+                }
+                Mission m = beg.getMission();
+
+//                log.info("mission: "+m);
+                // insert mission data
+                MissionDto missionDto = new MissionDto(
+                        m.getMissionId(),
+                        m.getMissionStatus(),
+                        m.getCompletionPhoto(),
+                        m.getCompletedAt(),
+                        m.getCreatedAt(),
+                        m.getMissionContent(),
+                        m.getDeadLine()
+                );
+
+                //insert beg data
+                BegDto begDto = new BegDto(
+                        beg.getBegId(),
+                        beg.getBegMoney(),
+                        beg.getBegContent(),
+                        beg.getCreateAt(),
+                        beg.getBegAccept()
+                );
+
+                missionListResponseDtos.add(new MissionListResponseDto(begDto,missionDto));
+
+            }
+        }
+//        log.info("relationSize: " + relations.size());
+        return missionListResponseDtos;
     }
 }
