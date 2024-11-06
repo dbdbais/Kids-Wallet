@@ -27,11 +27,11 @@ import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
 
 @Composable
-fun BottomNavigationBar(modifier: Modifier = Modifier) {
+fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavController) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(80.dp)
             .background(Color.White, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             .drawBehind {
                 val shadowHeight = 4.dp.toPx()
@@ -52,17 +52,23 @@ fun BottomNavigationBar(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.icon_alert),
             contentDescription = "Alert",
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(40.dp)
         )
         Image(
             painter = painterResource(id = R.drawable.home),
             contentDescription = "Home",
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier
+                .size(64.dp)
+                .clickable {
+                    navController.navigate("mainPage") {
+                        popUpTo("mainPage") { inclusive = true }
+                    }
+                }
         )
         Image(
             painter = painterResource(id = R.drawable.icon_regular),
             contentDescription = "Regular",
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(40.dp)
         )
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
+import com.ssafy.kidswallet.ui.components.FontSizes
 
 @Composable
 fun MainPageScreen(navController: NavController) {
@@ -66,7 +67,7 @@ fun MainPageScreen(navController: NavController) {
                 Text(
                     text = "500,000",
                     fontWeight = FontWeight.W900,
-                    fontSize = 24.sp,
+                    style = FontSizes.h24,
                     modifier = Modifier.padding(start = 8.dp)
                 )
             }
@@ -88,7 +89,7 @@ fun MainPageScreen(navController: NavController) {
                 Text(
                     text = "아이를 추가해주세요",
                     fontWeight = FontWeight.W900,
-                    fontSize = 24.sp,
+                    style = FontSizes.h24,
                     color = Color.Gray,
                     modifier = Modifier.padding(start = 8.dp)
                 )
@@ -127,7 +128,7 @@ fun MainPageScreen(navController: NavController) {
             )
         }
         BottomNavigationBar(
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier.align(Alignment.BottomCenter), navController
         )
     }
 }
@@ -148,7 +149,7 @@ fun CardApplicationBox(navController: NavController) {
 
         Text(
             text = "내 지갑",
-            fontSize = 24.sp,
+            style = FontSizes.h24,
             fontWeight = FontWeight.W900,
             color = Color.White,
             modifier = Modifier
@@ -184,7 +185,7 @@ fun BeggingApplicationBox(navController: NavController) {
 
         Text(
             text = "용돈 조르기",
-            fontSize = 24.sp,
+            style = FontSizes.h24,
             fontWeight = FontWeight.Black,
             color = Color.White,
             modifier = Modifier
@@ -221,7 +222,7 @@ fun TogetherApplicationBox(navController: NavController) {
 
         Text(
             text = "행복 달리기",
-            fontSize = 24.sp,
+            style = FontSizes.h24,
             fontWeight = FontWeight.Black,
             color = Color.White,
             modifier = Modifier
@@ -259,7 +260,7 @@ fun QuizApplicationBox(navController: NavController) {
 
         Text(
             text = "퀴즈",
-            fontSize = 24.sp,
+            style = FontSizes.h24,
             fontWeight = FontWeight.Black,
             color = Color.White,
             modifier = Modifier

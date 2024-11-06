@@ -15,6 +15,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+
+import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionScreen
+import com.ssafy.kidswallet.ui.screens.begging.BeggingMoneyScreen
 import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
 import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
@@ -75,6 +78,8 @@ fun MainScreen(navController: NavHostController) {
         composable("runParents") { RunParentsScreen(navController) }
         composable("runParentsDetail") { RunParentsDetailScreen(navController) }
         composable("begging") { BeggingScreen(navController) }
+        composable("beggingMission") { BeggingMissionScreen(navController) }
+        composable("beggingMoney") { BeggingMoneyScreen(navController) }
         composable("quiz") { QuizScreen(navController) }
     }
 }
