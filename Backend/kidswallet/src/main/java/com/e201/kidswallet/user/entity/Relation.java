@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Objects;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -31,5 +34,13 @@ public class Relation {
     @JoinColumn(name = "children_id", referencedColumnName = "user_id")
     private User child;
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "relation",cascade = CascadeType.ALL)
+    private List<Beg> Begs;
 
+    @Override
+    public String toString() {
+        return "Relation{" +
+                "relationId=" + relationId +
+                '}';
+    }
 }
