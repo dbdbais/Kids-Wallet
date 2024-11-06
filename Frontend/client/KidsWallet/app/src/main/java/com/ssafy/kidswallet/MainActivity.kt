@@ -17,9 +17,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ssafy.kidswallet.data.model.TextModel
 
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMoneyScreen
+import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestCompleteScreen
+import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestReasonScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestScreen
 import com.ssafy.kidswallet.ui.theme.KidsWalletTheme
 import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
@@ -90,6 +93,33 @@ fun MainScreen(navController: NavHostController) {
         ) { backStackEntry ->
             val name = backStackEntry.arguments?.getString("name")
             BeggingRequestScreen(navController, name)
+        }
+
+        composable(
+            route = "beggingRequestReason?name={name}&amount={amount}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("amount") { type = NavType.IntType}
+            )
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name")
+            val amount = backStackEntry.arguments?.getInt("amount") ?: 0
+            BeggingRequestReasonScreen(navController, name, amount)
+        }
+
+        composable(
+            route = "beggingRequestComplete?name={name}&amount={amount}&reason={reason}",
+            arguments = listOf(
+                navArgument("name") { type = NavType.StringType },
+                navArgument("amount") { type = NavType.IntType },
+                navArgument("reason") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name")
+            val amount = backStackEntry.arguments?.getInt("amount") ?: 0
+            val reason = backStackEntry.arguments?.getString("reason")
+
+            BeggingRequestCompleteScreen(navController, name, amount, reason)
         }
 
         composable("quiz") { QuizScreen(navController) }

@@ -13,6 +13,17 @@ class PersonViewModel : ViewModel() {
     private val _peopleList = MutableStateFlow<List<PersonModel>>(emptyList())
     val peopleList: StateFlow<List<PersonModel>> = _peopleList
 
+    private val _selectedPerson = MutableStateFlow<PersonModel?>(null)
+    val selectedPerson: StateFlow<PersonModel?> = _selectedPerson
+
+    fun setSelectedPerson(person: PersonModel) {
+        _selectedPerson.value = person
+    }
+
+    fun resetSelectedPerson() {
+        _selectedPerson.value = null
+    }
+
     fun fetchPeople() {
         loadPeople()
     }
