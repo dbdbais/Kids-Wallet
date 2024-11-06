@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.dp
 fun BlueButton(
     onClick: () -> Unit,
     text: String,
+    modifier: Modifier = Modifier, // 일반적으로 400dp 적용하면됨
     height: Int = 50, // 기본 버튼 높이를 50dp로 설정
     elevation: Int = 8 // 기본 그림자 높이를 8dp로 설정
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
             .shadow(
                 elevation = elevation.dp,
                 shape = RoundedCornerShape(15.dp)
@@ -47,4 +47,5 @@ fun BlueButton(
         )
     }
 }
+
 

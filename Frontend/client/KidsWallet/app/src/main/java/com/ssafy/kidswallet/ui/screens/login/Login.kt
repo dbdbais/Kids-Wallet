@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -125,6 +126,7 @@ fun Login(navController: NavHostController) {
         BlueButton(
             onClick = { navController.navigate("mainPage") },
             text = "확인",
+            modifier = Modifier.width(400.dp), // 원하는 너비 설정
             height = 40,
             elevation = 0
         )
