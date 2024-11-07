@@ -143,15 +143,21 @@ public class MissionService {
 
 //                log.info("mission: "+m);
                 // insert mission data
-                MissionDto missionDto = new MissionDto(
-                        m.getMissionId(),
-                        m.getMissionStatus(),
-                        m.getCompletionPhoto(),
-                        m.getCompletedAt(),
-                        m.getCreatedAt(),
-                        m.getMissionContent(),
-                        m.getDeadLine()
-                );
+                MissionDto missionDto;
+                if(m!=null){
+                    missionDto = new MissionDto(
+                            m.getMissionId(),
+                            m.getMissionStatus(),
+                            m.getCompletionPhoto(),
+                            m.getCompletedAt(),
+                            m.getCreatedAt(),
+                            m.getMissionContent(),
+                            m.getDeadLine()
+                    );
+                }
+                else{
+                    missionDto = new MissionDto();
+                }
 
                 //insert beg data
                 BegDto begDto = new BegDto(
@@ -161,7 +167,6 @@ public class MissionService {
                         beg.getCreateAt(),
                         beg.getBegAccept()
                 );
-
                 missionListResponseDtos.add(new MissionListResponseDto(begDto,missionDto));
 
             }
