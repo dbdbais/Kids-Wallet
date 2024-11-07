@@ -25,7 +25,8 @@ import java.util.*;
 @Slf4j
 @Service
 public class MissionService {
-    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
+//    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
+    private final long MAX_LONGBLOB_SIZE = 4L * 1024 * 1024 * 1024; // 4GB
     private final BegRepository begRepository;
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
@@ -50,6 +51,7 @@ public class MissionService {
         if(relations == null || relations.isEmpty())
             return StatusCode.NO_PARENTS;
 
+        // 부모 userId로 relation 찾기
         Relation relation=null;
         for(Relation r:relations){
             if(r.getParent().getUserId() == beggingRequestDto.getToUserId()) {
@@ -58,6 +60,7 @@ public class MissionService {
             }
         }
 
+        //Beg테이블 빌드
         Beg beg =Beg.builder()
                         .begContent(beggingRequestDto.getBeggingMessage())
                         .begMoney(beggingRequestDto.getBeggingMoney())
@@ -69,6 +72,7 @@ public class MissionService {
         return StatusCode.SUCCESS;
     }
 
+    // 조르기를 부모가 허락 or 반대
     @Transactional
     public StatusCode begAccept(BegAcceptRequestDto requestDto) {
         Beg beg = begRepository.findById(requestDto.getBegId()).get();
@@ -76,10 +80,12 @@ public class MissionService {
         return StatusCode.SUCCESS;
     }
 
+    // 미션 부여
     @Transactional
     public StatusCode assignMission(AssignMissionRequestDto requestDto) {
         Beg beg = begRepository.findById(requestDto.getBegId()).get();
 
+        //미션엔티티 빌드
         Mission mission = Mission.builder()
                 .missionContent(requestDto.getMissionMessage())
                 .deadLine(requestDto.getDeadline())
@@ -90,6 +96,7 @@ public class MissionService {
         return StatusCode.SUCCESS;
     }
 
+    // 이미지 업로드 == 미션에 대한 이미지
     @Transactional
     public StatusCode uploadCompleteImage(MissionCompleteRequestDto requestDto) {
         //base64를 byte배열로 인코딩
@@ -97,6 +104,9 @@ public class MissionService {
         long missionId = requestDto.getMissionId();
 
         //TODO: SIZE CHECKING 로직 추가
+        if(imageBytes.length > MAX_LONGBLOB_SIZE) {
+            return StatusCode.OVERFLOW_IMAGE_SIZE;
+        }
         log.info("imageBytes.length: "+imageBytes.length);
         log.info("imageBytes.length > MAX_LONGBLOB_SIZE: "+ (imageBytes.length > MAX_LONGBLOB_SIZE));
 
