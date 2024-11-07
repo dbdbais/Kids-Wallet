@@ -122,12 +122,12 @@ public class MissionService {
         Status status;
 
         if(requestDto.getIsComplete()==true) {
-            status = Status.complete;
+            status = Status.COMPLETE;
             log.info("requestDto.isComplete: " + requestDto.getIsComplete());
             log.info("status: " + status);
         }
         else
-            status=Status.fail;
+            status=Status.FAIL;
 
 //        missionRepository.updateMissionStatus(requestDto.getMissionId(),status.toString(),LocalDateTime.now());
         Mission mission = missionRepository.findById(requestDto.getMissionId()).get();

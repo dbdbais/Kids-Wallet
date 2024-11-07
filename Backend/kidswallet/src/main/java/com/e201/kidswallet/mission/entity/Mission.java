@@ -29,7 +29,7 @@ public class Mission {
     @Builder.Default
     @Enumerated(value=EnumType.STRING)
     @Column(name="mission_status",nullable = false)
-    private Status missionStatus=Status.request;
+    private Status missionStatus=Status.PROCEED;
 
     @Column(name="completion_photo",nullable = true,columnDefinition = "LONGBLOB")
     @Lob // 큰 데이터 저장을 위한 어노테이션
