@@ -1,17 +1,24 @@
 package com.e201.kidswallet.account.service;
 
+import com.e201.kidswallet.account.dto.TransactionListDTO;
+import com.e201.kidswallet.account.dto.TransactionResponseDTO;
+import com.e201.kidswallet.account.dto.TransferMoneyDTO;
 import com.e201.kidswallet.account.entity.Account;
 import com.e201.kidswallet.account.repository.AccountRepository;
 import com.e201.kidswallet.common.exception.StatusCode;
+import com.e201.kidswallet.transaction.entity.Transaction;
+import com.e201.kidswallet.transaction.enums.TransactionType;
 import com.e201.kidswallet.transaction.repository.TransactionRepository;
 import com.e201.kidswallet.user.entity.User;
 import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.SecureRandom;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,7 +34,7 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
-    public String makeRandomAccount(){
+    public String makeRandomAccount() {
         SecureRandom secureRandom = new SecureRandom();
 
         // 앞 6자리 코드
@@ -43,92 +50,136 @@ public class AccountService {
         return String.format("%06d-%02d-%06d", bankCode, accountType, uniqueNumber);
     }
 
-    public StatusCode depositMoney(String accountId,int amount){
-        Account account = accountRepository.findById(accountId).orElse(null);
+    public StatusCode depositMoney(String accountId, int amount) {
+        Optional<Account> account = accountRepository.findById(accountId);
 
-        if(account == null){
+        if (account.isEmpty()) {
             return StatusCode.BAD_REQUEST;
         }
 
-        account.deposit(amount);
+        account.get().deposit(amount);
 
         return StatusCode.SUCCESS;
 
     }
 
-    public StatusCode withdrawMoney(String accountId, int amount){
-        Account account = accountRepository.findById(accountId).orElse(null);
+    public StatusCode withdrawMoney(String accountId, int amount) {
+        Optional<Account> account = accountRepository.findById(accountId);
 
-        if(account == null){
+        if (account.isEmpty()) {
             return StatusCode.BAD_REQUEST;
         }
 
-        if(account.getBalance() < amount){
+        if (account.get().getBalance() < amount) {
             return StatusCode.NOT_ENOUGH_MONEY;
         }
 
-        account.withdraw(amount);
+        account.get().withdraw(amount);
         //계좌 출금
 
         return StatusCode.SUCCESS;
 
     }
 
-    public StatusCode transferMoney(String fromAccountId, String toAccountId, int amount){
-        Account fAccount = accountRepository.findById(fromAccountId).orElse(null);
-        Account tAccount = accountRepository.findById(toAccountId).orElse(null);
+    private Transaction makeTransaction(TransactionType transactionType, String message, String id, int amount) {
 
-        if(fAccount == null || tAccount == null){
+        return Transaction.builder()
+                .transactionType(transactionType)
+                .message(message)
+                .accountId(id)
+                .amount(amount)
+                .build();
+    }
+
+    @Transactional
+    public StatusCode transferMoney(TransferMoneyDTO transferMoneyDTO) {
+
+        String fromAccountId = transferMoneyDTO.getFAccountId();
+        String toAccountId = transferMoneyDTO.getTAcoountId();
+        int amount = transferMoneyDTO.getAmount();
+        String message = transferMoneyDTO.getMessage();
+
+        Optional<Account> fAccount = accountRepository.findById(fromAccountId);
+        Optional<Account> tAccount = accountRepository.findById(toAccountId);
+
+        if(fAccount.isEmpty() || tAccount.isEmpty()){
             return StatusCode.BAD_REQUEST;
         }
 
-        if(fAccount.getBalance() < amount){
+        if (fAccount.get().getBalance() < amount) {
             return StatusCode.NOT_ENOUGH_MONEY;
         }
 
-        // 출금 및 입금 작업 수행
-        fAccount.withdraw(amount);
-        tAccount.deposit(amount);
+        // 해당하는 트랙잭션 생성
+        Transaction withdrawalTransaction = makeTransaction(TransactionType.WITHDRAWAL, message, toAccountId, amount);
+        Transaction depositTransaction = makeTransaction(TransactionType.DEPOSIT, message, fromAccountId, amount);
+
+        // 트랜잭션을 먼저 저장
+        transactionRepository.save(withdrawalTransaction);
+        transactionRepository.save(depositTransaction);
+
+        // 출금 및 입금 작업 트랜잭션 추가 수행
+        fAccount.get().withdraw(amount);
+        fAccount.get().addTransaction(withdrawalTransaction);
+
+        tAccount.get().deposit(amount);
+        tAccount.get().addTransaction(depositTransaction);
 
         // 변경 사항 저장
-        accountRepository.save(fAccount);
-        accountRepository.save(tAccount);
+        accountRepository.save(fAccount.get());
+        accountRepository.save(tAccount.get());
 
         return StatusCode.SUCCESS;
-
     }
-    public StatusCode registerAccount(Long userId){
 
-        User sUser = userRepository.findById(userId).orElse(null);
+    public TransactionListDTO getTransaction(String accountId){
 
-        if(sUser == null) {
+        Optional<Account> account = accountRepository.findById(accountId);
+
+        if(account.isEmpty()){
+            return new TransactionListDTO(StatusCode.BAD_REQUEST);
+        }
+
+        List<TransactionResponseDTO> lst = account.get().getTransactions().stream()
+                .map(t -> TransactionResponseDTO.builder()
+                        .accountId(t.getAccountId())
+                        .message(t.getMessage())
+                        .amount(t.getAmount())
+                        .transactionType(t.getTransactionType())
+                        .transactionDate(t.getTransactionDate())
+                        .build())
+                .collect(Collectors.toList());
+
+
+        return new TransactionListDTO(StatusCode.SUCCESS,lst);
+    }
+
+    public StatusCode registerAccount(Long userId) {
+
+        Optional<User> sUser = userRepository.findById(userId);
+
+        if (sUser.isEmpty()) {
             return StatusCode.BAD_REQUEST;
         }
 
         String newAccountId = makeRandomAccount();
 
-        while(accountRepository.existsById(newAccountId)){
+        while (accountRepository.existsById(newAccountId)) {
             newAccountId = makeRandomAccount();
         }
         //중복 체크
 
         Account newAccount = Account.builder()
-                .user(sUser)
+                .user(sUser.get())
                 .accountId(newAccountId)
                 .build();
 
-        sUser.getAccounts().add(newAccount);
+        sUser.get().getAccounts().add(newAccount);
         //유저에 추가
         //accountRepository.save(newAccount);
 
         return StatusCode.SUCCESS;
     }
-
-
-    
-
-
-
 
 
 }

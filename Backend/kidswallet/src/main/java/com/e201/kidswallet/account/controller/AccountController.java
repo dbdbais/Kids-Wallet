@@ -1,6 +1,8 @@
 package com.e201.kidswallet.account.controller;
 
 import com.e201.kidswallet.account.dto.AccountMoneyDTO;
+import com.e201.kidswallet.account.dto.TransactionListDTO;
+import com.e201.kidswallet.account.dto.TransferMoneyDTO;
 import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
@@ -33,6 +35,17 @@ public class AccountController {
     public ResponseEntity<ResponseDto> withdrawAccount(@RequestBody AccountMoneyDTO accountwithdrawDTO){
         StatusCode returnCode = accountService.withdrawMoney(accountwithdrawDTO.getAccountId(),accountwithdrawDTO.getAmount());
         return ResponseDto.response(returnCode);
+    }
+    @PatchMapping("/transfer")
+    public ResponseEntity<ResponseDto> transferAccount(@RequestBody TransferMoneyDTO transferMoneyDTO){
+        StatusCode returnCode = accountService.transferMoney(transferMoneyDTO);
+        return ResponseDto.response(returnCode);
+    }
+
+    @GetMapping("/view/transaction")
+    public ResponseEntity<ResponseDto> viewTransaction(@RequestParam String id){
+       TransactionListDTO transactionListDTO = accountService.getTransaction(id);
+       return ResponseDto.response(transactionListDTO.getStatusCode(),transactionListDTO.getLst());
     }
 
 
