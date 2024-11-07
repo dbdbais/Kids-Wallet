@@ -73,19 +73,20 @@ public class TogetherRunService {
             e.printStackTrace();
         }
 
+        User parent = userRepository.findById(togetherRunRegisterRequestDto.getParentsId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
         TogetherRun togetherRun = TogetherRun.builder()
                 .relation(relation)
                 .targetTitle(togetherRunRegisterRequestDto.getTargetTitle())
                 .targetImage(imagePath)
-                .parentsAccount("123")
+                .parentsAccount(parent.getAccounts().get(0).getAccountId())
                 .parentsContribute(togetherRunRegisterRequestDto.getParentsContribute())
-                .childAccount("123")
+                .childAccount(user.getAccounts().get(0).getAccountId())
                 .childContribute(togetherRunRegisterRequestDto.getChildContribute())
                 .targetAmount(togetherRunRegisterRequestDto.getTargetAmount())
                 .targetDate(togetherRunRegisterRequestDto.getTargetDate())
                 .build();
 
-        // return redisTemplate.opsForHash().entries();
         // FCM notification
         try {
             togetherRunRepository.save(togetherRun);

@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class TogetherRunRegisterRequestDto {
@@ -13,7 +13,7 @@ public class TogetherRunRegisterRequestDto {
     private String targetTitle;
     private MultipartFile targetImage;
     private BigDecimal targetAmount;
-    private LocalDateTime targetDate;
+    private LocalDate targetDate;
     private BigDecimal parentsContribute;
     private BigDecimal childContribute;
 }

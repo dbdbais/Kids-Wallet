@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -52,7 +53,7 @@ public class TogetherRun {
     private BigDecimal targetAmount;
 
     @Column(name = "target_date")
-    private LocalDateTime targetDate;
+    private LocalDate targetDate;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Data
@@ -18,5 +18,5 @@ public class TogetherRunDataResponseDto {
     private BigDecimal targetAmount;
     private BigDecimal currentAmount;
     private BigDecimal currentInterestAmount;
-    private LocalDateTime expiredAt;
+    private LocalDate expiredAt;
 }
