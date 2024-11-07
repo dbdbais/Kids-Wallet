@@ -1,5 +1,6 @@
 package com.e201.kidswallet.account.entity;
 
+import com.e201.kidswallet.transaction.entity.Transaction;
 import com.e201.kidswallet.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -35,6 +38,14 @@ public class Account {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @OneToMany
+    @JoinTable(
+            name = "account_transaction",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "transaction_id")
+    )
+    private List<Transaction> transactions = new ArrayList<>();
+
     // 거래를 위한 입금
     public void deposit(int amount) {
         this.balance += amount;
@@ -48,9 +59,9 @@ public class Account {
             throw new IllegalArgumentException("잔액 부족");
         }
     }
-
-
-
-
+    // 계좌에 Transaction 더한다.
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
 
 }
