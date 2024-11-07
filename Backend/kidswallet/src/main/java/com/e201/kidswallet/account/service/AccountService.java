@@ -12,6 +12,7 @@ import com.e201.kidswallet.transaction.repository.TransactionRepository;
 import com.e201.kidswallet.user.entity.User;
 import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @Transactional
 public class AccountService {
@@ -57,7 +58,15 @@ public class AccountService {
             return StatusCode.BAD_REQUEST;
         }
 
+        // 해당하는 트랙잭션 생성
+        Transaction depositTransaction = makeTransaction(TransactionType.DEPOSIT, "입금", accountId, amount);
+
+        // 트랜잭션을 먼저 저장
+        transactionRepository.save(depositTransaction);
+
+
         account.get().deposit(amount);
+        account.get().addTransaction(depositTransaction);
 
         return StatusCode.SUCCESS;
 
@@ -74,8 +83,14 @@ public class AccountService {
             return StatusCode.NOT_ENOUGH_MONEY;
         }
 
+        // 해당하는 트랙잭션 생성
+        Transaction withdrawlTransaction = makeTransaction(TransactionType.WITHDRAWAL, "인출", accountId, amount);
+
+
         account.get().withdraw(amount);
+        account.get().addTransaction(withdrawlTransaction);
         //계좌 출금
+
 
         return StatusCode.SUCCESS;
 
@@ -95,7 +110,7 @@ public class AccountService {
     public StatusCode transferMoney(TransferMoneyDTO transferMoneyDTO) {
 
         String fromAccountId = transferMoneyDTO.getFAccountId();
-        String toAccountId = transferMoneyDTO.getTAcoountId();
+        String toAccountId = transferMoneyDTO.getTAccountId();
         int amount = transferMoneyDTO.getAmount();
         String message = transferMoneyDTO.getMessage();
 
