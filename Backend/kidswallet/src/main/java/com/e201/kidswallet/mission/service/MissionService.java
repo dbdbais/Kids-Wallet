@@ -103,7 +103,7 @@ public class MissionService {
         byte[] imageBytes = Base64.getDecoder().decode(requestDto.getBase64Image());
         long missionId = requestDto.getMissionId();
 
-        //TODO: SIZE CHECKING 로직 추가
+        // IMAGE SIZE CHECKING
         if(imageBytes.length > MAX_LONGBLOB_SIZE) {
             return StatusCode.OVERFLOW_IMAGE_SIZE;
         }
@@ -116,6 +116,7 @@ public class MissionService {
 
     }
 
+    // 부모가 자식이 보낸 image를 보고 미션
     @Transactional
     public StatusCode missionCompleteCheck(MissionCompleteCheckRequestDto requestDto) {
         Status status;
@@ -138,26 +139,30 @@ public class MissionService {
         return StatusCode.SUCCESS;
     }
 
+    //TODO: 지연로딩을 위한 처리 해야됨
+    //조르기와 미션 리스트 get
     @Transactional
     public List<MissionListResponseDto> getBegMissionList(long userId, long start, long end) {
 
+        //userId로 user와 관련된 관계들을 get
         List<Relation> relations = relationRepository.findRelation(userId);
         List<MissionListResponseDto> missionListResponseDtos = new ArrayList<>();
 
+        // 관계들을 순회하며 관계와 관련된 Beg들을 get
         for(Relation r:relations){
             log.info("info: "+r.toString());
             List<Beg> begs = r.getBegs();
             log.info("begs.size(): "+begs.size());
+            //Beg들을 순회하며 Mision을 찾음 (1:1 관계)
             for(Beg beg:begs){
                 if (beg instanceof HibernateProxy) {
                     Hibernate.initialize(beg);
                 }
                 Mission m = beg.getMission();
 
-//                log.info("mission: "+m);
                 // insert mission data
                 MissionDto missionDto;
-                if(m!=null){
+                if(m!=null){ // 조르기는 있어도 미션이 없을 수도 있기 때문에 예외처리
                     missionDto = new MissionDto(
                             m.getMissionId(),
                             m.getMissionStatus(),
@@ -180,11 +185,11 @@ public class MissionService {
                         beg.getCreateAt(),
                         beg.getBegAccept()
                 );
+
                 missionListResponseDtos.add(new MissionListResponseDto(begDto,missionDto));
 
             }
         }
-//        log.info("relationSize: " + relations.size());
         return missionListResponseDtos;
     }
 }
