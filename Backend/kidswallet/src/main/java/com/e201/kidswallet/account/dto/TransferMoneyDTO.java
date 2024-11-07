@@ -9,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class TransferMoneyDTO {
     String fAccountId;
-    String tAcoountId;
+    String tAccountId;
     String message;
     int amount;
 
