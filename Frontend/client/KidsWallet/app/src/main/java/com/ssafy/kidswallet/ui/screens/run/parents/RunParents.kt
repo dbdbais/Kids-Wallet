@@ -79,7 +79,7 @@ fun RunParentsScreen(navController: NavController) {
 
         Text(
             text = "목표 세우기",
-            style = FontSizes.h24,
+            style = FontSizes.h32,
             fontWeight = FontWeight.Bold
         )
 
@@ -120,7 +120,7 @@ fun RunParentsScreen(navController: NavController) {
                             Text(
                                 text = "목표를 세워봐요",
                                 style = FontSizes.h16,
-                                color = Color(0xFF8C8595),
+                                color = Color(0x808C8595),
                                 fontWeight = FontWeight.Bold
                             )
                         },
@@ -198,15 +198,15 @@ fun RunParentsScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "사진을 첨부할 수 있어요",
-                style = FontSizes.h16,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             if (imageUri == null) {
+                Text(
+                    text = "사진을 첨부할 수 있어요",
+                    style = FontSizes.h16,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 Image(
                     painter = painterResource(id = R.drawable.icon_plus2),
                     contentDescription = "사진 첨부",
