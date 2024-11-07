@@ -1,6 +1,6 @@
 package com.e201.kidswallet.user.entity;
 
-
+import com.e201.kidswallet.mission.entity.Beg;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,4 +38,13 @@ public class Relation {
     @OneToMany()
     private List<TogetherRun> togetherRunList = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "relation",cascade = CascadeType.ALL)
+    private List<Beg> Begs;
+
+    @Override
+    public String toString() {
+        return "Relation{" +
+                "relationId=" + relationId +
+                '}';
+    }
 }

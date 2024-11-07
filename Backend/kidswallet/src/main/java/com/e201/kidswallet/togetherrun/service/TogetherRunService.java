@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,7 +56,7 @@ public class TogetherRunService {
 
         User user = userRepository.findById(togetherRunRegisterRequestDto.getChildId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
-        List<Relation> relationList = user.getChildsRelations();
+        List<Relation> relationList = user.getChildrenRelations();
         Relation relation = null;
         for (Relation r : relationList) {
             System.out.println("relation: " + r);

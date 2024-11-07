@@ -1,5 +1,5 @@
 // package com.e201.kidswallet.mission;
-
+//
 // import com.e201.kidswallet.AbstractTest;
 // import com.e201.kidswallet.common.exception.StatusCode;
 // import com.e201.kidswallet.mission.dto.*;
@@ -12,45 +12,50 @@
 // import org.junit.jupiter.api.Order;
 // import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.TestMethodOrder;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.dao.DataIntegrityViolationException;
-
+//
 // import java.io.File;
 // import java.io.IOException;
 // import java.nio.file.Files;
 // import java.time.LocalDateTime;
 // import java.util.Base64;
+// import java.util.List;
+// import java.util.Map;
 // import java.util.NoSuchElementException;
-
+//
 // import static org.junit.jupiter.api.Assertions.assertEquals;
-
+//
 // @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 // public class MissionTest extends AbstractTest {
+//     private static final Logger log = LoggerFactory.getLogger(MissionTest.class);
 //     @Autowired
 //     private MissionService service;
 //     @Autowired
 //     private MissionRepository missionRepository;
-
+//
 //     @Test
 //     @Order(1)
 // //    @Transactional
 //     public void createBegTest(){
-//         BeggingRequestDto begRequestDto = new BeggingRequestDto(1,"Create Beg Test",1000);
+//         BeggingRequestDto begRequestDto = new BeggingRequestDto(2,1,"Create Beg Test",1000);
 //         assertEquals(StatusCode.SUCCESS, service.begging(begRequestDto)); // 결과 검증
 //     }
-
+//
 //     @Test
 //     @Order(2)
 //     public void begAccept(){
 //         BegAcceptRequestDto requestDto = new BegAcceptRequestDto(1,true);
 //         assertEquals(StatusCode.SUCCESS, service.begAccept(requestDto));
-
+//
 //     }
-
+//
 //     //해결:OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
 //     //https://hyunrian.tistory.com/76
 //     // run -> edit configurations -> junit -> build and run에서 -Xshare:off 추가
-
+//
 //     @Test
 //     @Order(3)
 //     public void assignMission(){
@@ -64,14 +69,14 @@
 //             assertEquals(DataIntegrityViolationException.class,e.getClass());
 //         }
 //     }
-
+//
 //     @Test
 //     public void uploadCompleteImage(){
 //         String base64Image=encodingBase64("C:\\Users\\SSAFY\\Pictures\\jenkins-svgrepo-com.png");
 //         MissionCompleteRequestDto missionCompleteRequestDto = new MissionCompleteRequestDto(1,base64Image);
 //         assertEquals(StatusCode.SUCCESS,service.uploadCompleteImage(missionCompleteRequestDto));
 //     }
-
+//
 //     public String encodingBase64(String imgUrl){
 //         try {
 //             // 이미지 파일 경로
@@ -85,17 +90,18 @@
 //             return null;
 //         }
 //     }
-
+//
 //     @Test
 //     public void completeMissionCheck(){
 //         MissionCompleteCheckRequestDto requestDto = new MissionCompleteCheckRequestDto(1L,false);
 //         StatusCode result = service.missionCompleteCheck(requestDto);
 //         System.out.println(missionRepository.findById(1L).get().getMissionStatus());
-
+//
 //         assertEquals(StatusCode.SUCCESS,result);
-
-
-
-
+//
+//     }
+//     @Test
+//     public void getBegMissionList(){
+//         assertEquals(StatusCode.SUCCESS,service.getBegMissionList(1,0,0));
 //     }
 // }

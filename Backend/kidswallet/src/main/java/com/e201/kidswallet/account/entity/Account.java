@@ -38,6 +38,7 @@ public class Account {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @Builder.Default
     @OneToMany
     @JoinTable(
             name = "account_transaction",
