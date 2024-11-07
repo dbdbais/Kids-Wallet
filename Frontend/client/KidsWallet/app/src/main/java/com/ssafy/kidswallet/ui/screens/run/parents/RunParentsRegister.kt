@@ -5,9 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
@@ -72,7 +68,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
                     // 금액 텍스트
                     Text(
-                        text = "25,000원 달리기",
+                        text = "${NumberUtils.formatNumberWithCommas(25000)}원 달리기",
                         color = Color(0xFF6DCEF5),
                         style = FontSizes.h24,
                         fontWeight = FontWeight.Bold,
@@ -99,14 +95,13 @@ fun RunParentsRegisterScreen(navController: NavController) {
             }
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
         // Members list
         Column(modifier = Modifier.fillMaxWidth()) {
             MemberRow(
                 name = "나",
-                amount = "목표 12,500원",
+                amount = NumberUtils.formatNumberWithCommas(12500) + "원",
                 imageResId = R.drawable.character_me // Replace with your image resource
             )
 
@@ -114,7 +109,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
             MemberRow(
                 name = "응애재훈",
-                amount = "목표 12,500원",
+                amount = NumberUtils.formatNumberWithCommas(12500) + "원",
                 imageResId = R.drawable.character_run_member // Replace with your image resource
             )
         }

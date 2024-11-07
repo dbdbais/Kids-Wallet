@@ -138,7 +138,7 @@ fun RunScreen(navController: NavController) {
                             .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
                             .padding(16.dp)
                             .clickable {
-                            navController.navigate("runParents")
+                                navController.navigate("runParents")
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -176,8 +176,8 @@ fun RunScreen(navController: NavController) {
                             .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
-                            navController.navigate("runParentsDetail")
-                        },
+                                navController.navigate("runParentsDetail")
+                            },
                         contentAlignment = Alignment.TopStart // 텍스트는 상단 좌측에 정렬
                     ) {
                         Column(
@@ -208,9 +208,9 @@ fun RunScreen(navController: NavController) {
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            // 지금까지 모은 금액
+                            // 지금까지 모은 금액 (포맷팅 적용)
                             Text(
-                                text = "500,000원",
+                                text = "${NumberUtils.formatNumberWithCommas(500000)}원",
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Start,
@@ -239,7 +239,6 @@ fun RunScreen(navController: NavController) {
         )
     }
 }
-
 
 @Preview(
     showBackground = true,

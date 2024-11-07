@@ -40,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 
-
 @Composable
 fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmountViewModel = viewModel()) {
     val amount by viewModel.amount.collectAsState()
@@ -121,7 +120,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = "12500",
+                initialAmount = NumberUtils.formatNumberWithCommas(12500),
                 onAmountChange = { newAmount -> },
                 isEditing = isEditingFirstAmount,
                 onEditingChange = { isEditingFirstAmount = it }
@@ -156,7 +155,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = "12500",
+                initialAmount = NumberUtils.formatNumberWithCommas(12500),
                 onAmountChange = { newAmount -> },
                 isEditing = isEditingSecondAmount,
                 onEditingChange = { isEditingSecondAmount = it }
