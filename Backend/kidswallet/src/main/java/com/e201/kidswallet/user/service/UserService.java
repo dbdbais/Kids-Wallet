@@ -4,12 +4,16 @@ import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.user.dto.RegisterRequestDTO;
 import com.e201.kidswallet.user.dto.RelationRequestDTO;
 import com.e201.kidswallet.user.dto.UserLoginDTO;
+import com.e201.kidswallet.user.dto.UserLoginResponseDTO;
 import com.e201.kidswallet.user.entity.Relation;
 import com.e201.kidswallet.user.entity.User;
 import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -34,7 +38,6 @@ public class UserService {
         return bCryptPasswordEncoder.matches(password, user.getUserPassword());
     }
 
-
     public StatusCode registerUser(RegisterRequestDTO registerRequestDTO) {
         User rUser = User.builder()
                 .userName(registerRequestDTO.getUserName())
@@ -51,18 +54,20 @@ public class UserService {
         return StatusCode.SUCCESS;
     }
 
-    public StatusCode loginUser(UserLoginDTO userLoginDTO){
+    public UserLoginResponseDTO loginUser(UserLoginDTO userLoginDTO){
         User sUser = getUserByName(userLoginDTO.getUserName());
 
         if(sUser == null){
-            return StatusCode.NO_USER;
+            return new UserLoginResponseDTO(StatusCode.NO_USER);
         }
         else{
-            if(isPasswordCorrect(sUser, userLoginDTO.getPassword())){
-                return StatusCode.SUCCESS;
+            if(isPasswordCorrect(sUser, userLoginDTO.getUserPassword())){
+                Map<String, Long> responseMap = new HashMap<>();
+                responseMap.put("userId", sUser.getUserId());
+                return new UserLoginResponseDTO(StatusCode.SUCCESS,responseMap);
             }
             else{
-                return StatusCode.WRONG_PW;
+                return new UserLoginResponseDTO(StatusCode.WRONG_PW);
             }
         }
     }
