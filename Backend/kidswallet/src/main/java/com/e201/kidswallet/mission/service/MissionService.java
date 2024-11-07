@@ -45,6 +45,11 @@ public class MissionService {
 
         //사용자 ID를 사용하여 relation엔티티 조회
         List<Relation> relations =userRepository.findById(beggingRequestDto.getToUserId()).get().getParentsRelations();
+
+        //부모가 없을 때 == 아무런 관계가 없을 때 예외 처리
+        if(relations == null || relations.isEmpty())
+            return StatusCode.NO_PARENTS;
+
         Relation relation=null;
         for(Relation r:relations){
             if(r.getParent().getUserId() == beggingRequestDto.getToUserId()) {
@@ -52,8 +57,6 @@ public class MissionService {
                 break;
             }
         }
-
-        //TODO: 부모 없으면 예외처리
 
         Beg beg =Beg.builder()
                         .begContent(beggingRequestDto.getBeggingMessage())
