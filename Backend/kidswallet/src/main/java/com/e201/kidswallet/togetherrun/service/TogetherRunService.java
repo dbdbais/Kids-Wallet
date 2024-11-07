@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,12 +55,13 @@ public class TogetherRunService {
     public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto)
             throws IOException {
 
-        User user = userRepository.findById(togetherRunRegisterRequestDto.getParentsId())
+        User user = userRepository.findById(togetherRunRegisterRequestDto.getChildId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
         List<Relation> relationList = user.getChildsRelations();
         Relation relation = null;
         for (Relation r : relationList) {
-            if (r.getChild().getUserId() == togetherRunRegisterRequestDto.getChildId()) {
+            System.out.println("relation: " + r);
+            if (r.getParent().getUserId() == togetherRunRegisterRequestDto.getParentsId()) {
                 relation = r;
                 break;
             }
@@ -74,6 +76,7 @@ public class TogetherRunService {
 
         TogetherRun togetherRun = TogetherRun.builder()
                 .relation(relation)
+                .targetTitle(togetherRunRegisterRequestDto.getTargetTitle())
                 .targetImage(imagePath)
                 .parentsAccount("123")
                 .parentsContribute(togetherRunRegisterRequestDto.getParentsContribute())
@@ -104,12 +107,36 @@ public class TogetherRunService {
             System.out.println("error: " + e.getMessage());
             return StatusCode.BAD_REQUEST;
         }
-        // 적금 생성
-        // 반환
+        SavingContract savingContract = null;
+        if (isAccept == TogetherRunStatus.ACCEPTED) {
+            try {
+                savingContract = SavingContract.builder()
+                        .user(userRepository.findById(togetherRun.getRelation().getParent().getUserId())
+                                .orElseThrow(() -> new IllegalArgumentException("Invalid userId")))
+                        .saving(savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId"))) //
+                        .depositDay((short)togetherRun.getCreatedAt().toLocalDate().getDayOfWeek().getValue())
+                        .expiredAt(togetherRun.getTargetDate())
+                        .build();
+                savingContractRepository.save(savingContract);
+            } catch (Exception e) {
+                System.out.println("error: " + e.getMessage());
+                return StatusCode.BAD_REQUEST;
+            }
+        }
+
+        try {
+            togetherRun.setSavingContract(savingContract);
+            togetherRunRepository.save(togetherRun);
+        } catch (Exception e) {
+            System.out.println("error: " + e.getMessage());
+            return StatusCode.BAD_REQUEST;
+        }
+
         return StatusCode.SUCCESS;
     }
 
     public List<TogetherRunDataResponseDto> togetherRunList(Long userId) {
+        // targetImage 추가
         List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = togetherRunRepository.findTogetherRunInfoByUserId(userId);
         return togetherRunDataResponseDtoList;
     }
@@ -124,7 +151,7 @@ public class TogetherRunService {
                     .userRealName(payment.getUser().getUserRealName())
                     .currentAmount(payment.getSavingContract().getCurrentAmount())
                     .depositAmount(payment.getDepositAmount())
-                    .depositedAt(payment.getDepositDate().atStartOfDay())
+                    .depositedAt(payment.getDepositDate())
                     .build();
             togetherRunDetailResponseDtoList.add(togetherRunDetailResponseDto);
         }
@@ -134,13 +161,12 @@ public class TogetherRunService {
     public TogetherRunCancelResponseDto togetherRunDelete(Long savingContractId) {
         SavingContract savingContract = savingContractRepository.findById(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
         savingContract.setStatus(SavingContractStatus.CANCELED);
-        // 종료 날짜 입력
+        savingContract.setDeletedAt(LocalDateTime.now());
         TogetherRunCancelResponseDto togetherRunCancelResponseDto = null;
         try {
             savingContractRepository.save(savingContract);
-            // 해지액 계산
             togetherRunCancelResponseDto = TogetherRunCancelResponseDto.builder()
-                    .cancelAmount(BigDecimal.valueOf(123))
+                    .cancelAmount(savingContract.getCurrentInterestAmount())
                     .build();
             return togetherRunCancelResponseDto;
         } catch (Exception e) {

@@ -2,18 +2,24 @@ package com.e201.kidswallet.togetherrun.entity;
 
 import com.e201.kidswallet.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Data
-@EnableJpaAuditing
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class SavingContract {
 
     @Id
@@ -32,12 +38,15 @@ public class SavingContract {
     @Column(name = "deposit_day")
     private short depositDay;
 
+    @Builder.Default()
     @Column(name="current_amount")
-    private BigDecimal currentAmount;
+    private BigDecimal currentAmount = BigDecimal.ZERO;
 
+    @Builder.Default()
     @Column(name="current_interest_amount")
-    private BigDecimal currentInterestAmount;
+    private BigDecimal currentInterestAmount = BigDecimal.ZERO;
 
+    @Builder.Default()
     @Column(name="status")
     private SavingContractStatus status = SavingContractStatus.PROCEED;
 
@@ -53,6 +62,7 @@ public class SavingContract {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "savingContract", cascade = CascadeType.ALL)
     private List<SavingPayment> savingPayments = new ArrayList<>();
+
 }
 
 

@@ -7,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,7 +31,7 @@ public class SavingPayment {
     private BigDecimal depositAmount;
 
     @Column(name = "deposit_date")
-    private LocalDate depositDate;
+    private LocalDateTime depositDate;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

@@ -14,6 +14,7 @@ public class TogetherRunDataResponseDto {
     private long savingContractId;
     private String childRealName;
     private String parentsRealName;
+    private String targetTitle;
     private BigDecimal targetAmount;
     private BigDecimal currentAmount;
     private BigDecimal currentInterestAmount;

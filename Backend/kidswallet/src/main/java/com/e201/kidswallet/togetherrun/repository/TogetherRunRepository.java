@@ -14,6 +14,7 @@ public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> 
             "sc.savingContractId, " +
             "childUser.userRealName, " +
             "parentUser.userRealName, " +
+            "tr.targetTitle, " +
             "tr.targetAmount, " +
             "sc.currentAmount, " +
             "sc.currentInterestAmount, " +

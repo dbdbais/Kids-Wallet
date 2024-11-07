@@ -2,20 +2,17 @@ package com.e201.kidswallet.togetherrun.entity;
 
 import com.e201.kidswallet.user.entity.Relation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Builder
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -32,6 +29,9 @@ public class TogetherRun {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "relation_id", referencedColumnName = "relation_id")
     private Relation relation;
+
+    @Column(name = "target_title")
+    private String targetTitle;
 
     @Column(name = "target_image")
     private String targetImage;
@@ -52,7 +52,7 @@ public class TogetherRun {
     private BigDecimal targetAmount;
 
     @Column(name = "target_date")
-    private String targetDate;
+    private LocalDateTime targetDate;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false)

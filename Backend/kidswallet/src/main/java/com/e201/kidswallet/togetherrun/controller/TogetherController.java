@@ -2,11 +2,11 @@ package com.e201.kidswallet.togetherrun.controller;
 
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
-import com.e201.kidswallet.togetherrun.entity.TogetherRunStatus;
-import com.e201.kidswallet.togetherrun.dto.TogetherRunAnswerRequestDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
+import com.e201.kidswallet.togetherrun.entity.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.service.TogetherRunService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +18,12 @@ import java.io.IOException;
 public class TogetherController {
 
     private final TogetherRunService togetherRunService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    public TogetherController(TogetherRunService togetherRunService) {
+    @Autowired
+    public TogetherController(TogetherRunService togetherRunService, ObjectMapper objectMapper) {
         this.togetherRunService = togetherRunService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping("/register")
