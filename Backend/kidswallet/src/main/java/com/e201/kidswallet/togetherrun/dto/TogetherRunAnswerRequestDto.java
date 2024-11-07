@@ -4,7 +4,5 @@ import lombok.Data;
 
 @Data
 public class TogetherRunAnswerRequestDto {
-    private Long userId;
-    private Long togetherRunId;
-    private boolean isAccept;
+    private long userId;
 }

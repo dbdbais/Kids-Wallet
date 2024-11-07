@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class TogetherRunCancelRequestDto {
-    private Long userId;
+    private long userId;
 }

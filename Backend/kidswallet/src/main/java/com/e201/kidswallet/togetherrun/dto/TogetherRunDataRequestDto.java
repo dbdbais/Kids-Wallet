@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class TogetherRunDataRequestDto {
-    private Long userId;
+    private long userId;
 }

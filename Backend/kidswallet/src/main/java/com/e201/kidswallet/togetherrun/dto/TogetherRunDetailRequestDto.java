@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class TogetherRunDetailRequestDto {
-    private Long savingContractId;
+    private long savingContractId;
 }

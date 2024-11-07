@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,13 +16,14 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EnableJpaAuditing
 @Table(name = "saving")
 public class Saving {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "saving_id")
-    private Long savingId;
+    private long savingId;
 
     @Column(name = "saving_name")
     private String savingName;
@@ -42,7 +44,7 @@ public class Saving {
     private BigDecimal interestRate;
 
     @CreatedDate
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.ORDINAL)
