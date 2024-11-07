@@ -115,7 +115,7 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
             }
         }
 
-        Spacer(modifier = Modifier.height(75.dp))
+        Spacer(modifier = Modifier.height(80.dp))
 
         BlueButton(
             onClick = {

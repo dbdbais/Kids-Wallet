@@ -67,7 +67,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
         Spacer(modifier = Modifier.height(50.dp))
 
         Text(
-            text = "목표 금액을 입력해 주세요",
+            text = "목표 금액 설정",
             style = FontSizes.h32,
             fontWeight = FontWeight.Bold
         )
@@ -84,7 +84,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
 
         // 같이 달리기 멤버
         Text(
-            text = "같이 달리기 멤버",
+            text = " ",
             style = FontSizes.h20,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
@@ -121,7 +121,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = "25000",
+                initialAmount = "12500",
                 onAmountChange = { newAmount -> },
                 isEditing = isEditingFirstAmount,
                 onEditingChange = { isEditingFirstAmount = it }
@@ -156,7 +156,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = "25000",
+                initialAmount = "12500",
                 onAmountChange = { newAmount -> },
                 isEditing = isEditingSecondAmount,
                 onEditingChange = { isEditingSecondAmount = it }
@@ -178,7 +178,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
 
         // 다음 버튼
         BlueButton(
-            onClick = { navController.navigate("mainPage") },
+            onClick = { navController.navigate("runParentsRegister") },
             text = "다음",
             modifier = Modifier
                 .width(400.dp)
