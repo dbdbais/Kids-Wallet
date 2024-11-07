@@ -37,10 +37,9 @@ public class Beg {
     @Column(name="beg_accept",nullable = true)
     private Boolean begAccept=null;
 
-//    TODO: relation 작업 완료 되면 주석해제
-//    @ManyToOne
-//    @JoinColumn(name="relation_id",referencedColumnName = "relation_id")
-//    private Relation relation;
+    @ManyToOne
+    @JoinColumn(name="relation_id",referencedColumnName = "relation_id")
+    private Relation relation;
 
     @OneToOne(mappedBy = "beg")
     private Mission mission;
