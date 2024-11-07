@@ -59,7 +59,6 @@ public class TogetherRunService {
         List<Relation> relationList = user.getChildrenRelations();
         Relation relation = null;
         for (Relation r : relationList) {
-            System.out.println("relation: " + r);
             if (r.getParent().getUserId() == togetherRunRegisterRequestDto.getParentsId()) {
                 relation = r;
                 break;
@@ -92,7 +91,7 @@ public class TogetherRunService {
             togetherRunRepository.save(togetherRun);
             return StatusCode.SUCCESS;
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+
             return StatusCode.BAD_REQUEST;
         }
     }
@@ -104,7 +103,6 @@ public class TogetherRunService {
         try {
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
             return StatusCode.BAD_REQUEST;
         }
         SavingContract savingContract = null;
@@ -119,7 +117,7 @@ public class TogetherRunService {
                         .build();
                 savingContractRepository.save(savingContract);
             } catch (Exception e) {
-                System.out.println("error: " + e.getMessage());
+
                 return StatusCode.BAD_REQUEST;
             }
         }
@@ -128,7 +126,7 @@ public class TogetherRunService {
             togetherRun.setSavingContract(savingContract);
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+
             return StatusCode.BAD_REQUEST;
         }
 
@@ -170,7 +168,7 @@ public class TogetherRunService {
                     .build();
             return togetherRunCancelResponseDto;
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+
             return togetherRunCancelResponseDto;
         }
     }
