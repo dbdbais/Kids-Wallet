@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.begging
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +31,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,10 +57,14 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.PersonViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.data.model.PersonModel
+import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.viewmodel.BeggingListViewModel
 
 @Composable
-fun BeggingMoneyScreen(navController: NavController) {
+fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel = viewModel()) {
+    val selectedPerson by viewModel.selectedPerson.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +88,9 @@ fun BeggingMoneyScreen(navController: NavController) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                PeopleSelect()
+                PeopleSelect(onPersonSelected = { person ->
+                    viewModel.setSelectedPerson(person)
+                })
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
@@ -91,17 +102,17 @@ fun BeggingMoneyScreen(navController: NavController) {
                             clip = false
                         )
                 ) {
-                    Button(
-                        onClick = { /* TODO */ },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF6DCEF5), // 버튼 배경색 설정
-                            contentColor = Color.White // 텍스트 색상 설정
-                        ),
-                        shape = RoundedCornerShape(24.dp) // 버튼 모양과 그림자의 모양을 일치
-                    ) {
-                        Text("선택하기")
-                    }
+                    BlueButton(
+                        onClick = {
+                            selectedPerson?.let { person ->
+                                navController.navigate("beggingRequest?name=${person.name}")
+                            }
+                        },
+                        modifier = Modifier.width(400.dp), // 원하는 너비 설정
+                        height = 50,
+                        text = "선택하기",
+                        elevation = 0
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(48.dp))
@@ -110,7 +121,6 @@ fun BeggingMoneyScreen(navController: NavController) {
                     fontWeight = FontWeight.Black,
                     style = FontSizes.h32
                 )
-                Spacer(modifier = Modifier.height(32.dp))
                 RecentlyList()
             }
         }
@@ -121,17 +131,21 @@ fun BeggingMoneyScreen(navController: NavController) {
 }
 
 @Composable
-fun PeopleSelect(viewModel: PersonViewModel = viewModel()) {
+fun PeopleSelect(
+    viewModel: PersonViewModel = viewModel(),
+    onPersonSelected: (PersonModel) -> Unit
+) {
     LaunchedEffect(Unit) {
         viewModel.fetchPeople()
     }
 
     val peopleList = viewModel.peopleList.collectAsState().value
+    var selectedPerson by remember { mutableStateOf<PersonModel?>(null) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp)
+            .height(200.dp)
             .border(3.dp, Color(0xFFB2EBF2), RoundedCornerShape(16.dp))
             .border(6.dp, Color(0xFF99DDF8).copy(alpha = 0.3f), RoundedCornerShape(16.dp))
             .border(9.dp, Color(0xFF99DDF8).copy(alpha = 0.1f), RoundedCornerShape(16.dp))
@@ -203,7 +217,15 @@ fun PeopleSelect(viewModel: PersonViewModel = viewModel()) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .background(
+                                    if (selectedPerson == person) Color(0xFFE3F2FD) else Color.Transparent,
+                                    shape = RoundedCornerShape(80.dp)
+                                )
                                 .padding(vertical = 8.dp)
+                                .clickable {
+                                    selectedPerson = person
+                                    onPersonSelected(person)
+                                }
                         ){
                             Row(
                                 modifier = Modifier
@@ -264,7 +286,7 @@ fun RecentlyList(viewModel: BeggingListViewModel = viewModel()) {
                 painter = painterResource(id = R.drawable.empty), // 이미지 리소스
                 contentDescription = "Empty Icon",
                 modifier = Modifier
-                    .size(200.dp)
+                    .size(170.dp)
                     .graphicsLayer(alpha = 0.8f) // 투명도 조절
             )
         }

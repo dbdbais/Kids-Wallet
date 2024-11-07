@@ -44,6 +44,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import java.util.Calendar
 
@@ -192,9 +193,9 @@ fun SignUp(navController: NavController) {
             GenderSelection(selectedGender) { selectedGender = it }
             RoleSelection(selectedRole) { selectedRole = it }
 
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
-            GradientButton(
+            BlueButton(
                 onClick = {
                     // 모든 필드가 유효한지 검증
                     idError = id.isEmpty()
@@ -215,32 +216,11 @@ fun SignUp(navController: NavController) {
                         Toast.makeText(context, "모든 필드를 정확히 입력해 주세요.", Toast.LENGTH_SHORT).show()
                     }
                 },
+                modifier = Modifier.width(400.dp),
+                height = 40,
                 text = "확인"
             )
         }
-    }
-}
-
-@Composable
-fun GradientButton(onClick: () -> Unit, text: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(Color(0xFF99DDF8), Color(0xFF6DCEF5))
-                ),
-                shape = RoundedCornerShape(15.dp) // 모서리 반경 설정
-            )
-            .clickable { onClick() }
-            .padding(vertical = 10.dp), // 버튼 높이 조정
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = Color.White,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
     }
 }
 
