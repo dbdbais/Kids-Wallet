@@ -1,14 +1,15 @@
 package com.e201.kidswallet.user.entity;
 
 import com.e201.kidswallet.mission.entity.Beg;
+import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,6 +34,9 @@ public class Relation {
     @ManyToOne
     @JoinColumn(name = "children_id", referencedColumnName = "user_id")
     private User child;
+
+    @OneToMany()
+    private List<TogetherRun> togetherRunList = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "relation",cascade = CascadeType.ALL)
     private List<Beg> Begs;
