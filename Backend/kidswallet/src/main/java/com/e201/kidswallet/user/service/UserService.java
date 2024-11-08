@@ -1,5 +1,7 @@
 package com.e201.kidswallet.user.service;
 
+import com.e201.kidswallet.account.dto.AccountInfoResponseDTO;
+import com.e201.kidswallet.account.entity.Account;
 import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.user.dto.RegisterRequestDTO;
 import com.e201.kidswallet.user.dto.RelationRequestDTO;
@@ -12,8 +14,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.swing.text.html.Option;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,6 +73,22 @@ public class UserService {
                 return new UserLoginResponseDTO(StatusCode.WRONG_PW);
             }
         }
+    }
+
+    public List<AccountInfoResponseDTO> getAccountInfo(Long id){
+        Optional<User> sUser = userRepository.findById(id);
+
+        if(sUser.isEmpty()){
+            return null;
+        }
+
+        return sUser.get().getAccounts().stream()
+                .map(a -> AccountInfoResponseDTO.builder()
+                                .accountId(a.getAccountId())
+                                .balance(a.getBalance())
+                                .createdAt(a.getCreatedAt())
+                                .build()).toList();
+
     }
 
     public StatusCode setRelation(RelationRequestDTO relationRequestDTO){
