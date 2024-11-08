@@ -140,7 +140,8 @@ fun MyWalletScreen(navController: NavController) {
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
-                                textAlign = TextAlign.Start
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
                             )
                             Image(
                                 painter = painterResource(id = R.drawable.icon_next_white),
@@ -154,7 +155,7 @@ fun MyWalletScreen(navController: NavController) {
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 textAlign = TextAlign.Start,
-                                modifier = Modifier.padding(start = 20.dp, top = 8.dp, bottom = 8.dp)
+                                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
                             )
                             Image(
                                 painter = painterResource(id = R.drawable.icon_next_white),
