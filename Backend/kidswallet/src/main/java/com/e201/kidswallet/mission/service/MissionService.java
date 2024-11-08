@@ -114,7 +114,7 @@ public class MissionService {
         log.info("imageBytes.length > MAX_LONGBLOB_SIZE: " + (imageBytes.length > MAX_LONGBLOB_SIZE));
 
         //image update
-        missionRepository.uploadCompleteImage(imageBytes, missionId);
+        missionRepository.uploadCompleteImage(imageBytes, missionId,Status.submit.toString());
         return StatusCode.SUCCESS;
 
     }
