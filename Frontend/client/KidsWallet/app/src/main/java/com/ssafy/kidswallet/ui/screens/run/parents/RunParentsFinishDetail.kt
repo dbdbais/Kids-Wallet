@@ -35,10 +35,14 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
+import com.ssafy.kidswallet.ui.components.SuccessBadge
 import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
-fun RunParentsDetailScreen(navController: NavController) {
+fun RunParentsFinishDetailScreen(navController: NavController) {
+    val collectedAmount = 25000 // You can change this value dynamically as needed
+    val formattedAmount = NumberUtils.formatNumberWithCommas(collectedAmount)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,25 +82,23 @@ fun RunParentsDetailScreen(navController: NavController) {
                             .align(Alignment.TopStart) // 좌측 상단에 정렬
                             .padding(8.dp) // 추가 패딩 적용 (필요 시)
                     ) {
-                        DdayBadge(remainingDays = 7)
+                        SuccessBadge(successOrFail = "성공")
                     }
 
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-
                         // 목표 이미지와 금액 정보
                         Image(
                             painter = painterResource(id = R.drawable.icon_labtop),
                             contentDescription = "목표 이미지",
                             modifier = Modifier
                                 .size(250.dp)
-//                                .padding(bottom = 8.dp)
                         )
 
                         Text(
-                            text = "25000원을 모았어요!",
+                            text = formattedAmount + "원을 모았어요!",
                             style = FontSizes.h20,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
@@ -125,7 +127,6 @@ fun RunParentsDetailScreen(navController: NavController) {
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
-
                 }
             }
         }
@@ -159,14 +160,11 @@ fun RunParentsDetailScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 그만하기 버튼
-        LightGrayButton(
+        BlueButton(
             onClick = {
-                navController.navigate("run") {
-                    popUpTo(0) { inclusive = true } // 모든 스택 제거
-                }
+                navController.navigate("runParentsFinish")
             },
-            text = "그만하기",
+            text = "뒤로가기",
             modifier = Modifier
                 .width(400.dp)
                 .padding(start = 16.dp, end = 16.dp)
@@ -176,62 +174,12 @@ fun RunParentsDetailScreen(navController: NavController) {
 }
 
 
-
-
-
-@Composable
-fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResId: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(
-                painter = painterResource(id = imageResId),
-                contentDescription = "$name 이미지",
-                modifier = Modifier.size(55.dp)
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = name,
-                style = FontSizes.h16,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Column(horizontalAlignment = Alignment.End) {
-            // current amount
-            Text(
-                text = "${NumberUtils.formatNumberWithCommas(currentAmount)}원",
-                style = FontSizes.h16,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF6DCEF5)
-            )
-
-            // goal amount
-            Text(
-                text = "목표 ${NumberUtils.formatNumberWithCommas(goalAmount)}원",
-                style = FontSizes.h16,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF8C8595)
-            )
-        }
-    }
-}
-
-
-
 @Preview(
     showBackground = true,
     device = "spec:width=1440px,height=3120px,dpi=560",
     showSystemUi = true
 )
 @Composable
-fun RunParentsDetailScreenPreview() {
-    RunParentsDetailScreen(navController = rememberNavController())
+fun RunParentsFinishDetailScreenPreview() {
+    RunParentsFinishDetailScreen(navController = rememberNavController())
 }
