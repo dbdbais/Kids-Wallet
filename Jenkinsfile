@@ -29,25 +29,6 @@ pipeline {
                 }
             }
         }
-
-         stage("Copy index.html"){
-             steps {
-                withCredentials([file(credentialsId: 'HTMLFILE', variable: 'html')]) {
-        	        script {
-                           // static 디렉토리가 없으면 생성
-                        sh '''
-                            if [ ! -d "${PROJECT_DIR}/src/main/resources/static" ]; then
-                            mkdir -p ${PROJECT_DIR}/src/main/resources/static
-                            fi
-                            '''
-                        sh 'chmod +r $html'
-                        echo 'html file location: $html'
-        	            sh 'rm -f ${PROJECT_DIR}/src/main/resources/static/index.html'
-                        sh 'cp $html ${PROJECT_DIR}/src/main/resources/static/index.html'
-                    }
-                }
-            }
-        }
         
       stage('Build') {
             steps {
