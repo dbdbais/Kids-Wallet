@@ -81,7 +81,7 @@
 <script>
     function downloadFile() {
           // 파일 다운로드 API 호출
-          fetch('http://localhost:7000/api/v1/download/notepad')  // 요청 URL을 서버의 경로로 변경
+          fetch('http://app:7000/api/v1/download/notepad')  // 요청 URL을 서버의 경로로 변경
               .then(response => {
                   if (!response.ok) {
                       throw new Error('Network response was not ok');
