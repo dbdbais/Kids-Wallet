@@ -120,7 +120,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = NumberUtils.formatNumberWithCommas(12500),
+                initialAmount = "12500",
                 onAmountChange = { newAmount -> },
                 isEditing = isEditingFirstAmount,
                 onEditingChange = { isEditingFirstAmount = it }
@@ -155,7 +155,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = NumberUtils.formatNumberWithCommas(12500),
+                initialAmount = "12500",
                 onAmountChange = { newAmount -> },
                 isEditing = isEditingSecondAmount,
                 onEditingChange = { isEditingSecondAmount = it }
