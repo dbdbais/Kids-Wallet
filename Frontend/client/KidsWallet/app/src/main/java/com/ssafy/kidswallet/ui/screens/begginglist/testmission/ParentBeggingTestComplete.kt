@@ -1,4 +1,4 @@
-package com.ssafy.kidswallet.ui.screens.begginglist.assignmission
+package com.ssafy.kidswallet.ui.screens.begginglist.testmission
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,11 +28,10 @@ import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
-import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
-fun ParentBeggingRequestCheckScreen(
+fun ParentBeggingTestCompleteScreen(
     navController: NavController,
     name: String?,
     begMoney: Int,
@@ -65,7 +63,7 @@ fun ParentBeggingRequestCheckScreen(
                     color = Color(0xFF6DCEF5)
                 )
                 Text(
-                    text = "님이",
+                    text = "님에게",
                     style = FontSizes.h24,
                     fontWeight = FontWeight.Black
                 )
@@ -80,7 +78,7 @@ fun ParentBeggingRequestCheckScreen(
                     color = Color(0xFF6DCEF5)
                 )
                 Text(
-                    text = "원을 요청했어요",
+                    text = "원을 보냈어요",
                     style = FontSizes.h24,
                     fontWeight = FontWeight.Black
                 )
@@ -161,23 +159,13 @@ fun ParentBeggingRequestCheckScreen(
                     .padding(start = 16.dp, end = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
-                LightGrayButton(
-                    onClick = {
-                        navController.navigate("parentBeggingWaiting")
-                    },
-                    text = "거절하기",
-                    modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
-                    height = 50,
-                    elevation = 4
-                )
                 BlueButton(
                     onClick = {
-                        navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}")
+                        navController.navigate("mainPage")
                     },
-                    text = "미션주기",
+                    text = "돌아가기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
+                        .width(400.dp), // 원하는 너비 설정
                     height = 50,
                     elevation = 4
                 )

@@ -32,6 +32,7 @@ import com.ssafy.kidswallet.ui.screens.begginglist.assignmission.ParentBeggingCo
 import com.ssafy.kidswallet.ui.screens.begginglist.ParentBeggingCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begginglist.assignmission.ParentBeggingRequestCheckScreen
 import com.ssafy.kidswallet.ui.screens.begginglist.ParentBeggingWaitingScreen
+import com.ssafy.kidswallet.ui.screens.begginglist.testmission.ParentBeggingTestCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begginglist.testmission.ParentBeggingTestMissionScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
@@ -185,6 +186,14 @@ fun MainScreen(navController: NavHostController) {
             val missionContent = backStackEntry.arguments?.getString("missionContent") ?: ""
             val completionPhoto = backStackEntry.arguments?.getString("completionPhoto") ?: ""
             ParentBeggingTestMissionScreen(navController, name, begMoney, begContent, missionContent, completionPhoto)
+        }
+
+        composable("parentBeggingCompleteMission/{name}/{begMoney}/{begContent}") { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val begMoneyString = backStackEntry.arguments?.getString("begMoney") ?: "0"
+            val begMoney = begMoneyString.toIntOrNull() ?: 0
+            val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
+            ParentBeggingTestCompleteScreen(navController, name, begMoney, begContent)
         }
 
         composable("quiz") { QuizScreen(navController) }
