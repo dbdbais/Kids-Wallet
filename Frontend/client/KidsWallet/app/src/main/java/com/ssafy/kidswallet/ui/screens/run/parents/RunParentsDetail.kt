@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -29,6 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.ui.components.BlueButton
+import com.ssafy.kidswallet.ui.components.DdayBadge
+import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
@@ -36,22 +41,14 @@ fun RunParentsDetailScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
     ) {
         Top(title = "같이 달리기", navController = navController)
-        // 상단 타이틀
-        Text(
-            text = "같이 달리기",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
 
         // 목표 이미지 및 정보 박스
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFE0F7FA), RoundedCornerShape(16.dp))
+                .background(Color(0xFF6DCEF5))
                 .padding(16.dp)
         ) {
             Column(
@@ -59,21 +56,13 @@ fun RunParentsDetailScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // D-Day 배지
-                Text(
-                    text = "D-7",
-                    color = Color(0xFF00796B),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .background(Color(0xFFB2DFDB), RoundedCornerShape(8.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                )
+                DdayBadge(remainingDays = 7)
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // 목표 이미지와 금액 정보
                 Image(
-                    painter = painterResource(id = R.drawable.logo_coin), // 노트북 이미지 예시
+                    painter = painterResource(id = R.drawable.logo_coin),
                     contentDescription = "목표 이미지",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -83,9 +72,8 @@ fun RunParentsDetailScreen(navController: NavController) {
 
                 Text(
                     text = "0원을 모았어요!",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Row(
@@ -94,13 +82,18 @@ fun RunParentsDetailScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "목표 25,000원",
-                        fontSize = 14.sp,
-                        color = Color.Gray
+                        style = FontSizes.h16,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "|",
+                        style = FontSizes.h16,
+                        color = Color.White
                     )
                     Text(
                         text = "2024.10.30 까지",
-                        fontSize = 14.sp,
-                        color = Color.Gray
+                        style = FontSizes.h16,
+                        color = Color.White
                     )
                 }
             }
@@ -116,96 +109,83 @@ fun RunParentsDetailScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // 참여자 1
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.character_young_man), // 사용자 이미지 예시
-                        contentDescription = "사용자 이미지",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(end = 8.dp)
-                    )
-                    Text(
-                        text = "나",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "0원",
-                        fontSize = 16.sp,
-                        color = Color(0xFF6DCEF5)
-                    )
-                    Text(
-                        text = "목표 12,500원",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                }
-            }
+            ParticipantInfo(
+                name = "나",
+                currentAmount = 0,
+                goalAmount = 25000,
+                imageResId = R.drawable.character_me
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // 참여자 2
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.character_young_girl), // 사용자 이미지 예시
-                        contentDescription = "사용자 이미지",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .padding(end = 8.dp)
-                    )
-                    Text(
-                        text = "응애재훈",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "0원",
-                        fontSize = 16.sp,
-                        color = Color(0xFF6DCEF5)
-                    )
-                    Text(
-                        text = "목표 12,500원",
-                        fontSize = 12.sp,
-                        color = Color.Gray
-                    )
-                }
-            }
+            ParticipantInfo(
+                name = "응애재훈",
+                currentAmount = 0,
+                goalAmount = 25000,
+                imageResId = R.drawable.character_run_member
+            )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         // 그만하기 버튼
-        Button(
-            onClick = { /* 그만하기 동작 구현 */ },
+        LightGrayButton(
+            onClick = { navController.navigate("runParentsRegister") },
+            text = "다음",
             modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(Color(0xFFD9D9D9), RoundedCornerShape(16.dp)),
-            contentPadding = PaddingValues()
-        ) {
+                .width(400.dp)
+                .padding(bottom = 20.dp)
+        )
+    }
+}
+
+
+@Composable
+fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResId: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(id = imageResId),
+                contentDescription = "$name 이미지",
+                modifier = Modifier.size(55.dp)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
             Text(
-                text = "그만하기",
-                fontSize = 18.sp,
-                color = Color.Black
+                text = name,
+                style = FontSizes.h16,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Column(horizontalAlignment = Alignment.End) {
+            // current amount
+            Text(
+                text = "${NumberUtils.formatNumberWithCommas(currentAmount)}원",
+                style = FontSizes.h16,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF6DCEF5)
+            )
+
+            // goal amount
+            Text(
+                text = "목표 ${NumberUtils.formatNumberWithCommas(goalAmount)}원",
+                style = FontSizes.h16,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF8C8595)
             )
         }
     }
 }
+
+
 
 @Preview(
     showBackground = true,

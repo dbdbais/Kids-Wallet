@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
+import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.GoldenRatioUtils
@@ -138,7 +139,7 @@ fun RunScreen(navController: NavController) {
                             .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
                             .padding(16.dp)
                             .clickable {
-                            navController.navigate("runParents")
+                                navController.navigate("runParents")
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -176,8 +177,8 @@ fun RunScreen(navController: NavController) {
                             .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
-                            navController.navigate("runParentsDetail")
-                        },
+                                navController.navigate("runParentsDetail")
+                            },
                         contentAlignment = Alignment.TopStart // 텍스트는 상단 좌측에 정렬
                     ) {
                         Column(
@@ -185,15 +186,7 @@ fun RunScreen(navController: NavController) {
                             verticalArrangement = Arrangement.Top
                         ) {
                             // 상단 D-7 배지
-                            Text(
-                                text = "D-7",
-                                color = Color(0xFF6DCEF5),
-                                fontWeight = FontWeight.Bold,
-                                style = FontSizes.h12,
-                                modifier = Modifier
-                                    .background(Color(0xFFE9F8FE), RoundedCornerShape(8.dp))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
+                            DdayBadge(remainingDays = 7)
 
                             Spacer(modifier = Modifier.height(8.dp))
 
@@ -208,9 +201,9 @@ fun RunScreen(navController: NavController) {
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            // 지금까지 모은 금액
+                            // 지금까지 모은 금액 (포맷팅 적용)
                             Text(
-                                text = "500,000원",
+                                text = "${NumberUtils.formatNumberWithCommas(500000)}원",
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Start,
@@ -239,7 +232,6 @@ fun RunScreen(navController: NavController) {
         )
     }
 }
-
 
 @Preview(
     showBackground = true,

@@ -35,6 +35,9 @@ import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMemberListScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMoneyScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsRegisterScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 
@@ -85,8 +88,10 @@ fun MainScreen(navController: NavHostController) {
         // run
         composable("run") { RunScreen(navController) }
         composable("runParents") { RunParentsScreen(navController) }
+        composable("runParentsMoney") { RunParentsMoneyScreen(navController) }
         composable("runParentsDetail") { RunParentsDetailScreen(navController) }
-        // begging
+        composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
+        composable("runParentsRegister") { RunParentsRegisterScreen(navController) }
         composable("begging") { BeggingScreen(navController) }
 
         composable("beggingMissionPlay/{name}/{money}/{begContent}/{missionContent}") { backStackEntry ->
