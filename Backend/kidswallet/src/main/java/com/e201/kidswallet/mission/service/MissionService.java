@@ -161,7 +161,7 @@ public class MissionService {
             // 요청하는 주체가 아이 => parent realName get in relation
             // 요청하는 주체가 어른 => child realName get in relation
             String name = null;
-            if (role == Role.child)
+            if (role == Role.CHILD)
                 name = r.getParent().getUserRealName();
             else
                 name = r.getChild().getUserRealName();
