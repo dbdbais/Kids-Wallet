@@ -36,6 +36,9 @@ public class SavingContract {
     @JoinColumn(name="saving_id", nullable = false)
     private Saving saving;
 
+    @Column(name = "saving_account")
+    private String savingAccount;
+
     @Column(name = "deposit_day")
     private short depositDay;
 
