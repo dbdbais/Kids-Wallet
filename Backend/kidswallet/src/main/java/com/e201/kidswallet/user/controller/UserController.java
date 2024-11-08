@@ -33,6 +33,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto> registUser( @RequestBody RegisterRequestDTO registerRequestDTO){
+        System.out.println("hi");
         StatusCode returnCode = userService.registerUser(registerRequestDTO);
         return ResponseDto.response(returnCode);
     }

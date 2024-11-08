@@ -2,11 +2,13 @@ package com.e201.kidswallet.donation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class DonationRequestDTO {
     private String name;
     private String organName;

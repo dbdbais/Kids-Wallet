@@ -4,11 +4,13 @@ import com.e201.kidswallet.common.exception.StatusCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class UserLoginResponseDTO {
     StatusCode statusCode;
