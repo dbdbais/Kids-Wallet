@@ -198,7 +198,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, name: String, b
                 )
                 BlueButton(
                     onClick = {
-                        navController.navigate("parentBeggingWaiting")
+                        navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}")
                     },
                     text = "보내기",
                     modifier = Modifier
