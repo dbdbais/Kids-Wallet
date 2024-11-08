@@ -6,6 +6,7 @@ import com.e201.kidswallet.mission.enums.Status;
 import com.e201.kidswallet.mission.repository.MissionRepository;
 import com.e201.kidswallet.mission.dto.MissionListResponseDto;
 import com.e201.kidswallet.user.entity.Relation;
+import com.e201.kidswallet.user.enums.Role;
 import com.e201.kidswallet.user.repository.RelationRepository;
 import com.e201.kidswallet.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -146,6 +147,7 @@ public class MissionService {
 
         //userId로 user와 관련된 관계들을 get
         List<Relation> relations = relationRepository.findRelation(userId);
+        Role role = userRepository.findById(userId).get().getUserRole();
         List<MissionListResponseDto> missionListResponseDtos = new ArrayList<>();
 
         // 관계들을 순회하며 관계와 관련된 Beg들을 get
