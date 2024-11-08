@@ -1,4 +1,4 @@
-package com.ssafy.kidswallet.ui.screens.run
+package com.ssafy.kidswallet.ui.screens.run.parents
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,13 +38,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
-import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.GoldenRatioUtils
+import com.ssafy.kidswallet.ui.components.SuccessBadge
 
 @Composable
-fun RunScreen(navController: NavController) {
+fun RunParentsFinishScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +58,7 @@ fun RunScreen(navController: NavController) {
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Top(title = "행복 달리기", navController = navController)
+                Top(title = "같이 달리기", navController = navController)
             }
 
             // Tabs
@@ -105,12 +105,12 @@ fun RunScreen(navController: NavController) {
 
                 // 지난 달리기 텍스트
                 Text(
-                    text = "지난 달리기",
+                    text = "진행중인 달리기",
                     fontWeight = FontWeight.Bold,
                     style = FontSizes.h16,
                     color = Color(0xFF6DCEF5),
                     modifier = Modifier
-                        .clickable { navController.navigate("runParentsFinish") }
+                        .clickable { navController.navigate("run") }
                         .align(Alignment.CenterVertically)
                 )
             }
@@ -130,44 +130,6 @@ fun RunScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 첫 번째 고정 카드
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(GoldenRatioUtils.goldenHeight(150f).dp)
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = RoundedCornerShape(16.dp),
-                            )
-                            .background(Color.White)
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(8.dp))
-                            .padding(16.dp)
-                            .clickable {
-                                navController.navigate("runParents")
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "새로운 달리기\n시작하기",
-                                style = FontSizes.h16,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Image(
-                                painter = painterResource(id = R.drawable.icon_plus_circle),
-                                contentDescription = "Add Run",
-                                modifier = Modifier.size(40.dp)
-                            )
-                        }
-                    }
-                }
-
                 // 반복되는 카드들
                 items(4) { index ->
                     Box(
@@ -182,7 +144,7 @@ fun RunScreen(navController: NavController) {
                             .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
-                                navController.navigate("runParentsDetail")
+                                navController.navigate("runParentsFinishDetail")
                             },
                         contentAlignment = Alignment.TopStart // 텍스트는 상단 좌측에 정렬
                     ) {
@@ -191,7 +153,7 @@ fun RunScreen(navController: NavController) {
                             verticalArrangement = Arrangement.Top
                         ) {
                             // 상단 D-7 배지
-                            DdayBadge(remainingDays = 7)
+                            SuccessBadge(successOrFail = "성공")
 
                             Spacer(modifier = Modifier.height(8.dp))
 
@@ -244,6 +206,6 @@ fun RunScreen(navController: NavController) {
     showSystemUi = true
 )
 @Composable
-fun RunScreenPreview() {
-    RunScreen(navController = rememberNavController())
+fun RunParentsFinishScreenPreview() {
+    RunParentsFinishScreen(navController = rememberNavController())
 }
