@@ -143,7 +143,7 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
         ) {
             ParticipantInfo(
                 name = "나",
-                currentAmount = 0,
+                currentAmount = 12500,
                 goalAmount = 12500,
                 imageResId = R.drawable.character_me
             )
@@ -152,7 +152,7 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
 
             ParticipantInfo(
                 name = "응애재훈",
-                currentAmount = 0,
+                currentAmount = 12500,
                 goalAmount = 12500,
                 imageResId = R.drawable.character_run_member
             )
