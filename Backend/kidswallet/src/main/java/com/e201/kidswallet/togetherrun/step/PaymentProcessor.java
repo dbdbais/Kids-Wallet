@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class PaymentProcessor implements ItemProcessor<SavingContract, SavingTransferProcessorDto> {
 
     private final TogetherRunRepository togetherRunRepository;

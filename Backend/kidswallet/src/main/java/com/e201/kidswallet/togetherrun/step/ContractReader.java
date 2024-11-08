@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public class ContractReader implements ItemReader<SavingContract> {
 
     private final SavingContractRepository savingContractRepository;

@@ -3,7 +3,6 @@ package com.e201.kidswallet.togetherrun.config;
 import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.togetherrun.dto.SavingTransferProcessorDto;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
-import com.e201.kidswallet.togetherrun.entity.SavingPayment;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingPaymentRepository;
 import com.e201.kidswallet.togetherrun.repository.TogetherRunRepository;

@@ -4,18 +4,20 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ScheduledJobLauncher {
+@Configuration
+@EnableScheduling
+public class SavingTransferJobScheduler {
 
     private final JobLauncher jobLauncher;
-    private final Job automaticTransferJob;
+    private final Job savingTransferJob;
 
-    public ScheduledJobLauncher(JobLauncher jobLauncher, Job automaticTransferJob) {
+    public SavingTransferJobScheduler(JobLauncher jobLauncher, Job savingTransferJob) {
         this.jobLauncher = jobLauncher;
-        this.automaticTransferJob = automaticTransferJob;
+        this.savingTransferJob = savingTransferJob;
     }
 
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
@@ -24,6 +26,6 @@ public class ScheduledJobLauncher {
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters();
 
-        jobLauncher.run(automaticTransferJob, jobParameters);
+        jobLauncher.run(savingTransferJob, jobParameters);
     }
 }
