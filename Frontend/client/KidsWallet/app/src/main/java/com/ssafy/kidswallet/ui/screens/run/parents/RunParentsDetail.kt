@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,60 +42,90 @@ fun RunParentsDetailScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Top(title = "같이 달리기", navController = navController)
+        Top(
+            title = "같이 달리기",
+            navController = navController
+        )
 
-        // 목표 이미지 및 정보 박스
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF6DCEF5))
+                .background(Color(0xFF6DCEF5)) // 배경색
                 .padding(16.dp)
+                .padding(top = 30.dp, bottom = 14.dp), // 상하 패딩을 추가하여 크기를 늘림
+            contentAlignment = Alignment.TopCenter
         ) {
             Column(
-                horizontalAlignment = Alignment.Start,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // D-Day 배지
-                DdayBadge(remainingDays = 7)
+                // 목표 이미지 및 정보 박스
+                Box(
+                    modifier = Modifier
+                        .shadow(
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(45.dp)
+                        )
+                        .background(Color(0xFF99DDF8), RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                ) {
+                    // D-Day 배지를 좌측 상단에 위치시킴
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopStart) // 좌측 상단에 정렬
+                            .padding(8.dp) // 추가 패딩 적용 (필요 시)
+                    ) {
+                        DdayBadge(remainingDays = 7)
+                    }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
 
-                // 목표 이미지와 금액 정보
-                Image(
-                    painter = painterResource(id = R.drawable.logo_coin),
-                    contentDescription = "목표 이미지",
+                        // 목표 이미지와 금액 정보
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_labtop),
+                            contentDescription = "목표 이미지",
+                            modifier = Modifier
+                                .size(250.dp)
+//                                .padding(bottom = 8.dp)
+                        )
+
+                        Text(
+                            text = "0원을 모았어요!",
+                            style = FontSizes.h20,
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+                // 목표 금액과 마감 기한 텍스트
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp)
-                        .padding(bottom = 8.dp)
-                )
-
-                Text(
-                    text = "0원을 모았어요!",
-                    style = FontSizes.h20,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        text = "목표 25,000원",
-                        style = FontSizes.h16,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "|",
-                        style = FontSizes.h16,
-                        color = Color.White
-                    )
                     Text(
                         text = "2024.10.30 까지",
                         style = FontSizes.h16,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "목표 25,000원",
+                        style = FontSizes.h16,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+
                 }
             }
         }
@@ -112,7 +143,7 @@ fun RunParentsDetailScreen(navController: NavController) {
             ParticipantInfo(
                 name = "나",
                 currentAmount = 0,
-                goalAmount = 25000,
+                goalAmount = 12500,
                 imageResId = R.drawable.character_me
             )
 
@@ -121,7 +152,7 @@ fun RunParentsDetailScreen(navController: NavController) {
             ParticipantInfo(
                 name = "응애재훈",
                 currentAmount = 0,
-                goalAmount = 25000,
+                goalAmount = 12500,
                 imageResId = R.drawable.character_run_member
             )
         }
@@ -131,13 +162,17 @@ fun RunParentsDetailScreen(navController: NavController) {
         // 그만하기 버튼
         LightGrayButton(
             onClick = { navController.navigate("runParentsRegister") },
-            text = "다음",
+            text = "그만하기",
             modifier = Modifier
                 .width(400.dp)
+                .padding(start = 16.dp, end = 16.dp)
                 .padding(bottom = 20.dp)
         )
     }
 }
+
+
+
 
 
 @Composable
