@@ -16,7 +16,7 @@ public enum StatusCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 Request Method 호출입니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류"),
     DUPLICATE_USER(HttpStatus.UNAUTHORIZED,"중복된 사용자입니다."),
-    NO_USER(HttpStatus.METHOD_NOT_ALLOWED,"존재하지 않는 사용자입니다."),
+    NO_USER(HttpStatus.METHOD_NOT_ALLOWED,"허용되지 않은 사용자입니다."),
     NO_PARENTS(HttpStatus.BAD_REQUEST,"부모가 없습니다."),
     OVERFLOW_IMAGE_SIZE(HttpStatus.BAD_REQUEST,"이미지 파일의 크기가 너무 큽니다(4GB이하 허용)"),
     NOT_ENOUGH_MONEY(HttpStatus.BAD_REQUEST,"돈이 부족합니다.");

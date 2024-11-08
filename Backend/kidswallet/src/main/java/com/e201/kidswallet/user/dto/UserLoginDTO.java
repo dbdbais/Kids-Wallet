@@ -9,5 +9,5 @@ import lombok.Getter;
 @Getter
 public class UserLoginDTO {
     private String userName;
-    private String userPassword;
+    private String password;
 }
