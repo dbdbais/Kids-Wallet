@@ -178,7 +178,7 @@ fun BeggingRequestReasonScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) // 원하는 절대 거리 설정
         ) {
             BlueButton(
                 onClick = {
@@ -190,7 +190,7 @@ fun BeggingRequestReasonScreen(
                 },
                 text = "확인",
                 modifier = Modifier
-                    .width(200.dp) // 원하는 너비 설정
+                    .width(400.dp) // 원하는 너비 설정
                     .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
                 height = 50,
                 elevation = 4
