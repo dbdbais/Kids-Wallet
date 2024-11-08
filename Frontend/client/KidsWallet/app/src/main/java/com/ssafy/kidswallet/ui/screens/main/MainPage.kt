@@ -125,6 +125,9 @@ fun MainPageScreen(navController: NavController) {
                     .padding(16.dp)
                     .height(170.dp)
                     .width(450.dp)
+                    .clickable {
+                        navController.navigate("parentBeggingWaiting")
+                    }
             )
         }
         BottomNavigationBar(

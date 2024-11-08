@@ -33,7 +33,7 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightBlueButton
 import com.ssafy.kidswallet.ui.components.Top
-import com.ssafy.kidswallet.ui.screens.begging.CircularSlider
+import com.ssafy.kidswallet.ui.screens.begging.beggingmoney.CircularSlider
 import com.ssafy.kidswallet.viewmodel.RunParentsAmountViewModel
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight

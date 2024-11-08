@@ -1,4 +1,4 @@
-package com.ssafy.kidswallet.ui.screens.begging
+package com.ssafy.kidswallet.ui.screens.begging.mission
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
