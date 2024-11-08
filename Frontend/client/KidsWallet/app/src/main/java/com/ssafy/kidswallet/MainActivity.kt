@@ -18,8 +18,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ssafy.kidswallet.data.model.TextModel
+import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionCheckScreen
+import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionCompleteScreen
+import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionPlayScreen
 
-import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionScreen
+import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionPlayScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMoneyScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestReasonScreen
@@ -90,7 +93,18 @@ fun MainScreen(navController: NavHostController) {
         composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
         composable("runParentsRegister") { RunParentsRegisterScreen(navController) }
         composable("begging") { BeggingScreen(navController) }
-        composable("beggingMission") { BeggingMissionScreen(navController) }
+
+        composable("beggingMissionPlay/{name}/{money}/{begContent}/{missionContent}") { backStackEntry ->
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val begMoneyString = backStackEntry.arguments?.getString("money") ?: "0"
+            val begMoney = begMoneyString.toIntOrNull() ?: 0
+            val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
+            val missionContent = backStackEntry.arguments?.getString("missionContent") ?: ""
+            BeggingMissionPlayScreen(navController, name, begMoney, begContent, missionContent)
+        }
+
+        composable("beggingMissionCheck") { BeggingMissionCheckScreen(navController) }
+        composable("beggingMissionComplete") { BeggingMissionCompleteScreen(navController) }
         composable("beggingMoney") { BeggingMoneyScreen(navController) }
 
         composable(

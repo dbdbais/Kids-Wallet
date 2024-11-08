@@ -111,7 +111,7 @@ fun BeggingMission(navController: NavController, boxHeight: androidx.compose.ui.
                 clip = false
             )
             .background(Color(0xFFFFEDEF), shape = RoundedCornerShape(16.dp)) // 파란색 배경과 둥근 모서리 적용
-            .clickable { navController.navigate("beggingMission") } // 클릭 시 화면 이동
+            .clickable { navController.navigate("beggingMissionCheck") } // 클릭 시 화면 이동
     ) {
         // 가운데 텍스트
         Text(

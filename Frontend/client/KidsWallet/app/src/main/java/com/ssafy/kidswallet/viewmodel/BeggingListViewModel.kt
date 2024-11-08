@@ -29,5 +29,4 @@ class BeggingListViewModel : ViewModel() {
             _recentlyBeggingList.value = beggingList
         }
     }
-
 }

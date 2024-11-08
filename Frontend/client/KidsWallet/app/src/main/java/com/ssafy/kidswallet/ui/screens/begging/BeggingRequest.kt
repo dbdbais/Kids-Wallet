@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -67,6 +69,7 @@ fun BeggingRequestScreen(navController: NavController, name: String?, viewModel:
         Column(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Top(title = "조르기", navController = navController) // BackButton 사용
         }
@@ -124,13 +127,13 @@ fun BeggingRequestScreen(navController: NavController, name: String?, viewModel:
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp)
         ) {
             BlueButton(
                 onClick = { navController.navigate("beggingRequestReason?name=${name}&amount=${amount}") },
                 text = "다음",
                 modifier = Modifier
-                    .width(200.dp) // 원하는 너비 설정
+                    .width(400.dp) // 원하는 너비 설정
                     .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
                 height = 50,
                 elevation = 4
