@@ -62,7 +62,7 @@ fun MyWalletScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(25.dp)
                 )
-                .padding(16.dp)
+                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
         ) {
             Column {
                 Text(
