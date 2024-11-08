@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,11 +37,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
-import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.GreenButton
 import com.ssafy.kidswallet.ui.components.Top
-import com.ssafy.kidswallet.utils.DateUtils
+import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 
 @Composable

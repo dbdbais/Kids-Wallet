@@ -17,12 +17,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ssafy.kidswallet.data.model.TextModel
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionCheckScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionPlayScreen
 
-import com.ssafy.kidswallet.ui.screens.begging.BeggingMissionPlayScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingMoneyScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begging.BeggingRequestReasonScreen
@@ -35,6 +33,8 @@ import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishDetailScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMemberListScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMoneyScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsRegisterScreen
@@ -87,6 +87,8 @@ fun MainScreen(navController: NavHostController) {
         composable("card") { CardScreen(navController) }
         // run
         composable("run") { RunScreen(navController) }
+        composable("runParentsFinish") { RunParentsFinishScreen(navController) }
+        composable("runParentsFinishDetail") { RunParentsFinishDetailScreen(navController) }
         composable("runParents") { RunParentsScreen(navController) }
         composable("runParentsMoney") { RunParentsMoneyScreen(navController) }
         composable("runParentsDetail") { RunParentsDetailScreen(navController) }

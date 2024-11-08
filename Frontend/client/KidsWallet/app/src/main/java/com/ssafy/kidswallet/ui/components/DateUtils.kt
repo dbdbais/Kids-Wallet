@@ -1,4 +1,4 @@
-package com.ssafy.kidswallet.utils
+package com.ssafy.kidswallet.ui.components
 
 import java.text.SimpleDateFormat
 import java.util.Locale

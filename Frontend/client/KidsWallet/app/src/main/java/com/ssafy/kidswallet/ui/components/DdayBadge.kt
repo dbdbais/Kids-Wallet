@@ -22,3 +22,16 @@ fun DdayBadge(remainingDays: Int) {
             .padding(horizontal = 8.dp, vertical = 4.dp)
     )
 }
+
+@Composable
+fun SuccessBadge(successOrFail: String) {
+    Text(
+        text = successOrFail,
+        color = Color(0xFF6DCEF5),
+        fontWeight = FontWeight.Bold,
+        style = FontSizes.h12,
+        modifier = Modifier
+            .background(Color(0xFFE9F8FE), RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    )
+}
