@@ -161,7 +161,11 @@ fun RunParentsDetailScreen(navController: NavController) {
 
         // 그만하기 버튼
         LightGrayButton(
-            onClick = { navController.navigate("runParentsRegister") },
+            onClick = {
+                navController.navigate("run") {
+                    popUpTo(0) { inclusive = true } // 모든 스택 제거
+                }
+            },
             text = "그만하기",
             modifier = Modifier
                 .width(400.dp)
