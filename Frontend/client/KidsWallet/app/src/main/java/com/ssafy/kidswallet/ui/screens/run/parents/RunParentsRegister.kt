@@ -49,7 +49,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth() // 컨테이너가 사용 가능한 모든 공간을 차지하도록 설정
-                    .background(Color(0xFFF7F7F7), shape = RoundedCornerShape(16.dp))
+                    .background(Color(0xFFF7F7F7), shape = RoundedCornerShape(25.dp))
                     .padding(16.dp)
                     .widthIn(max = 300.dp), // 원하는 최대 너비를 설정하여 콘텐츠를 제한
                 contentAlignment = Alignment.Center // Box 내부의 콘텐츠를 가운데 정렬
