@@ -118,7 +118,9 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
         // 신청 버튼
         BlueButton(
-            onClick = { navController.navigate("run") },
+            onClick = { navController.navigate("run") {
+                popUpTo(0) { inclusive = true } // 모든 스택 제거
+            } },
             text = "신청하기",
             modifier = Modifier
                 .width(400.dp)
