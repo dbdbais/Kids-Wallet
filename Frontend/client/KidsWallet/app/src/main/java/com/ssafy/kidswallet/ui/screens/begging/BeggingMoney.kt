@@ -21,8 +21,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -73,6 +75,7 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             Top(title = "조르기", navController = navController) // BackButton 사용
             Spacer(modifier = Modifier.height(24.dp))
@@ -93,27 +96,17 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
                 })
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shadow(
-                            elevation = 4.dp,
-                            shape = RoundedCornerShape(24.dp),
-                            clip = false
-                        )
-                ) {
-                    BlueButton(
-                        onClick = {
-                            selectedPerson?.let { person ->
-                                navController.navigate("beggingRequest?name=${person.name}")
-                            }
-                        },
-                        modifier = Modifier.width(400.dp), // 원하는 너비 설정
-                        height = 50,
-                        text = "선택하기",
-                        elevation = 0
-                    )
-                }
+                BlueButton(
+                    onClick = {
+                        selectedPerson?.let { person ->
+                            navController.navigate("beggingRequest?name=${person.name}")
+                        }
+                    },
+                    modifier = Modifier.width(400.dp), // 원하는 너비 설정
+                    height = 50,
+                    text = "선택하기",
+                    elevation = 0
+                )
 
                 Spacer(modifier = Modifier.height(48.dp))
                 Text(
@@ -125,7 +118,7 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
             }
         }
         BottomNavigationBar(
-            modifier = Modifier.align(Alignment.BottomCenter), navController
+            modifier = Modifier.align(Alignment.BottomCenter).padding(top = 16.dp), navController
         )
     }
 }

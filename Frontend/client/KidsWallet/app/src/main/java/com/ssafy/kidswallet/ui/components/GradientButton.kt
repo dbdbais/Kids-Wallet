@@ -33,13 +33,13 @@ fun BlueButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFF99DDF8), Color(0xFF6DCEF5))
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
@@ -68,11 +68,11 @@ fun LightBlueButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 Color(0xFFE9F8FE),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
@@ -101,13 +101,13 @@ fun GrayButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFFA0A0A0), Color(0xFF8C8595))
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
@@ -136,11 +136,11 @@ fun LightGrayButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 Color(0xFFF7F7F7),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
@@ -169,13 +169,13 @@ fun YellowButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFFFFD262), Color(0xFFFBC02D))
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
@@ -204,13 +204,13 @@ fun GreenButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFFA1E9A1), Color(0xFF77DD77))
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
@@ -239,13 +239,13 @@ fun PinkButton(
         modifier = modifier
             .shadow(
                 elevation = elevation.dp,
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFFFFA1B0), Color(0xFFFF8396))
                 ),
-                shape = RoundedCornerShape(15.dp)
+                shape = RoundedCornerShape(45.dp)
             )
             .clickable(onClick = onClick)
             .height(height.dp),
