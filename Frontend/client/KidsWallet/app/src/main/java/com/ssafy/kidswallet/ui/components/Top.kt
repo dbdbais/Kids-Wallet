@@ -2,6 +2,7 @@ package com.ssafy.kidswallet.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,11 +23,10 @@ import com.ssafy.kidswallet.R
 
 @Composable
 fun Top(title: String, navController: NavController) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp), // 상단과 하단 패딩을 줄임
-        verticalAlignment = Alignment.CenterVertically
+            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.icon_back),
@@ -37,16 +37,12 @@ fun Top(title: String, navController: NavController) {
                     navController.popBackStack() // 이전 화면으로 돌아가기
                 }
         )
-        Spacer(modifier = Modifier.weight(1f))
-
         Text(
             text = title,
             style = FontSizes.h20,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier.align(Alignment.Center)
         )
-
-        Spacer(modifier = Modifier.weight(1f))
     }
 }

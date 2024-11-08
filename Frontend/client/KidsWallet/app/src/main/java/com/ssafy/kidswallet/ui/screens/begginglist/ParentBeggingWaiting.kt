@@ -16,14 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,12 +41,11 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.YellowButton
-import com.ssafy.kidswallet.utils.DateUtils
+import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
-import com.ssafy.kidswallet.viewmodel.PersonViewModel
 
 @Composable
-fun ParentBeggingWaitingkScreen(navController: NavController) {
+fun ParentBeggingWaitingScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,13 +98,13 @@ fun ParentBeggingWaitingkScreen(navController: NavController) {
                 .weight(0.5f)
                 .fillMaxWidth()
         ) {
-            CurrentMissionList(navController = navController)
+            WaitingMissionList(navController = navController)
         }
     }
 }
 
 @Composable
-fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navController: NavController) {
+fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), navController: NavController) {
     LaunchedEffect(Unit) {
         viewModel.fetchMissionList()
     }
@@ -197,7 +193,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                             ) {
                                 BlueButton(
                                     onClick = {
-                                        // navController.navigate("beggingMissionPlay/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
+                                        navController.navigate("parentBeggingRequestCheck/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}")
                                     },
                                     text = "요청 확인",
                                     height = 40
@@ -205,7 +201,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                             } else {
                                 YellowButton(
                                     onClick = {
-                                        // navController.navigate("beggingMissionPlay/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
+                                        navController.navigate("parentBeggingTestMission/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}/${mission.mission?.completionPhoto}")
                                     },
                                     text = "미션 확인",
                                     height = 40
