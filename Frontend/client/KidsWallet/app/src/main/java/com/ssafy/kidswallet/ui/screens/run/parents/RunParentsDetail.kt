@@ -96,7 +96,7 @@ fun RunParentsDetailScreen(navController: NavController) {
                         )
 
                         Text(
-                            text = "25000원을 모았어요!",
+                            text = "0원을 모았어요!",
                             style = FontSizes.h20,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
