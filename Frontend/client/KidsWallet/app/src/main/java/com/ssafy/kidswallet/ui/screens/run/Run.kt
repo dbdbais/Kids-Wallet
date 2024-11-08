@@ -38,6 +38,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
+import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.GoldenRatioUtils
@@ -185,15 +186,7 @@ fun RunScreen(navController: NavController) {
                             verticalArrangement = Arrangement.Top
                         ) {
                             // 상단 D-7 배지
-                            Text(
-                                text = "D-7",
-                                color = Color(0xFF6DCEF5),
-                                fontWeight = FontWeight.Bold,
-                                style = FontSizes.h12,
-                                modifier = Modifier
-                                    .background(Color(0xFFE9F8FE), RoundedCornerShape(8.dp))
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
+                            DdayBadge(remainingDays = 7)
 
                             Spacer(modifier = Modifier.height(8.dp))
 

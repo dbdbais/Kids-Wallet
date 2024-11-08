@@ -99,7 +99,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
         // Members list
         Column(modifier = Modifier.fillMaxWidth()) {
-            MemberRow(
+            ParticipantInfo(
                 name = "나",
                 amount = NumberUtils.formatNumberWithCommas(12500) + "원",
                 imageResId = R.drawable.character_me // Replace with your image resource
@@ -107,7 +107,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            MemberRow(
+            ParticipantInfo(
                 name = "응애재훈",
                 amount = NumberUtils.formatNumberWithCommas(12500) + "원",
                 imageResId = R.drawable.character_run_member // Replace with your image resource
@@ -128,7 +128,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
 }
 
 @Composable
-fun MemberRow(name: String, amount: String, imageResId: Int) {
+fun ParticipantInfo(name: String, amount: String, imageResId: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
