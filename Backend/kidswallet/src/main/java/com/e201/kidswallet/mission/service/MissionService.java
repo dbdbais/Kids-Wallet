@@ -26,8 +26,8 @@ import java.util.*;
 @Slf4j
 @Service
 public class MissionService {
-//    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
-    private final long MAX_LONGBLOB_SIZE = 4L * 1024 * 1024 * 1024; // 4GB
+    //    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
+
     private final BegRepository begRepository;
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
@@ -63,9 +63,9 @@ public class MissionService {
 
         //Beg테이블 빌드
         Beg beg =Beg.builder()
-                        .begContent(beggingRequestDto.getBeggingMessage())
-                        .begMoney(beggingRequestDto.getBeggingMoney())
-                        .relation(relation).build();
+                .begContent(beggingRequestDto.getBeggingMessage())
+                .begMoney(beggingRequestDto.getBeggingMoney())
+                .relation(relation).build();
 
         log.info(beg.toString());
         //여기서 실패하면 jpa가 RUNTIMEEXCEPTION을 throw함 == transactional이 됨
@@ -100,6 +100,7 @@ public class MissionService {
     // 이미지 업로드 == 미션에 대한 이미지
     @Transactional
     public StatusCode uploadCompleteImage(MissionCompleteRequestDto requestDto) {
+        final long MAX_LONGBLOB_SIZE = 4L * 1024 * 1024 * 1024; // 4GB
         //base64를 byte배열로 인코딩
         byte[] imageBytes = Base64.getDecoder().decode(requestDto.getBase64Image());
         long missionId = requestDto.getMissionId();
@@ -112,7 +113,7 @@ public class MissionService {
         log.info("imageBytes.length > MAX_LONGBLOB_SIZE: "+ (imageBytes.length > MAX_LONGBLOB_SIZE));
 
         //image update
-        missionRepository.uploadCompleteImage(imageBytes,missionId);
+        missionRepository.uploadCompleteImage(imageBytes,missionId,Status.submit.toString());
         return StatusCode.SUCCESS;
 
     }
@@ -197,7 +198,7 @@ public class MissionService {
                         beg.getBegAccept()
                 );
 
-                missionListResponseDtos.add(new MissionListResponseDto(begDto,missionDto));
+                missionListResponseDtos.add(new MissionListResponseDto(name,begDto,missionDto));
 
             }
         }
