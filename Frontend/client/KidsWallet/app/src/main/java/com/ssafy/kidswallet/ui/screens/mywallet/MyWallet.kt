@@ -1,3 +1,5 @@
+package com.ssafy.kidswallet.ui.screens.mywallet
+
 import androidx.compose.runtime.*
 import java.util.Calendar
 import androidx.compose.foundation.Image
@@ -62,20 +64,22 @@ fun MyWalletScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(25.dp)
                 )
-                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
+//                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
         ) {
             Column {
                 Text(
                     text = "남은 돈",
                     style = FontSizes.h16,
                     color = Color(0xFF5EA0BB),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 20.dp, top = 25.dp)
                 )
                 Text(
                     text = "500원",
                     style = FontSizes.h32,
                     color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 20.dp)
                 )
 
                 Spacer(modifier = Modifier.height(25.dp))
@@ -109,51 +113,57 @@ fun MyWalletScreen(navController: NavController) {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                TextButton( onClick = {
-                    // role에 따라 라우팅 처리
-                    if (role == "parents") {
-                        navController.navigate("myWallet") // "parents"일 경우 특정 경로로 이동
-                    } else {
-                        navController.navigate("begging") // "children"일 경우 다른 경로로 이동
-                    }
-                }) {
+                TextButton(
+                    onClick = {
+                        // role에 따라 라우팅 처리
+                        if (role == "parents") {
+                            navController.navigate("myWallet") // "parents"일 경우 특정 경로로 이동
+                        } else {
+                            navController.navigate("begging") // "children"일 경우 다른 경로로 이동
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = Color(0xFF6DCEF5),
+                            shape = RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp)
+                        )
+                ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(), // Row가 가득 채워지도록 설정
-                        horizontalArrangement = Arrangement.SpaceBetween, // 요소들을 양 끝으로 배치
-                        verticalAlignment = Alignment.CenterVertically // 세로로 중앙 정렬
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (role == "parents") {
-                            // role이 "parents"일 경우 보이도록 설정
                             Text(
                                 text = "내 아이 지갑 같이보기",
-                                style = FontSizes.h16,
+                                style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 textAlign = TextAlign.Start
                             )
                             Image(
-                                painter = painterResource(id = R.drawable.icon_next_white), // 커스텀 아이콘
+                                painter = painterResource(id = R.drawable.icon_next_white),
                                 contentDescription = "클릭 버튼",
-                                modifier = Modifier.size(16.dp) // 크기 조정 가능
+                                modifier = Modifier.size(16.dp)
                             )
                         } else {
                             Text(
                                 text = "조르러 가기",
-                                style = FontSizes.h16,
+                                style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
-                                textAlign = TextAlign.Start
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(start = 20.dp, top = 8.dp, bottom = 8.dp)
                             )
                             Image(
-                                painter = painterResource(id = R.drawable.icon_next_white), // 커스텀 아이콘
+                                painter = painterResource(id = R.drawable.icon_next_white),
                                 contentDescription = "클릭 버튼",
-                                modifier = Modifier.size(16.dp) // 크기 조정 가능
+                                modifier = Modifier.size(16.dp)
                             )
                         }
                     }
                 }
-
-
             }
         }
 
@@ -268,7 +278,7 @@ fun ClickableIconWithText(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.clickable { navController.navigate(route) }
+        modifier = modifier.clickable { navController.navigate(route) }.padding(start = 16.dp, bottom = 16.dp)
     ) {
         Image(
             painter = painterResource(id = imageId),
@@ -278,7 +288,7 @@ fun ClickableIconWithText(
         Text(
             text = text,
             style = FontSizes.h16,
-            color = Color.Black
+            color = Color.White
         )
     }
 }

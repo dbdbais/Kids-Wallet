@@ -1,6 +1,5 @@
 package com.ssafy.kidswallet
 
-import MyWalletScreen
 import android.os.Build
 import QuizScreen
 import android.os.Bundle
@@ -31,6 +30,7 @@ import com.ssafy.kidswallet.ui.screens.begging.BeggingScreen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
+import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishDetailScreen
