@@ -149,8 +149,17 @@ public class MissionService {
         List<MissionListResponseDto> missionListResponseDtos = new ArrayList<>();
 
         // 관계들을 순회하며 관계와 관련된 Beg들을 get
-        for(Relation r:relations){
-            log.info("info: "+r.toString());
+        for (Relation r : relations) {
+            // 요청하는 주체의 role에 따라 name을 동적으로 값 설정
+            // 요청하는 주체가 아이 => parent realName get in relation
+            // 요청하는 주체가 어른 => child realName get in relation
+            String name = null;
+            if (role == Role.CHILD)
+                name = r.getParent().getUserRealName();
+            else
+                name = r.getChild().getUserRealName();
+
+            log.info("info: " + r.toString());
             List<Beg> begs = r.getBegs();
             log.info("begs.size(): "+begs.size());
             //Beg들을 순회하며 Mision을 찾음 (1:1 관계)
