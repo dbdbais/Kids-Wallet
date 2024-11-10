@@ -59,7 +59,6 @@ public class TogetherRunService {
         List<Relation> relationList = user.getChildrenRelations();
         Relation relation = null;
         for (Relation r : relationList) {
-            System.out.println("relation: " + r);
             if (r.getParent().getUserId() == togetherRunRegisterRequestDto.getParentsId()) {
                 relation = r;
                 break;
@@ -73,25 +72,26 @@ public class TogetherRunService {
             e.printStackTrace();
         }
 
+        User parent = userRepository.findById(togetherRunRegisterRequestDto.getParentsId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
         TogetherRun togetherRun = TogetherRun.builder()
                 .relation(relation)
                 .targetTitle(togetherRunRegisterRequestDto.getTargetTitle())
                 .targetImage(imagePath)
-                .parentsAccount("123")
+                .parentsAccount(parent.getAccounts().get(0).getAccountId())
                 .parentsContribute(togetherRunRegisterRequestDto.getParentsContribute())
-                .childAccount("123")
+                .childAccount(user.getAccounts().get(0).getAccountId())
                 .childContribute(togetherRunRegisterRequestDto.getChildContribute())
                 .targetAmount(togetherRunRegisterRequestDto.getTargetAmount())
                 .targetDate(togetherRunRegisterRequestDto.getTargetDate())
                 .build();
 
-        // return redisTemplate.opsForHash().entries();
         // FCM notification
         try {
             togetherRunRepository.save(togetherRun);
             return StatusCode.SUCCESS;
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+
             return StatusCode.BAD_REQUEST;
         }
     }
@@ -103,7 +103,6 @@ public class TogetherRunService {
         try {
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
             return StatusCode.BAD_REQUEST;
         }
         SavingContract savingContract = null;
@@ -118,7 +117,7 @@ public class TogetherRunService {
                         .build();
                 savingContractRepository.save(savingContract);
             } catch (Exception e) {
-                System.out.println("error: " + e.getMessage());
+
                 return StatusCode.BAD_REQUEST;
             }
         }
@@ -127,7 +126,7 @@ public class TogetherRunService {
             togetherRun.setSavingContract(savingContract);
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+
             return StatusCode.BAD_REQUEST;
         }
 
@@ -169,7 +168,7 @@ public class TogetherRunService {
                     .build();
             return togetherRunCancelResponseDto;
         } catch (Exception e) {
-            System.out.println("error: " + e.getMessage());
+
             return togetherRunCancelResponseDto;
         }
     }
