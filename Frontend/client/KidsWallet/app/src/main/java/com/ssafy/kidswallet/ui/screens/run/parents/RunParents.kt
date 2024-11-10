@@ -93,7 +93,7 @@ fun RunParentsScreen(navController: NavController) {
                     brush = Brush.linearGradient(
                         colors = listOf(Color(0xFF99DDF8), Color(0xFF6DCEF5))
                     ),
-                    shape = RoundedCornerShape(15.dp)
+                    shape = RoundedCornerShape(25.dp)
                 )
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
