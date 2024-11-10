@@ -115,20 +115,30 @@ fun MainPageScreen(navController: NavController) {
                 TogetherApplicationBox(navController)
                 QuizApplicationBox(navController)
             }
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // 메모장 이미지
-            Image(
-                painter = painterResource(id = R.drawable.memo), // 메모장 이미지
-                contentDescription = "Memo Pad",
+            
+            Spacer(modifier = Modifier.height(40.dp))
+            
+            Box(
                 modifier = Modifier
-                    .padding(16.dp)
-                    .height(170.dp)
-                    .width(450.dp)
-                    .clickable {
-                        navController.navigate("parentBeggingWaiting")
-                    }
-            )
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.5f)
+                    .clickable { navController.navigate("makeAccount") }
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.account_button),
+                    contentDescription = "Account Button",
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+                Text(
+                    text = "통장 개설하기",
+                    style = FontSizes.h24,
+                    fontWeight = FontWeight.W900,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+            }
         }
         BottomNavigationBar(
             modifier = Modifier.align(Alignment.BottomCenter), navController
@@ -213,7 +223,7 @@ fun TogetherApplicationBox(navController: NavController) {
     Box(
         modifier = Modifier
             .size(180.dp)
-            .clickable { navController.navigate("run") }
+            .clickable { navController.navigate("run") },
     ) {
 
         Image(

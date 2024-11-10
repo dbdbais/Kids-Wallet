@@ -37,6 +37,7 @@ import com.ssafy.kidswallet.ui.screens.begginglist.testmission.ParentBeggingTest
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
+import com.ssafy.kidswallet.ui.screens.makeaccount.MakeAccountScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
@@ -197,5 +198,7 @@ fun MainScreen(navController: NavHostController) {
         }
 
         composable("quiz") { QuizScreen(navController) }
+
+        composable("makeAccount") { MakeAccountScreen(navController) }
     }
 }
