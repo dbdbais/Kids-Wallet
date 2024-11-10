@@ -26,6 +26,12 @@ public class UserLoginResponseDTO {
 
     private StatusCode statusCode;
 
+    private Long userId;
+
+    private boolean hasCard;
+
+    private String representAccountId;
+
     private String userName;
 
     private LocalDate userBirth;

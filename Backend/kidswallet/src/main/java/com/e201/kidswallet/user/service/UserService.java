@@ -56,6 +56,22 @@ public class UserService {
         return StatusCode.SUCCESS;
     }
 
+    public StatusCode getCard(Long userId){
+        Optional<User> sUser = userRepository.findById(userId);
+
+        if(sUser.isEmpty()){
+            return null;
+        }
+        if(sUser.get().isHasCard()){
+            return StatusCode.ALREADY_HAS_CARD;
+        }
+        else{
+            sUser.get().makeCard();
+            return StatusCode.SUCCESS;
+        }
+
+    }
+
     public UserLoginResponseDTO loginUser(UserLoginDTO userLoginDTO){
         User sUser = getUserByName(userLoginDTO.getUserName());
 
@@ -80,12 +96,15 @@ public class UserService {
                 return
                         UserLoginResponseDTO.builder()
                                 .statusCode(StatusCode.SUCCESS)
+                                .userId(sUser.getUserId())
                                 .userMoney(sUser.getUserMoney())
                                 .userName(sUser.getUserName())
                                 .userGender(sUser.getUserGender())
                                 .userRealName(sUser.getUserRealName())
                                 .userBirth(sUser.getUserBirth())
+                                .representAccountId(sUser.getRepresentAccountId())
                                 .userRole(sUser.getUserRole())
+                                .hasCard(sUser.isHasCard())
                                 .relations(rLst)
                         .build();
 
