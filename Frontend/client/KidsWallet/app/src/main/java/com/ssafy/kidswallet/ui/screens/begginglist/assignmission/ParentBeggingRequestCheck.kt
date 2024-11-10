@@ -1,9 +1,8 @@
-package com.ssafy.kidswallet.ui.screens.begging
+package com.ssafy.kidswallet.ui.screens.begginglist.assignmission
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,55 +24,27 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
-import com.ssafy.kidswallet.data.model.TextModel
-import com.ssafy.kidswallet.ui.components.FontSizes
-import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.BlueButton
-import com.ssafy.kidswallet.ui.components.GrayButton
+import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
+import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
-fun BeggingRequestCompleteScreen(
+fun ParentBeggingRequestCheckScreen(
     navController: NavController,
     name: String?,
-    amount: Int,
-    reason: String?
+    begMoney: Int,
+    begContent: String?
 ) {
     Column {
         Column(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp), // 상단과 하단 패딩을 줄임
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.icon_back),
-                    contentDescription = "Back",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .alpha(0f)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = "조르기",
-                    style = FontSizes.h20,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-            }
+            Top(title = "용돈 관리", navController = navController)
         }
         Column(
             modifier = Modifier
@@ -94,7 +65,7 @@ fun BeggingRequestCompleteScreen(
                     color = Color(0xFF6DCEF5)
                 )
                 Text(
-                    text = "에게",
+                    text = "님이",
                     style = FontSizes.h24,
                     fontWeight = FontWeight.Black
                 )
@@ -103,7 +74,7 @@ fun BeggingRequestCompleteScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$amount",
+                    text = "$begMoney",
                     style = FontSizes.h32,
                     fontWeight = FontWeight.Black,
                     color = Color(0xFF6DCEF5)
@@ -155,7 +126,7 @@ fun BeggingRequestCompleteScreen(
                             .size(200.dp)
                     )
                     Text(
-                        text = reason ?: "알 수 없음",
+                        text = begContent ?: "알 수 없음",
                         style = FontSizes.h20,
                         fontWeight = FontWeight.Black
                     )
@@ -163,7 +134,7 @@ fun BeggingRequestCompleteScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$amount",
+                            text = "$begMoney",
                             style = FontSizes.h24,
                             fontWeight = FontWeight.Black,
                             color = Color(0xFF6DCEF5)
@@ -192,11 +163,9 @@ fun BeggingRequestCompleteScreen(
             ){
                 LightGrayButton(
                     onClick = {
-                        navController.navigate("mainPage") {
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                        }
+                        navController.navigate("parentBeggingWaiting")
                     },
-                    text = "홈으로 가기",
+                    text = "거절하기",
                     modifier = Modifier
                         .width(130.dp), // 원하는 너비 설정
                     height = 50,
@@ -204,11 +173,9 @@ fun BeggingRequestCompleteScreen(
                 )
                 BlueButton(
                     onClick = {
-                        navController.navigate("begging") {
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                        }
+                        navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}")
                     },
-                    text = "조르기로 가기",
+                    text = "미션주기",
                     modifier = Modifier
                         .width(230.dp), // 원하는 너비 설정
                     height = 50,
@@ -217,16 +184,4 @@ fun BeggingRequestCompleteScreen(
             }
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560", // Galaxy S24 Ultra 해상도에 맞추기
-    showSystemUi = true
-)
-@Composable
-fun BeggingRequestCompleteScreenPreview() {
-    // 임시 NavController를 생성하여 프리뷰에서 사용
-    val navController = rememberNavController()
-    BeggingRequestReasonScreen(navController = navController, name = "테스트 사용자", amount = 50000) // 테스트용 이름 전달
 }

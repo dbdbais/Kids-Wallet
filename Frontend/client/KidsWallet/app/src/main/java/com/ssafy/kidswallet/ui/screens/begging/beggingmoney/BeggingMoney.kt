@@ -1,6 +1,5 @@
-package com.ssafy.kidswallet.ui.screens.begging
+package com.ssafy.kidswallet.ui.screens.begging.beggingmoney
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,10 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,17 +35,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
@@ -61,7 +51,8 @@ import com.ssafy.kidswallet.viewmodel.PersonViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssafy.kidswallet.data.model.PersonModel
 import com.ssafy.kidswallet.ui.components.BlueButton
-import com.ssafy.kidswallet.viewmodel.BeggingListViewModel
+import com.ssafy.kidswallet.ui.components.DateUtils
+import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 
 @Composable
 fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel = viewModel()) {
@@ -89,11 +80,19 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
                     fontWeight = FontWeight.Black,
                     style = FontSizes.h32
                 )
-
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp, start = 16.dp, end = 16.dp)
+                        .height(2.dp),
+                    color = Color(0xFFB2EBF2)
+                )
                 Spacer(modifier = Modifier.height(16.dp))
+
                 PeopleSelect(onPersonSelected = { person ->
                     viewModel.setSelectedPerson(person)
                 })
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 BlueButton(
@@ -108,17 +107,28 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
                     elevation = 0
                 )
 
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
                     text = "최근 조르기 내역",
                     fontWeight = FontWeight.Black,
                     style = FontSizes.h32
                 )
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 2.dp, start = 16.dp, end = 16.dp)
+                        .height(2.dp),
+                    color = Color(0xFFB2EBF2)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
                 RecentlyList()
             }
         }
         BottomNavigationBar(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(top = 16.dp), navController
+            modifier = Modifier
+                .align(Alignment.BottomCenter), navController
         )
     }
 }
@@ -231,7 +241,9 @@ fun PeopleSelect(
                                     modifier = Modifier
                                         .size(40.dp)
                                         .background(
-                                            color = if (person.gender == "남") Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
+                                            color = if (person.gender == "남") Color(0xFFE9F8FE) else Color(
+                                                0xFFFFEDEF
+                                            ),
                                             shape = CircleShape
                                         ),
                                     contentAlignment = Alignment.Center
@@ -262,14 +274,15 @@ fun PeopleSelect(
 }
 
 @Composable
-fun RecentlyList(viewModel: BeggingListViewModel = viewModel()) {
+fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel()) {
     LaunchedEffect(Unit) {
-        viewModel.fetchBeggingList()
+        viewModel.fetchMissionList()
     }
     // ViewModel의 데이터를 관찰
-    val beggingList = viewModel.recentlyBeggingModel.collectAsState().value
+    val missionList = viewModel.missionList.collectAsState().value
+    val completeMission = missionList.filter { it.mission?.missionStatus == "complete" }
 
-    if (beggingList.isEmpty()) {
+    if (completeMission.isEmpty()) {
         // 데이터가 비어 있을 때는 Empty 이미지를 표시
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -291,13 +304,23 @@ fun RecentlyList(viewModel: BeggingListViewModel = viewModel()) {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp) // 항목 간 간격
         ) {
-            items(beggingList) { item ->
+            items(completeMission) { mission ->
+                val formattedDate = DateUtils.formatDate(mission.begDto.createAt)
+                val formattedNumber = NumberUtils.formatNumberWithCommas(mission.begDto.begMoney)
                 Box(
                     modifier = Modifier
                         .width(250.dp)
-                        .height(200.dp)
-                        .border(6.dp, Color(0xFF99DDF8).copy(alpha = 0.1f), RoundedCornerShape(24.dp))
-                        .border(4.dp, Color(0xFF99DDF8).copy(alpha = 0.3f), RoundedCornerShape(24.dp))
+                        .height(160.dp)
+                        .border(
+                            6.dp,
+                            Color(0xFF99DDF8).copy(alpha = 0.1f),
+                            RoundedCornerShape(24.dp)
+                        )
+                        .border(
+                            4.dp,
+                            Color(0xFF99DDF8).copy(alpha = 0.3f),
+                            RoundedCornerShape(24.dp)
+                        )
                         .border(2.dp, Color(0xFF99DDF8), RoundedCornerShape(24.dp))
                         .padding(8.dp),
                     contentAlignment = Alignment.Center,
@@ -309,7 +332,7 @@ fun RecentlyList(viewModel: BeggingListViewModel = viewModel()) {
                          modifier = Modifier.padding(bottom = 16.dp)
                         ) {
                             Text(
-                                text = item.date,
+                                text = formattedDate,
                                 color = Color.Gray,
                                 fontWeight = FontWeight.Bold,
                             )
@@ -319,7 +342,7 @@ fun RecentlyList(viewModel: BeggingListViewModel = viewModel()) {
                             verticalAlignment = Alignment.CenterVertically
                         ){
                             Text(
-                                text = item.name,
+                                text = mission.name,
                                 color = Color(0xFF6DCEF5),
                                 fontWeight = FontWeight.Bold,
                                 style = FontSizes.h24
@@ -334,7 +357,7 @@ fun RecentlyList(viewModel: BeggingListViewModel = viewModel()) {
                             verticalAlignment = Alignment.CenterVertically
                         ){
                             Text(
-                                text = item.money,
+                                text = formattedNumber,
                                 color = Color(0xFF6DCEF5),
                                 fontWeight = FontWeight.Bold,
                                 style = FontSizes.h24

@@ -1,4 +1,4 @@
-package com.ssafy.kidswallet.ui.screens.begging
+package com.ssafy.kidswallet.ui.screens.begging.mission
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,15 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
-import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.GreenButton
 import com.ssafy.kidswallet.ui.components.Top
-import com.ssafy.kidswallet.ui.components.YellowButton
 import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 
 @Composable
-fun BeggingMissionCheckScreen(navController: NavController) {
+fun BeggingMissionCompleteScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,8 +62,8 @@ fun BeggingMissionCheckScreen(navController: NavController) {
                 Button(
                     onClick = { navController.navigate("beggingMissionCheck") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6DCEF5),
-                        contentColor = Color.White
+                        containerColor = Color(0xFFF7F7F7),
+                        contentColor =  Color(0xFF8C8595)
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
@@ -77,8 +76,8 @@ fun BeggingMissionCheckScreen(navController: NavController) {
                 Button(
                     onClick = { navController.navigate("beggingMissionComplete") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFF7F7F7),
-                        contentColor = Color(0xFF8C8595)
+                        containerColor = Color(0xFF6DCEF5),
+                        contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
@@ -106,7 +105,7 @@ fun BeggingMissionCheckScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "미션 진행 중",
+                    text = "미션 완료",
                     fontWeight = FontWeight.Bold,
                     style = FontSizes.h16,
                     color = Color(0xFF8C8595)
@@ -120,56 +119,23 @@ fun BeggingMissionCheckScreen(navController: NavController) {
 
             Column(
                 modifier = Modifier
-                    .weight(0.5f)
+                    .weight(1f)
                     .fillMaxWidth()
             ) {
-                CurrentMissionList(navController = navController)
+                CompleteMissionList()
             }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.logo_time),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp) // 이미지 크기 조정
-                        .clip(CircleShape) // 이미지도 동그랗게 클립
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "미션 대기 중",
-                    fontWeight = FontWeight.Bold,
-                    style = FontSizes.h16,
-                    color = Color(0xFF8C8595)
-                )
-            }
-            Divider(
-                color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                modifier = Modifier.padding(vertical = 8.dp) // 여백 추가 (선택 사항)
-            )
-
-            Column(
-                modifier = Modifier
-                    .weight(0.5f)
-                    .fillMaxWidth()
-            ) {
-                WaitingMissionList()
-            }
-
 
         }
     }
 }
 
 @Composable
-fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navController: NavController) {
+fun CompleteMissionList(viewModel: BeggingMissionViewModel = viewModel()) {
     LaunchedEffect(Unit) {
         viewModel.fetchMissionList()
     }
     val missionList = viewModel.missionList.collectAsState().value
-    val ongoingMission = missionList.filter { it.mission?.missionStatus == "proceed"}
+    val completeMission = missionList.filter { it.mission?.missionStatus == "complete" }
 
     Row(
         modifier = Modifier
@@ -178,7 +144,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (ongoingMission.isEmpty()) {
+        if (completeMission.isEmpty()) {
             Image(
                 painter = painterResource(id = R.drawable.empty), // 이미지 리소스
                 contentDescription = "Empty Icon",
@@ -194,9 +160,8 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                 verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
                 horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
             ) {
-                items(ongoingMission) {mission ->
+                items(completeMission) {mission ->
                     val formattedDate = DateUtils.formatDate(mission.begDto.createAt)
-
                     Column (
                         modifier = Modifier
                             .width(400.dp)
@@ -228,14 +193,8 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                                 fontWeight = FontWeight.Bold,
                                 style = FontSizes.h16,
                                 color = Color.Gray
-                                )
-                            BlueButton(
-                                onClick = {
-                                    navController.navigate("beggingMissionPlay/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
-                                },
-                                text = "미션 수행하기",
-                                height = 40
                             )
+                            GreenButton(onClick = { /*TODO*/ }, text = "승인", height = 40)
                         }
                         Row(
                             modifier = Modifier
@@ -274,126 +233,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
 
                                 )
                                 Text(
-                                    text = "님이 미션을 주셨어요!",
-                                    fontWeight = FontWeight.Bold,
-                                    style = FontSizes.h16,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel()) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchMissionList()
-    }
-    val missionList = viewModel.missionList.collectAsState().value
-    val waitingMission = missionList.filter {
-        (it.begDto.begAccept == true && it.mission == null) || (it.begDto.begAccept == null && it.mission == null)
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (waitingMission.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.empty), // 이미지 리소스
-                contentDescription = "Empty Icon",
-                modifier = Modifier
-                    .size(150.dp)
-                    .graphicsLayer(alpha = 0.8f) // 투명도 조절
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
-            ) {
-                items(waitingMission) {mission ->
-                    val formattedDate = DateUtils.formatDate(mission.begDto.createAt)
-                    Column (
-                        modifier = Modifier
-                            .width(400.dp)
-                            .height(140.dp)
-                            .padding(bottom = 16.dp)
-                            .border(
-                                6.dp,
-                                Color(0xFF99DDF8).copy(alpha = 0.1f),
-                                RoundedCornerShape(24.dp)
-                            )
-                            .border(
-                                4.dp,
-                                Color(0xFF99DDF8).copy(alpha = 0.3f),
-                                RoundedCornerShape(24.dp)
-                            )
-                            .border(2.dp, Color(0xFF99DDF8), RoundedCornerShape(24.dp)),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Center
-                    ){
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = formattedDate,
-                                fontWeight = FontWeight.Bold,
-                                style = FontSizes.h16,
-                                color = Color.Gray
-                            )
-                            YellowButton(onClick = { /*TODO*/ }, text = "대기", height = 40)
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        color = if (kotlin.random.Random.nextBoolean()) Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(
-                                        id = if (kotlin.random.Random.nextBoolean()) R.drawable.character_old_man else R.drawable.character_old_girl
-                                    ),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(32.dp) // 이미지 크기 조정
-                                        .clip(CircleShape) // 이미지도 동그랗게 클립
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Row (
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Text(
-                                    text = mission.name,
-                                    fontWeight = FontWeight.Bold,
-                                    style = FontSizes.h16,
-                                    color = Color(0xFF6DCEF5)
-
-                                )
-                                Text(
-                                    text = "에게 용돈을 요청했어요!",
+                                    text = "님이 용돈을 주셨어요!",
                                     fontWeight = FontWeight.Bold,
                                     style = FontSizes.h16,
                                 )

@@ -45,7 +45,7 @@ import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 
 @Composable
-fun ParentBeggingWaitingkScreen(navController: NavController) {
+fun ParentBeggingWaitingScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,13 +98,13 @@ fun ParentBeggingWaitingkScreen(navController: NavController) {
                 .weight(0.5f)
                 .fillMaxWidth()
         ) {
-            CurrentMissionList(navController = navController)
+            WaitingMissionList(navController = navController)
         }
     }
 }
 
 @Composable
-fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navController: NavController) {
+fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), navController: NavController) {
     LaunchedEffect(Unit) {
         viewModel.fetchMissionList()
     }
@@ -193,7 +193,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                             ) {
                                 BlueButton(
                                     onClick = {
-                                        // navController.navigate("beggingMissionPlay/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
+                                        navController.navigate("parentBeggingRequestCheck/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}")
                                     },
                                     text = "요청 확인",
                                     height = 40
@@ -201,7 +201,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                             } else {
                                 YellowButton(
                                     onClick = {
-                                        // navController.navigate("beggingMissionPlay/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
+                                        navController.navigate("parentBeggingTestMission/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}/${mission.mission?.completionPhoto}")
                                     },
                                     text = "미션 확인",
                                     height = 40
