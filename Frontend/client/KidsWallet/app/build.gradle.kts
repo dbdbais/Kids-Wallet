@@ -22,7 +22,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/\"")
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
         }
         release {
             isMinifyEnabled = false
@@ -30,7 +30,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/\"")
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
         }
     }
     compileOptions {

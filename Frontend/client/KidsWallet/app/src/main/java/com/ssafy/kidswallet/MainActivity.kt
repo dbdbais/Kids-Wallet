@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ssafy.kidswallet.ui.screens.alert.AlertListScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionCheckScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionPlayScreen
@@ -60,8 +61,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val navController = rememberNavController() // NavController 생성
-                    MainScreen(navController) // NavController를 MainScreen에 전달
+                    val navController = rememberNavController()
+                    MainScreen(navController)
                 }
             }
         }
@@ -200,5 +201,7 @@ fun MainScreen(navController: NavHostController) {
         composable("quiz") { QuizScreen(navController) }
 
         composable("makeAccount") { MakeAccountScreen(navController) }
+
+        composable("alertList") { AlertListScreen(navController) }
     }
 }

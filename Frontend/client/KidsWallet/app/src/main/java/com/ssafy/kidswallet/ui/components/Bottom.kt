@@ -53,6 +53,9 @@ fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavControl
             painter = painterResource(id = R.drawable.icon_alert),
             contentDescription = "Alert",
             modifier = Modifier.size(32.dp)
+                .clickable {
+                    navController.navigate("alertList")
+                }
         )
         Image(
             painter = painterResource(id = R.drawable.home),
