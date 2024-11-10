@@ -6,6 +6,6 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ApiService {
-    @POST("api/v1/user/register")
+    @POST("user/register")
     suspend fun registerUser(@Body signUpModel: SignUpModel): Response<Any>
 }
