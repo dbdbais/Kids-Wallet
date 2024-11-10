@@ -29,6 +29,14 @@ public class User
     @Column(name="user_id",nullable = false)
     private long userId;
 
+    @Builder.Default
+    @Column(name="representative_account_id", nullable = true)
+    private String representAccountId = null;
+
+    @Builder.Default
+    @Column(name="isCard")
+    private boolean hasCard = false;
+
     @Column(name = "user_name",nullable = false)
     private String userName;
 
@@ -69,6 +77,15 @@ public class User
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "child", cascade = CascadeType.ALL)
     private List<Relation> childrenRelations;
+
+    public void makeCard(){
+        this.hasCard = true;
+    }
+
+    public void setRepresentAccountId(String registerId){
+        this.representAccountId = registerId;
+    }
+
 
     @Override
     public String toString() {

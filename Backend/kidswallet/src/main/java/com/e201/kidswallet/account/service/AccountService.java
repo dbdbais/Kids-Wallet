@@ -192,7 +192,7 @@ public class AccountService {
         sUser.get().getAccounts().add(newAccount);
         //유저에 추가
         //accountRepository.save(newAccount);
-
+        sUser.get().setRepresentAccountId(newAccountId);
         return StatusCode.SUCCESS;
     }
 

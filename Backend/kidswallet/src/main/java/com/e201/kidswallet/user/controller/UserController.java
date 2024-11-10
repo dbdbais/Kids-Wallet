@@ -33,7 +33,6 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto> registUser( @RequestBody RegisterRequestDTO registerRequestDTO){
-        System.out.println("hi");
         StatusCode returnCode = userService.registerUser(registerRequestDTO);
         return ResponseDto.response(returnCode);
     }
@@ -47,7 +46,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> loginUser(@RequestBody UserLoginDTO userLoginDTO){
         UserLoginResponseDTO userLoginResponseDTO = userService.loginUser(userLoginDTO);
-        return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO.getMap());
+        return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO);
     }
 
     /**
@@ -64,16 +63,30 @@ public class UserController {
 
     /**
      * 유저가 가지는 계좌 정보를 모두 조회하는 로직
-     * @param id
+     * @param userId
      * @return 모든 계좌 정보 반환
      */
 
-    @GetMapping("/accounts/{id}")
-    public ResponseEntity<ResponseDto> getAccounts(@PathVariable Long id) {
-        List<AccountInfoResponseDTO> lst = userService.getAccountInfo(id);
+    @GetMapping("/accounts/{userId}")
+    public ResponseEntity<ResponseDto> getAccounts(@PathVariable Long userId) {
+        List<AccountInfoResponseDTO> lst = userService.getAccountInfo(userId);
         return ResponseDto.response(StatusCode.SUCCESS, lst);
     }
 
+    /**
+     * 유저가 카드를 발급하는 로직
+     * @param userId
+     * @return 카드발급 성공 여부 반환
+     */
 
+    @PatchMapping("/card/{userId}")
+    public ResponseEntity<ResponseDto> getCard(@PathVariable Long userId) {
+        StatusCode statusCode = userService.getCard(userId);
+        return ResponseDto.response(statusCode);
+    }
 
+//    @GetMapping("/info/{userId}")
+//    public ResponseEntity<ResponseDto> getUserInfo(@PathVariable Long userId) {
+//
+//    }
 }
