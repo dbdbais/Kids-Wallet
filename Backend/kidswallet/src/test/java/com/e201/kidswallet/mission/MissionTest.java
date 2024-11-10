@@ -2,6 +2,7 @@
 
  import com.e201.kidswallet.AbstractTest;
  import com.e201.kidswallet.common.exception.StatusCode;
+ import com.e201.kidswallet.fcm.service.FcmService;
  import com.e201.kidswallet.mission.dto.*;
  import com.e201.kidswallet.mission.enums.Status;
  import com.e201.kidswallet.mission.repository.MissionRepository;
@@ -30,12 +31,15 @@
      private MissionService service;
      @Autowired
      private MissionRepository missionRepository;
+     @Autowired
+     private FcmService fcmService;
 
      @Test
      @Order(1)
      //    @Transactional
      public void createBegTest(){
          BeggingRequestDto begRequestDto = new BeggingRequestDto(2,1,"Create Beg Test",1000);
+         fcmService.sendMessage(fcmService.getToken(1L),"toBackendTest","toBackendTest" );
          assertEquals(StatusCode.SUCCESS, service.begging(begRequestDto)); // 결과 검증
      }
 
