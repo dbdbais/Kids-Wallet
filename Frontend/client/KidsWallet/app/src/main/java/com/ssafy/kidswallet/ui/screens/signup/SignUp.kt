@@ -42,26 +42,27 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.viewmodel.SignUpViewModel
 import java.util.Calendar
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun SignUp(navController: NavController) {
+fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordChecked by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var birth by remember { mutableStateOf("") }
-    var idFocused by remember { mutableStateOf(false) }
-    var passwordFocused by remember { mutableStateOf(false) }
-    var passwordCheckedFocused by remember { mutableStateOf(false) }
-    var nameFocused by remember { mutableStateOf(false) }
-    var birthFocused by remember { mutableStateOf(false) }
-    var selectedGender by remember { mutableStateOf("남") }
-    var selectedRole by remember { mutableStateOf("부모") }
+
+    var selectedGender by remember { mutableStateOf("") }
+    var selectedRole by remember { mutableStateOf("") }
+
+    val errorState = viewModel.errorState.collectAsState().value
 
     var idError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
@@ -168,20 +169,6 @@ fun SignUp(navController: NavController) {
                     unfocusedBorderColor = if (nameError) Color.Red else Color(0xFFD3D0D7)
                 )
             )
-//            OutlinedTextField(
-//                value = birth,
-//                onValueChange = { birth = it },
-//                label = { Text("생년월일", color = Color(0xFF8C8595)) },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .onFocusChanged { focusState -> birthFocused = focusState.isFocused }
-//                    .padding(bottom = 8.dp),
-//                shape = RoundedCornerShape(15.dp),
-//                colors = OutlinedTextFieldDefaults.colors(
-//                    focusedBorderColor = Color(0xFF6DCEF5),
-//                    unfocusedBorderColor = Color( 0xFFD3D0D7)
-//                ),
-//            )
             BirthdayInputField(
                 birth = birth,
                 onDateSelected = { selectedDate ->
@@ -197,7 +184,7 @@ fun SignUp(navController: NavController) {
 
             BlueButton(
                 onClick = {
-                    // 모든 필드가 유효한지 검증
+                    // 모든 필드가 유효한지 검증 - 비어있으면 true고, 비어있지 않아야 !로 true가 됨
                     idError = id.isEmpty()
                     passwordError = password.isEmpty()
 
@@ -206,12 +193,20 @@ fun SignUp(navController: NavController) {
 
 
                     // 유효한 경우 회원가입 정보 저장 로직 추가
-                    if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError) {
+                    if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked)) {
                         Toast.makeText(
-                            context,
+                           context,
                             "아이디: $id, 비밀번호: $password, 이름: $name, 생년월일: $birth, 성별: $selectedGender, 역할: $selectedRole",
                             Toast.LENGTH_LONG
                         ).show()
+                        viewModel.registerUser(
+                            userName = id,
+                            userPassword = password,
+                            userBirth = birth,
+                            userGender = selectedGender,
+                            userRealName = name,
+                            userRole = selectedRole
+                        )
                     } else {
                         Toast.makeText(context, "모든 필드를 정확히 입력해 주세요.", Toast.LENGTH_SHORT).show()
                     }
@@ -234,14 +229,14 @@ fun GenderSelection(selectedGender: String, onGenderSelected: (String) -> Unit) 
     ) {
         GenderButton(
             text = "남",
-            isSelected = selectedGender == "남",
-            onClick = { onGenderSelected("남") }
+            isSelected = selectedGender == "MALE",
+            onClick = { onGenderSelected("MALE") }
         )
 
         GenderButton(
             text = "여",
-            isSelected = selectedGender == "여",
-            onClick = { onGenderSelected("여") }
+            isSelected = selectedGender == "FEMALE",
+            onClick = { onGenderSelected("FEMALE") }
         )
     }
 }
@@ -277,14 +272,14 @@ fun RoleSelection(selectedRole: String, onRoleSelected: (String) -> Unit) {
     ) {
         RoleButton(
             text = "부모",
-            isSelected = selectedRole == "부모",
-            onClick = { onRoleSelected("부모") }
+            isSelected = selectedRole == "PARENT",
+            onClick = { onRoleSelected("PARENT") }
         )
 
         RoleButton(
             text = "아이",
-            isSelected = selectedRole == "아이",
-            onClick = { onRoleSelected("아이")}
+            isSelected = selectedRole == "CHILD",
+            onClick = { onRoleSelected("CHILD")}
         )
     }
 }
