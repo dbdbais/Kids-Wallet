@@ -1,19 +1,22 @@
 package com.e201.kidswallet.togetherrun.entity;
 
 import com.e201.kidswallet.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Data
-@EnableJpaAuditing
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "saving_payment")
 public class SavingPayment {
 
     @Id
@@ -23,6 +26,8 @@ public class SavingPayment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "saving_contract_id", nullable = false)
+    @ToString.Exclude
+    @JsonIgnore
     private SavingContract savingContract;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,7 +41,7 @@ public class SavingPayment {
     private LocalDateTime depositDate;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
 }

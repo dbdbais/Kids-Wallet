@@ -59,9 +59,11 @@ public class TogetherRunService {
         List<Relation> relationList = user.getChildrenRelations();
         Relation relation = null;
         for (Relation r : relationList) {
+            System.out.println("Relation Child: " + r.getChild().getUserId());
+            System.out.println("Relation Parent: " + r.getParent().getUserId());
             if (r.getParent().getUserId() == togetherRunRegisterRequestDto.getParentsId()) {
                 relation = r;
-                break;
+//                break;
             }
         }
 

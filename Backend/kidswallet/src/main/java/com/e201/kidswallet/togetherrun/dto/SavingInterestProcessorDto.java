@@ -4,10 +4,9 @@ import com.e201.kidswallet.togetherrun.entity.SavingPayment;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Data
-public class SavingTransferProcessorDto {
-    private long savingContractId;
+@Builder
+public class SavingInterestProcessorDto {
     private SavingPayment childPayment;
     private SavingPayment parentsPayment;
 }

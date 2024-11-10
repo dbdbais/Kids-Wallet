@@ -2,10 +2,7 @@ package com.e201.kidswallet.togetherrun.entity;
 
 import com.e201.kidswallet.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -61,13 +58,12 @@ public class SavingContract {
     @Column(name="expired_at")
     private LocalDate expiredAt;
 
-    @Column(name="saving_account")
-    private String savingAccount;
-
     @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "savingContract", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<SavingPayment> savingPayments = new ArrayList<>();
 
 }
