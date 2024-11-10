@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.main
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import com.ssafy.kidswallet.ui.components.Top
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,9 +27,13 @@ import androidx.compose.ui.unit.sp
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MainPageScreen(navController: NavController) {
+fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
+    val userData = viewModel.userData.collectAsState().value
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,8 +70,10 @@ fun MainPageScreen(navController: NavController) {
                         .width(50.dp) // 가로 크기 조절
                         .height(50.dp) // 세로 크기 조절
                 )
+
+                Log.d("MainPageScreen", "Current user data: $userData")
                 Text(
-                    text = "500,000",
+                    text = userData?.userMoney?.toString() ?: "알 수 없음",
                     fontWeight = FontWeight.W900,
                     style = FontSizes.h24,
                     modifier = Modifier.padding(start = 8.dp)
