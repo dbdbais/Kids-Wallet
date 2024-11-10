@@ -1,7 +1,5 @@
 package com.e201.kidswallet.mission.service;
 
-import com.e201.kidswallet.account.dto.TransferMoneyDTO;
-import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.mission.dto.*;
 import com.e201.kidswallet.mission.entity.Mission;
 import com.e201.kidswallet.mission.enums.Status;
@@ -28,21 +26,19 @@ import java.util.*;
 @Slf4j
 @Service
 public class MissionService {
+    //    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
 
     private final BegRepository begRepository;
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
     private final RelationRepository relationRepository;
-    private final AccountService accountService;
-
     @Autowired
-    public MissionService(BegRepository begRepository, MissionRepository missionRepository, UserRepository userRepository, RelationRepository relationRepository, AccountService accountService) {
+    public MissionService(BegRepository begRepository, MissionRepository missionRepository, UserRepository userRepository, RelationRepository relationRepository) {
 
         this.begRepository = begRepository;
         this.missionRepository = missionRepository;
         this.userRepository = userRepository;
         this.relationRepository = relationRepository;
-        this.accountService = accountService;
     }
 
     //Transactional은 runtime err일 때만 롤백가능
@@ -131,41 +127,21 @@ public class MissionService {
             status = Status.complete;
             log.info("requestDto.isComplete: " + requestDto.getIsComplete());
             log.info("status: " + status);
-            transfer(requestDto.getMissionId());
         }
         else
             status=Status.fail;
 
-//      missionRepository.updateMissionStatus(requestDto.getMissionId(),status.toString(),LocalDateTime.now());
+//        missionRepository.updateMissionStatus(requestDto.getMissionId(),status.toString(),LocalDateTime.now());
         Mission mission = missionRepository.findById(requestDto.getMissionId()).get();
         mission.changeMissionStatusAndCompleteTime(status);
 
         log.info("Updating mission status: missionId=" + requestDto.getMissionId() + ", status=" + status + ", updateTime=" + LocalDateTime.now());
-
-
+        //TODO: 계좌로 입금 로직 추가
 
         return StatusCode.SUCCESS;
     }
 
-    //계좌로 입금 로직
-    private void transfer(long missionId) {
-        Beg beg = missionRepository.findById(missionId).get().getBeg();
-        int money = beg.getBegMoney();
-        Relation relation = beg.getRelation();
-        //TODO: 대표 계좌 조회
-//        relation.getParent().getAccounts();
-//        relation.getChild().getAccounts();
-
-        //TODO: 송금
-//        accountService.transferMoney(new TransferMoneyDTO(pAccountId,
-//                                                          cAccountId,
-//                                                          money
-//                                                          ))
-
-    }
-
     //TODO: 지연로딩을 위한 처리 해야됨
-    //TODO: redis 작업
     //조르기와 미션 리스트 get
     @Transactional
     public List<MissionListResponseDto> getBegMissionList(long userId, long start, long end) {
