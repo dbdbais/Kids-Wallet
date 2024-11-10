@@ -1,17 +1,18 @@
 package com.e201.kidswallet.user.controller;
 
+import com.e201.kidswallet.account.dto.AccountInfoResponseDTO;
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.user.dto.RegisterRequestDTO;
 import com.e201.kidswallet.user.dto.RelationRequestDTO;
 import com.e201.kidswallet.user.dto.UserLoginDTO;
+import com.e201.kidswallet.user.dto.UserLoginResponseDTO;
 import com.e201.kidswallet.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -32,6 +33,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto> registUser( @RequestBody RegisterRequestDTO registerRequestDTO){
+        System.out.println("hi");
         StatusCode returnCode = userService.registerUser(registerRequestDTO);
         return ResponseDto.response(returnCode);
     }
@@ -44,8 +46,8 @@ public class UserController {
     
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> loginUser(@RequestBody UserLoginDTO userLoginDTO){
-        StatusCode returnCode = userService.loginUser(userLoginDTO);
-        return ResponseDto.response(returnCode);
+        UserLoginResponseDTO userLoginResponseDTO = userService.loginUser(userLoginDTO);
+        return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO);
     }
 
     /**
@@ -60,4 +62,26 @@ public class UserController {
         return ResponseDto.response(returnCode);
     }
 
+    /**
+     * 유저가 가지는 계좌 정보를 모두 조회하는 로직
+     * @param userId
+     * @return 모든 계좌 정보 반환
+     */
+
+    @GetMapping("/accounts/{userId}")
+    public ResponseEntity<ResponseDto> getAccounts(@PathVariable Long userId) {
+        List<AccountInfoResponseDTO> lst = userService.getAccountInfo(userId);
+        return ResponseDto.response(StatusCode.SUCCESS, lst);
+    }
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
+
+//    @GetMapping("/info/{userId}")
+//    public ResponseEntity<ResponseDto> getUserInfo(@PathVariable Long userId) {
+//
+//    }
 }

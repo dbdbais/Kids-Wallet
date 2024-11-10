@@ -61,6 +61,9 @@ public class SavingContract {
     @Column(name="expired_at")
     private LocalDate expiredAt;
 
+    @Column(name="saving_account")
+    private String savingAccount;
+
     @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 

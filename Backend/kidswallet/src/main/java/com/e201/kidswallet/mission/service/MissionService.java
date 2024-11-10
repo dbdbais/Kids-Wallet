@@ -6,6 +6,7 @@ import com.e201.kidswallet.mission.enums.Status;
 import com.e201.kidswallet.mission.repository.MissionRepository;
 import com.e201.kidswallet.mission.dto.MissionListResponseDto;
 import com.e201.kidswallet.user.entity.Relation;
+import com.e201.kidswallet.user.enums.Role;
 import com.e201.kidswallet.user.repository.RelationRepository;
 import com.e201.kidswallet.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,8 @@ import java.util.*;
 @Slf4j
 @Service
 public class MissionService {
-//    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
-    private final long MAX_LONGBLOB_SIZE = 4L * 1024 * 1024 * 1024; // 4GB
+    //    private final long MAX_LONGBLOB_SIZE = 4_294_967_295L;
+
     private final BegRepository begRepository;
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
@@ -62,9 +63,9 @@ public class MissionService {
 
         //Beg테이블 빌드
         Beg beg =Beg.builder()
-                        .begContent(beggingRequestDto.getBeggingMessage())
-                        .begMoney(beggingRequestDto.getBeggingMoney())
-                        .relation(relation).build();
+                .begContent(beggingRequestDto.getBeggingMessage())
+                .begMoney(beggingRequestDto.getBeggingMoney())
+                .relation(relation).build();
 
         log.info(beg.toString());
         //여기서 실패하면 jpa가 RUNTIMEEXCEPTION을 throw함 == transactional이 됨
@@ -99,6 +100,7 @@ public class MissionService {
     // 이미지 업로드 == 미션에 대한 이미지
     @Transactional
     public StatusCode uploadCompleteImage(MissionCompleteRequestDto requestDto) {
+        final long MAX_LONGBLOB_SIZE = 4L * 1024 * 1024 * 1024; // 4GB
         //base64를 byte배열로 인코딩
         byte[] imageBytes = Base64.getDecoder().decode(requestDto.getBase64Image());
         long missionId = requestDto.getMissionId();
@@ -111,7 +113,7 @@ public class MissionService {
         log.info("imageBytes.length > MAX_LONGBLOB_SIZE: "+ (imageBytes.length > MAX_LONGBLOB_SIZE));
 
         //image update
-        missionRepository.uploadCompleteImage(imageBytes,missionId);
+        missionRepository.uploadCompleteImage(imageBytes,missionId,Status.submit.toString());
         return StatusCode.SUCCESS;
 
     }
@@ -146,11 +148,21 @@ public class MissionService {
 
         //userId로 user와 관련된 관계들을 get
         List<Relation> relations = relationRepository.findRelation(userId);
+        Role role = userRepository.findById(userId).get().getUserRole();
         List<MissionListResponseDto> missionListResponseDtos = new ArrayList<>();
 
         // 관계들을 순회하며 관계와 관련된 Beg들을 get
-        for(Relation r:relations){
-            log.info("info: "+r.toString());
+        for (Relation r : relations) {
+            // 요청하는 주체의 role에 따라 name을 동적으로 값 설정
+            // 요청하는 주체가 아이 => parent realName get in relation
+            // 요청하는 주체가 어른 => child realName get in relation
+            String name = null;
+            if (role == Role.CHILD)
+                name = r.getParent().getUserRealName();
+            else
+                name = r.getChild().getUserRealName();
+
+            log.info("info: " + r.toString());
             List<Beg> begs = r.getBegs();
             log.info("begs.size(): "+begs.size());
             //Beg들을 순회하며 Mision을 찾음 (1:1 관계)
@@ -186,7 +198,7 @@ public class MissionService {
                         beg.getBegAccept()
                 );
 
-                missionListResponseDtos.add(new MissionListResponseDto(begDto,missionDto));
+                missionListResponseDtos.add(new MissionListResponseDto(name,begDto,missionDto));
 
             }
         }

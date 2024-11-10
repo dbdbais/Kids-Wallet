@@ -1,5 +1,6 @@
 package com.e201.kidswallet.user.dto;
 
+import com.e201.kidswallet.user.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class MoneyRequestDTO {
-    private long userId;
-    private int money;
+public class ParentChildResponseDTO {
+    private String userName;
+    private Gender userGender;
 }
