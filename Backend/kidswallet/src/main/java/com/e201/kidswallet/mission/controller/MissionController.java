@@ -1,7 +1,7 @@
 package com.e201.kidswallet.mission.controller;
 
 import com.e201.kidswallet.common.exception.StatusCode;
-import com.e201.kidswallet.fcm.service.FcmService;
+//import com.e201.kidswallet.fcm.service.FcmService;
 import com.e201.kidswallet.mission.dto.*;
 import com.e201.kidswallet.mission.service.MissionService;
 import com.e201.kidswallet.common.ResponseDto;
@@ -17,18 +17,22 @@ public class MissionController {
 
 
     private final MissionService service;
-    private final FcmService fcmService;
-    @Autowired
-    public MissionController(MissionService begsService, FcmService fcmService) {
-        this.service = begsService;
-        this.fcmService = fcmService;
+//    private final FcmService fcmService;
+//    @Autowired
+//    public MissionController(MissionService begsService, FcmService fcmService) {
+//        this.service = begsService;
+//        this.fcmService = fcmService;
+//    }
+
+    public MissionController(MissionService service) {
+        this.service = service;
     }
 
     //아이가 어른에게 조르기
     @PostMapping("/beg")
     public ResponseEntity<?> begging(@RequestBody BeggingRequestDto requestDto){
-        String token = fcmService.getToken(requestDto.getToUserId());
-        fcmService.sendMessage(token,"조르기 요청","아이가 용돈을 요청했어요");
+//        String token = fcmService.getToken(requestDto.getToUserId());
+//        fcmService.sendMessage(token,"조르기 요청","아이가 용돈을 요청했어요");
         return ResponseDto.response(service.begging(requestDto));
     }
 
