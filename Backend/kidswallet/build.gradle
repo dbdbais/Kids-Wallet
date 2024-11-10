@@ -20,6 +20,7 @@ configurations {
 }
 
 repositories {
+	google()  // Firebase 의존성을 가져오기 위해 필요
 	mavenCentral()
 }
 
