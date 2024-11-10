@@ -3,6 +3,7 @@ package com.ssafy.kidswallet
 import android.os.Build
 import QuizScreen
 import android.os.Bundle
+import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -49,6 +50,7 @@ import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMoneyScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsRegisterScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
+import com.ssafy.kidswallet.ui.splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
@@ -89,6 +91,7 @@ fun MainScreen(navController: NavHostController) {
             }
         }
 
+        composable("splash") { SplashScreen(navController) }
         composable("loginRouting") { Login(navController) }
         composable("signup") { SignUp(navController) }
         composable("mainPage") { MainPageScreen(navController) }
