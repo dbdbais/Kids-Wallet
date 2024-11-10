@@ -4,16 +4,18 @@ import com.e201.kidswallet.transaction.enums.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class TransactionResponseDTO {
-    String accountId;
-    String message;
-    TransactionType transactionType;
-    int amount;
-    LocalDateTime transactionDate;
+    private String accountId;
+    private String message;
+    private TransactionType transactionType;
+    private int amount;
+    private LocalDateTime transactionDate;
 }

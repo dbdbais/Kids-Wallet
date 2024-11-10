@@ -68,6 +68,8 @@ public class AccountService {
         account.get().deposit(amount);
         account.get().addTransaction(depositTransaction);
 
+
+
         return StatusCode.SUCCESS;
 
     }
@@ -86,14 +88,13 @@ public class AccountService {
         // 해당하는 트랙잭션 생성
         Transaction withdrawlTransaction = makeTransaction(TransactionType.WITHDRAWAL, "인출", accountId, amount);
 
+        transactionRepository.save(withdrawlTransaction);
 
         account.get().withdraw(amount);
         account.get().addTransaction(withdrawlTransaction);
         //계좌 출금
 
-
         return StatusCode.SUCCESS;
-
     }
 
     private Transaction makeTransaction(TransactionType transactionType, String message, String id, int amount) {
@@ -109,8 +110,8 @@ public class AccountService {
     @Transactional
     public StatusCode transferMoney(TransferMoneyDTO transferMoneyDTO) {
 
-        String fromAccountId = transferMoneyDTO.getFAccountId();
-        String toAccountId = transferMoneyDTO.getTAccountId();
+        String fromAccountId = transferMoneyDTO.getFromId();
+        String toAccountId = transferMoneyDTO.getToId();
         int amount = transferMoneyDTO.getAmount();
         String message = transferMoneyDTO.getMessage();
 
