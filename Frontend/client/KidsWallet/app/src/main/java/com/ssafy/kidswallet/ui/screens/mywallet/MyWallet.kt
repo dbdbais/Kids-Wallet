@@ -29,8 +29,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.alpha
+import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+
+// Sample transaction data class
+data class Transaction(
+    val storeName: String,
+    val date: String,
+    val amount: Int,
+    val balance: Int
+)
 
 @Composable
 fun MyWalletScreen(navController: NavController) {
@@ -39,6 +50,14 @@ fun MyWalletScreen(navController: NavController) {
     var currentMonth by remember { mutableStateOf(calendar.get(Calendar.MONTH) + 1) } // 0-based month, +1 for display
     var currentYear by remember { mutableStateOf(calendar.get(Calendar.YEAR)) }
     val role = " "
+    val transactionList = listOf( // Example transaction list; replace with actual API data
+        Transaction("아이스24", "2024.10.22", -500, 500),
+        Transaction("미션", "2024.10.22", 500, 1000),
+        Transaction("CU편의점", "2024.10.22", -1500, 500),
+        Transaction("아이스24", "2024.10.22", -500, 500),
+        Transaction("미션", "2024.10.22", 500, 1000),
+        Transaction("CU편의점", "2024.10.22", -1500, 500)
+    )
 
     Column(
         modifier = Modifier
@@ -64,7 +83,6 @@ fun MyWalletScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(25.dp)
                 )
-//                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 16.dp)
         ) {
             Column {
                 Text(
@@ -92,21 +110,21 @@ fun MyWalletScreen(navController: NavController) {
                         navController = navController,
                         imageId = R.drawable.icon_wallet,
                         text = "지출 관리",
-                        route = "mainPage", // 첫 번째 아이콘 클릭 시 이동할 경로
+                        route = "mainPage",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
                         navController = navController,
                         imageId = R.drawable.icon_withrow,
                         text = "보내기",
-                        route = "mainPage", // 두 번째 아이콘 클릭 시 이동할 경로
+                        route = "mainPage",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
                         navController = navController,
                         imageId = R.drawable.icon_deposit,
                         text = "채우기",
-                        route = "mainPage", // 세 번째 아이콘 클릭 시 이동할 경로
+                        route = "mainPage",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
@@ -115,11 +133,10 @@ fun MyWalletScreen(navController: NavController) {
 
                 TextButton(
                     onClick = {
-                        // role에 따라 라우팅 처리
                         if (role == "parents") {
-                            navController.navigate("myWallet") // "parents"일 경우 특정 경로로 이동
+                            navController.navigate("myWallet")
                         } else {
-                            navController.navigate("begging") // "children"일 경우 다른 경로로 이동
+                            navController.navigate("begging")
                         }
                     },
                     modifier = Modifier
@@ -170,22 +187,21 @@ fun MyWalletScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Calendar Section with Rounded Gray Background
+        // Calendar Section
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = Color(0xFFF7F7F7), // 원하는 배경색
-                    shape = RoundedCornerShape(16.dp) // 라운드 모서리
+                    color = Color(0xFFF7F7F7),
+                    shape = RoundedCornerShape(16.dp)
                 )
-                .padding(12.dp) // 내부 여백 설정
+                .padding(start = 8.dp, end = 8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Define range: 2023년 11월 ~ 2024년 11월
                 val startMonth = 11
                 val startYear = 2023
                 val endMonth = 11
@@ -196,7 +212,6 @@ fun MyWalletScreen(navController: NavController) {
 
                 IconButton(
                     onClick = {
-                        // 이전 달로 이동
                         if (!isFirstMonth) {
                             if (currentMonth == 1) {
                                 currentMonth = 12
@@ -206,24 +221,23 @@ fun MyWalletScreen(navController: NavController) {
                             }
                         }
                     },
-                    enabled = !isFirstMonth, // 버튼 비활성화
-                    modifier = Modifier.alpha(if (isFirstMonth) 0f else 1f) // 버튼을 안보이게 하되 공간은 차지
+                    enabled = !isFirstMonth,
+                    modifier = Modifier.alpha(if (isFirstMonth) 0f else 1f)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.icon_back), // 커스텀 아이콘
+                        painter = painterResource(id = R.drawable.icon_back),
                         contentDescription = "이전 달",
-                        modifier = Modifier.size(24.dp) // 크기 조정 가능
+                        modifier = Modifier.size(20.dp)
                     )
                 }
                 Text(
                     text = "${currentYear}년 ${currentMonth}월",
                     style = FontSizes.h20,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 8.dp) // 텍스트 양쪽 간격
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
                 IconButton(
                     onClick = {
-                        // 다음 달로 이동
                         if (!isLastMonth) {
                             if (currentMonth == 12) {
                                 currentMonth = 1
@@ -233,37 +247,91 @@ fun MyWalletScreen(navController: NavController) {
                             }
                         }
                     },
-                    enabled = !isLastMonth, // 버튼 비활성화
-                    modifier = Modifier.alpha(if (isLastMonth) 0f else 1f) // 버튼을 안보이게 하되 공간은 차지
+                    enabled = !isLastMonth,
+                    modifier = Modifier.alpha(if (isLastMonth) 0f else 1f)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.icon_next), // 커스텀 아이콘
+                        painter = painterResource(id = R.drawable.icon_next),
                         contentDescription = "다음 달",
-                        modifier = Modifier.size(24.dp) // 크기 조정 가능
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(50.dp))
+        // Transaction Section
+        if (transactionList.isEmpty()) {
+            Spacer(modifier = Modifier.height(50.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_no_transaction),
+                    contentDescription = "거래내역 없음",
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "거래내역이 없어요",
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                transactionList.forEach { transaction ->
+                    TransactionItem(transaction = transaction)
+                    Divider(
+                        color = Color.LightGray,
+                        thickness = 1.dp,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
 
-        // No Transaction Section
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_no_transaction),
-                contentDescription = "거래내역 없음",
-                modifier = Modifier.size(100.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+@Composable
+fun TransactionItem(transaction: Transaction) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
             Text(
-                text = "거래내역이 없어요",
-                style = FontSizes.h20,
+                text = transaction.storeName,
+                style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = transaction.date,
+                style = FontSizes.h16,
+                color = Color.Gray
+            )
+        }
+        Column(
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(
+                text = if (transaction.amount > 0) "+${transaction.amount}원" else "${transaction.amount}원",
+                style = FontSizes.h16,
+                color = if (transaction.amount > 0) Color.Red else Color.Blue,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "잔액 ${transaction.balance}원",
+                style = FontSizes.h16,
+                color = Color.Gray
             )
         }
     }
@@ -275,11 +343,13 @@ fun ClickableIconWithText(
     imageId: Int,
     text: String,
     route: String,
-    modifier: Modifier = Modifier // 추가된 modifier 매개변수
+    modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.clickable { navController.navigate(route) }.padding(start = 16.dp, bottom = 16.dp)
+        modifier = modifier
+            .clickable { navController.navigate(route) }
+            .padding(start = 16.dp, bottom = 16.dp)
     ) {
         Image(
             painter = painterResource(id = imageId),
