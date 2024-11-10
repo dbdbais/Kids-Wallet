@@ -7,6 +7,6 @@
  import org.junit.platform.suite.api.Suite;
 
  @Suite
- @SelectClasses({ UserTest.class, MissionTest.class , AccountTest.class})
+// @SelectClasses({ UserTest.class, MissionTest.class , AccountTest.class})
  public class AllTests {
  }
