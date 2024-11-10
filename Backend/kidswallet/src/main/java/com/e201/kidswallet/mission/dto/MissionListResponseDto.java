@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MissionListResponseDto {
+    String name;
     BegDto begDto;
     MissionDto mission;
 

@@ -4,11 +4,13 @@ import com.e201.kidswallet.user.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class DonatedUserResponseDTO implements Comparable<DonatedUserResponseDTO> {
     private String userName;
