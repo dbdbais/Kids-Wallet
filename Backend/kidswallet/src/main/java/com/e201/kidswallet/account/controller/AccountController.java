@@ -20,12 +20,12 @@ public class AccountController {
     }
 
     /**
-     * 해당하는 유저의 계좌를 생성한다.
+     * 해당하는 유저의 계좌를 생성하고 대표 계좌로 지정한다.
      * @param userId
      * @return
      */
 
-    @PostMapping("/regist/{userId}")
+    @PostMapping("/register/{userId}")
     public ResponseEntity<ResponseDto> createAccount(@PathVariable Long userId){
         StatusCode returnCode = accountService.registerAccount(userId);
         return ResponseDto.response(returnCode);

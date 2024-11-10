@@ -29,6 +29,9 @@ public class User
     @Column(name="user_id",nullable = false)
     private long userId;
 
+    @Column(name="representative_account_id", nullable = true)
+    private String representAccountId = null;
+
     @Column(name = "user_name",nullable = false)
     private String userName;
 
@@ -66,9 +69,12 @@ public class User
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Relation> parentsRelations;
 
-
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "child", cascade = CascadeType.ALL)
     private List<Relation> childrenRelations;
+
+    public void setRepresentAccountId(String registerId){
+        this.representAccountId = registerId;
+    }
 
     @Override
     public String toString() {

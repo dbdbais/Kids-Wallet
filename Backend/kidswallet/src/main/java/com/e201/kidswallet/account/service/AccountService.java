@@ -14,6 +14,7 @@ import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -27,12 +28,28 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
+    private final RedisTemplate<String, Transaction> transactionRedisTemplate;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository, UserRepository userRepository) {
+    public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository, UserRepository userRepository, RedisTemplate<String, Transaction> transactionRedisTemplate) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
+        this.transactionRedisTemplate = transactionRedisTemplate;
+    }
+
+    // REDIS에 트랜잭션 저장
+    public void saveTransaction(String accountId, Long transactionId, Transaction transaction) {
+        // Redis 키 구성: transaction:계좌번호:트랜잭션ID
+        String key = "transaction:" + accountId + ":" + transactionId;
+        transactionRedisTemplate.opsForValue().set(key, transaction);
+    }
+
+    //REDIS에 트랜잭션 가져옴
+    public Transaction getTransaction(String accountId, Long transactionId) {
+        // Redis 키 구성: transaction:계좌번호:트랜잭션ID
+        String key = "transaction:" + accountId + ":" + transactionId;
+        return transactionRedisTemplate.opsForValue().get(key);
     }
 
     public String makeRandomAccount() {
@@ -55,6 +72,7 @@ public class AccountService {
         Optional<Account> account = accountRepository.findById(accountId);
 
         if (account.isEmpty()) {
+            log.info("비어있다.");
             return StatusCode.BAD_REQUEST;
         }
 
@@ -67,6 +85,8 @@ public class AccountService {
 
         account.get().deposit(amount);
         account.get().addTransaction(depositTransaction);
+
+        saveTransaction(accountId,depositTransaction.getTransactionId(),depositTransaction);
 
         return StatusCode.SUCCESS;
 
@@ -91,6 +111,7 @@ public class AccountService {
         account.get().addTransaction(withdrawlTransaction);
         //계좌 출금
 
+        saveTransaction(accountId,withdrawlTransaction.getTransactionId(),withdrawlTransaction);
 
         return StatusCode.SUCCESS;
 
@@ -139,6 +160,10 @@ public class AccountService {
 
         tAccount.get().deposit(amount);
         tAccount.get().addTransaction(depositTransaction);
+
+        saveTransaction(fromAccountId,withdrawalTransaction.getTransactionId(),withdrawalTransaction);
+        saveTransaction(toAccountId,depositTransaction.getTransactionId(),depositTransaction);
+
 
         // 변경 사항 저장
         accountRepository.save(fAccount.get());
@@ -192,6 +217,8 @@ public class AccountService {
         sUser.get().getAccounts().add(newAccount);
         //유저에 추가
         //accountRepository.save(newAccount);
+        //대표 계좌로 설정
+        sUser.get().setRepresentAccountId(newAccountId);
 
         return StatusCode.SUCCESS;
     }
