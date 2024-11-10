@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.kidswallet.data.model.LoginModel
+import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.data.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,9 @@ class LoginViewModel : ViewModel() {
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState
 
+    private val _userData = MutableStateFlow<UserDataModel?>(null)
+    val userData: StateFlow<UserDataModel?> = _userData
+
     fun loginUser(userName: String, userPassword: String) {
         val loginModel = LoginModel(userName, userPassword)
 
@@ -26,7 +30,15 @@ class LoginViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _loginState.value = true
 
+                    val apiResponse = response.body()
+                    val userData = apiResponse?.data
+                    if (userData != null) {
+                        _userData.value = userData
+                    }
+
                     Log.d("LoginSuccess", "Response Body: ${response.body()}")
+                    Log.d("FullResponse", "Response: $response")
+                    Log.d("UserDataState", "Current user data: ${_userData.value}")
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = errorBody?.let {
@@ -48,7 +60,3 @@ class LoginViewModel : ViewModel() {
         }
     }
 }
-
-
-
-// 성별, 이름, 돈, 롤, 카드 생성 했는지 여부, 통장 개설 여부, 등록한 아이나 어른 목록
