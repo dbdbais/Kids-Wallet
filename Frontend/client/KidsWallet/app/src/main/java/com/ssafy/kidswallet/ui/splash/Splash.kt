@@ -65,7 +65,7 @@ fun SplashScreen(navController: NavController) {
                     text = "의",
                     style = FontSizes.h32,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 6.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                    modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // 간격 추가
                 Text(
@@ -78,7 +78,7 @@ fun SplashScreen(navController: NavController) {
                     text = "를",
                     style = FontSizes.h32,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 6.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                    modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
                 )
             }
 
