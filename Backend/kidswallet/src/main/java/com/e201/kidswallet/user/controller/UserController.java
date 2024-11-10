@@ -47,7 +47,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> loginUser(@RequestBody UserLoginDTO userLoginDTO){
         UserLoginResponseDTO userLoginResponseDTO = userService.loginUser(userLoginDTO);
-        return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO.getMap());
+        return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO);
     }
 
     /**
@@ -64,16 +64,24 @@ public class UserController {
 
     /**
      * 유저가 가지는 계좌 정보를 모두 조회하는 로직
-     * @param id
+     * @param userId
      * @return 모든 계좌 정보 반환
      */
 
-    @GetMapping("/accounts/{id}")
-    public ResponseEntity<ResponseDto> getAccounts(@PathVariable Long id) {
-        List<AccountInfoResponseDTO> lst = userService.getAccountInfo(id);
+    @GetMapping("/accounts/{userId}")
+    public ResponseEntity<ResponseDto> getAccounts(@PathVariable Long userId) {
+        List<AccountInfoResponseDTO> lst = userService.getAccountInfo(userId);
         return ResponseDto.response(StatusCode.SUCCESS, lst);
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
 
-
+//    @GetMapping("/info/{userId}")
+//    public ResponseEntity<ResponseDto> getUserInfo(@PathVariable Long userId) {
+//
+//    }
 }
