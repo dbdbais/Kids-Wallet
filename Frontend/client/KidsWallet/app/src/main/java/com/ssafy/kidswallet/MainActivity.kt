@@ -3,6 +3,7 @@ package com.ssafy.kidswallet
 import android.os.Build
 import QuizScreen
 import android.os.Bundle
+import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
