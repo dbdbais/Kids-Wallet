@@ -45,11 +45,12 @@ public class MissionController {
         return ResponseDto.response(service.assignMission(requestDto));
     }
 
+    //부모에게 미션 수행 여부 전송
     @PutMapping("/complete")
     public ResponseEntity<?>missionComplete(@RequestBody MissionCompleteRequestDto requestDto){
         return ResponseDto.response(service.uploadCompleteImage(requestDto));
     }
-
+    //부모에게 미션 수행 여부 판단
     @PutMapping("/complete/check")
     public ResponseEntity<?> checkMissionComplete(@RequestBody MissionCompleteCheckRequestDto requestDto){
         return ResponseDto.response(service.missionCompleteCheck(requestDto));
