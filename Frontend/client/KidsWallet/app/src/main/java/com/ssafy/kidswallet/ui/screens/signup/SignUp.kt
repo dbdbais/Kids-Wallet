@@ -63,6 +63,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
     var selectedRole by remember { mutableStateOf("") }
 
     val errorState = viewModel.errorState.collectAsState().value
+    val navigateToLogin by viewModel.navigateToLogin.collectAsState()
 
     var idError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
@@ -70,6 +71,10 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
     var nameError by remember { mutableStateOf(false) }
     var birthError by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    if (navigateToLogin) {
+        navController.navigate("loginRouting")
+    }
 
     Column(
         modifier = Modifier
@@ -207,6 +212,8 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                             userRealName = name,
                             userRole = selectedRole
                         )
+                    } else if (password.length < 8) {
+                        Toast.makeText(context, "비밀번호는 8자리 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(context, "모든 필드를 정확히 입력해 주세요.", Toast.LENGTH_SHORT).show()
                     }

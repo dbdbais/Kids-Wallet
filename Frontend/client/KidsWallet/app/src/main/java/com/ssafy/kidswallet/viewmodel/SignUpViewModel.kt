@@ -21,6 +21,9 @@ class SignUpViewModel : ViewModel() {
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState
 
+    private val _navigateToLogin = MutableStateFlow(false)
+    val navigateToLogin: StateFlow<Boolean> = _navigateToLogin
+
     // 사용자 데이터 입력 처리
     fun registerUser(
         userName: String,
@@ -40,7 +43,6 @@ class SignUpViewModel : ViewModel() {
                 outputFormat.format(date) // 변환된 문자열
             } catch (e: Exception) {
                 _errorState.value = "Invalid date format: ${e.message}"
-                Log.e("SignUpViewModel", "Invalid date format", e)
                 return@launch
             }
 
@@ -58,14 +60,12 @@ class SignUpViewModel : ViewModel() {
                 val response = RetrofitClient.apiService.registerUser(signUpModel)
                 if (response.isSuccessful) {
                     _signUpState.value = signUpModel
-                    Log.d("SignUpViewModel", "User registered successfully")
+                    _navigateToLogin.value = true
                 } else {
                     _errorState.value = "Registration failed: ${response.errorBody()?.string()}"
-                    Log.e("SignUpViewModel", "Error: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception){
                 _errorState.value = "Network error: ${e.message}"
-                Log.e("SignUpViewModel", "Exception: ${e.message}", e)
             }
 
         }
