@@ -201,20 +201,6 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 TogetherApplicationBox(navController, storedUserData)
                 QuizApplicationBox(navController, storedUserData)
             }
-
-            // 임시 카드 접근 코드
-            Box(
-                modifier = Modifier
-                    .clickable { navController.navigate("card") }
-            ) {
-                Text(
-                    text = "카드",
-                    style = FontSizes.h20,
-                    fontWeight = FontWeight.W900,
-                    color = Color.Black,
-                )
-            }
-            // 여기까지
             
             Spacer(modifier = Modifier.height(40.dp))
             if (storedUserData?.representAccountId == null) {
