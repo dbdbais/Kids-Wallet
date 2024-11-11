@@ -3,7 +3,7 @@ package com.e201.kidswallet.togetherrun.controller;
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
-import com.e201.kidswallet.togetherrun.entity.TogetherRunStatus;
+import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.service.TogetherRunService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;

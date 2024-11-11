@@ -21,7 +21,7 @@ public class BatchConfig {
         this.dataSource = dataSource;
     }
 
-    @Bean
+    @Bean(name = "kidswalletJobRepository")
 
     public JobRepository jobRepository(PlatformTransactionManager transactionManager) throws Exception {
         JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();

@@ -10,15 +10,15 @@
 //import org.springframework.stereotype.Component;
 //
 //@Component
-//public class SavingTransferTestRunner implements ApplicationRunner {
+//public class SavingInterestTestRunner implements ApplicationRunner {
 //
 //    private final JobLauncher jobLauncher;
-//    private final Job savingTransferJob;
+//    private final Job savingInterestJob;
 //
 //    @Autowired
-//    public SavingTransferTestRunner(JobLauncher jobLauncher, Job savingTransferJob) {
+//    public SavingInterestTestRunner(JobLauncher jobLauncher, Job savingInterestJob) {
 //        this.jobLauncher = jobLauncher;
-//        this.savingTransferJob = savingTransferJob;
+//        this.savingInterestJob = savingInterestJob;
 //    }
 //
 //    @Override
@@ -26,8 +26,8 @@
 //        JobParameters jobParameters = new JobParametersBuilder()
 //                .addLong("time", System.currentTimeMillis())
 //                .toJobParameters();
-//
-//        jobLauncher.run(savingTransferJob, jobParameters);
+//        jobLauncher.run(savingInterestJob, jobParameters);
 //    }
 //}
+//
 //

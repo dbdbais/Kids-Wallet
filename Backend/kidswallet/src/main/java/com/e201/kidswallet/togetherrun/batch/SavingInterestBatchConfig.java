@@ -1,17 +1,15 @@
-package com.e201.kidswallet.togetherrun.config;
+package com.e201.kidswallet.togetherrun.batch;
 
-import com.e201.kidswallet.togetherrun.dto.SavingInterestProcessorDto;
 import com.e201.kidswallet.togetherrun.entity.Saving;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
-import com.e201.kidswallet.togetherrun.repository.SavingPaymentRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingRepository;
 import com.e201.kidswallet.togetherrun.repository.TogetherRunRepository;
+import com.e201.kidswallet.togetherrun.service.TogetherRunService;
 import lombok.NonNull;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -19,6 +17,7 @@ import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-@EnableBatchProcessing
 public class SavingInterestBatchConfig {
 
 
@@ -41,14 +39,13 @@ public class SavingInterestBatchConfig {
 
     @Bean
     public Job savingInterestJob(JobRepository jobRepository, Step savingInterestStep) {
-        System.out.println("savingInterestJob");
         return new JobBuilder("savingInterestJob", jobRepository)
                 .start(savingInterestStep)
                 .build();
     }
 
     @Bean
-    public Step savingInterestStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+    public Step savingInterestStep(@Qualifier("kidswalletJobRepository") JobRepository jobRepository, PlatformTransactionManager transactionManager,
                                    ItemReader<SavingContract> allContractReader,
                                    ItemProcessor<SavingContract, SavingContract> interestProcessor,
                                    ItemWriter<SavingContract> interestResultWriter) {
@@ -66,8 +63,6 @@ public class SavingInterestBatchConfig {
 
             @Override
             public SavingContract read() {
-                System.out.println("Reader read");
-
                 if (currentChunk == null || currentChunk.isEmpty()) {
                     Pageable pageable = PageRequest.of(currentPage, chunkSize);
                     Page<SavingContract> page = savingContractRepository.findAll(pageable);
@@ -85,25 +80,11 @@ public class SavingInterestBatchConfig {
     }
 
     @Bean
-    public ItemProcessor<SavingContract, SavingContract> interestProcessor(SavingContractRepository savingContractRepository, SavingRepository savingRepository, TogetherRunRepository togetherRunRepository) {
+    public ItemProcessor<SavingContract, SavingContract> interestProcessor(TogetherRunService togetherRunService) {
         return new ItemProcessor<SavingContract, SavingContract>() {
             @Override
             public SavingContract process(@NonNull SavingContract contract) {
-                System.out.println("interestProcessor: " + contract);
-
-                Saving saving = savingRepository.findById(contract.getSaving().getSavingId()).orElse(null);
-                BigDecimal interestRate = saving.getInterestRate();
-
-                LocalDate startDate = contract.getCreatedAt().toLocalDate();
-                LocalDate endDate = contract.getExpiredAt();
-                int days = endDate.compareTo(startDate);
-
-                TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(contract.getSavingContractId()).orElse(null);
-                BigDecimal targetAmount = togetherRun.getTargetAmount();
-
-                BigDecimal interestAmount = targetAmount.multiply(interestRate).divide(BigDecimal.valueOf(365), 2).multiply(BigDecimal.valueOf(days));
-                // target_amount * interest rate / 365 * (expired_at - created_at)
-                contract.setCurrentInterestAmount(interestAmount);
+                contract.setCurrentInterestAmount(togetherRunService.calcInterestAmount(contract));
                 return contract;
             }
         };
@@ -114,14 +95,11 @@ public class SavingInterestBatchConfig {
         return new ItemWriter<SavingContract>() {
             @Override
             public void write(Chunk<? extends SavingContract> chunk) throws Exception {
-                System.out.println("Writer");
                 List<? extends SavingContract> items = chunk.getItems();
                 for (SavingContract item : items) {
                     try {
-                        System.out.println("Saving Result: " + savingContractRepository.save(item));
-                        System.out.println("Saved");
+                        savingContractRepository.save(item);
                     } catch (Exception e) {
-                        System.out.println("Error: " + e.getMessage());
                         e.printStackTrace();
                     }
                 }

@@ -1,5 +1,7 @@
 package com.e201.kidswallet.togetherrun.entity;
 
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractPaymentCheck;
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
 import com.e201.kidswallet.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,6 +40,11 @@ public class SavingContract {
 
     @Column(name = "deposit_day")
     private short depositDay;
+
+    @Builder.Default()
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "payment_check")
+    private SavingContractPaymentCheck paymentCheck = SavingContractPaymentCheck.PAYMENT;
 
     @Builder.Default()
     @Column(name="current_amount")
