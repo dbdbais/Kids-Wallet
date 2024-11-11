@@ -29,10 +29,13 @@ import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.data.model.UserDataModel
 
 @Composable
 fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
-    val userData = viewModel.userData.collectAsState().value
+    val storedUserData = viewModel.getStoredUserData().collectAsState().value
+
+    Log.d("DataStore", "Stored user data!!: $storedUserData")
 
     Box(
         modifier = Modifier
@@ -71,9 +74,8 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                         .height(50.dp) // 세로 크기 조절
                 )
 
-                Log.d("MainPageScreen", "Current user data: $userData")
                 Text(
-                    text = userData?.userMoney?.toString() ?: "알 수 없음",
+                    text = storedUserData?.userMoney?.toString() ?: "알 수 없음",
                     fontWeight = FontWeight.W900,
                     style = FontSizes.h24,
                     modifier = Modifier.padding(start = 8.dp)
@@ -88,19 +90,29 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.icon_add),
-                    contentDescription = "Waiting Message",
-                    modifier = Modifier
-                        .size(60.dp) // 이미지 크기 조절 (80 x 80)
-                )
-                Text(
-                    text = "아이를 추가해주세요",
-                    fontWeight = FontWeight.W900,
-                    style = FontSizes.h20,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
+                if (storedUserData?.userRole == "CHILD") {
+                    Text(
+                        text = "어른이 추가될 때까지 기다려보아요",
+                        fontWeight = FontWeight.W900,
+                        style = FontSizes.h20,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.icon_add),
+                        contentDescription = "Waiting Message",
+                        modifier = Modifier
+                            .size(60.dp) // 이미지 크기 조절 (80 x 80)
+                    )
+                    Text(
+                        text = "아이를 추가해주세요",
+                        fontWeight = FontWeight.W900,
+                        style = FontSizes.h20,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
             }
 
             // 네 개의 아이콘 박스 (2x2 Grid)
@@ -110,8 +122,8 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                     .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                CardApplicationBox(navController)
-                BeggingApplicationBox(navController)
+                CardApplicationBox(navController, storedUserData)
+                BeggingApplicationBox(navController, storedUserData)
             }
 
             Row(
@@ -120,32 +132,68 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                     .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                TogetherApplicationBox(navController)
-                QuizApplicationBox(navController)
+                TogetherApplicationBox(navController, storedUserData)
+                QuizApplicationBox(navController, storedUserData)
             }
             
             Spacer(modifier = Modifier.height(40.dp))
-            
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.5f)
-                    .clickable { navController.navigate("makeAccount") }
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.account_button),
-                    contentDescription = "Account Button",
+            if (storedUserData?.representAccountId == null) {
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                )
-                Text(
-                    text = "통장 개설하기",
-                    style = FontSizes.h24,
-                    fontWeight = FontWeight.W900,
-                    color = Color.White,
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.5f)
+                        .clickable { navController.navigate("makeAccount") }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.account_button),
+                        contentDescription = "Account Button",
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                    Text(
+                        text = "통장 개설하기",
+                        style = FontSizes.h24,
+                        fontWeight = FontWeight.W900,
+                        color = Color.White,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    )
+                }
+            } else {
+                Box(
                     modifier = Modifier
-                        .align(Alignment.Center)
-                )
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.5f)
+                        .clickable { navController.navigate("makeAccount") }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.account_button),
+                        contentDescription = "Account Button",
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "주거래 통장",
+                            style = FontSizes.h24,
+                            fontWeight = FontWeight.W900,
+                            color = Color.White,
+                            modifier = Modifier
+                        )
+                        Text(
+                            text = storedUserData.representAccountId,
+                            style = FontSizes.h24,
+                            fontWeight = FontWeight.W900,
+                            color = Color.White,
+                            modifier = Modifier
+                        )
+                    }
+                }
             }
         }
         BottomNavigationBar(
@@ -155,11 +203,17 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
 }
 
 @Composable
-fun CardApplicationBox(navController: NavController) {
+fun CardApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
             .size(180.dp)
-            .clickable { navController.navigate("myWallet") }
+            .clickable {
+                if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
+                    navController.navigate("card")
+                } else {
+                    navController.navigate("myWallet")
+                }
+            }
     ) {
         Image(
             painter = painterResource(id = R.drawable.blue_box),
@@ -169,7 +223,11 @@ fun CardApplicationBox(navController: NavController) {
         )
 
         Text(
-            text = "내 지갑",
+            text = if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
+                "카드 신청"
+            } else {
+                "내 지갑"
+            },
             style = FontSizes.h20,
             fontWeight = FontWeight.W900,
             color = Color.White,
@@ -191,11 +249,17 @@ fun CardApplicationBox(navController: NavController) {
 }
 
 @Composable
-fun BeggingApplicationBox(navController: NavController) {
+fun BeggingApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
             .size(180.dp)
-            .clickable { navController.navigate("begging") }
+            .clickable {
+                if (storedUserData?.userRole == "CHILD") {
+                    navController.navigate("begging")
+                } else {
+                    navController.navigate("parentBeggingWaiting")
+                }
+            }
     ) {
         Image(
             painter = painterResource(id = R.drawable.pink_box),
@@ -205,7 +269,11 @@ fun BeggingApplicationBox(navController: NavController) {
         )
 
         Text(
-            text = "용돈 조르기",
+            text = if (storedUserData?.userRole == "CHILD") {
+                "용돈 조르기"
+            } else {
+                "조르기 내역"
+            },
             style = FontSizes.h20,
             fontWeight = FontWeight.Black,
             color = Color.White,
@@ -227,7 +295,7 @@ fun BeggingApplicationBox(navController: NavController) {
 }
 
 @Composable
-fun TogetherApplicationBox(navController: NavController) {
+fun TogetherApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
             .size(180.dp)
@@ -265,7 +333,7 @@ fun TogetherApplicationBox(navController: NavController) {
 }
 
 @Composable
-fun QuizApplicationBox(navController: NavController) {
+fun QuizApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
             .size(180.dp)
