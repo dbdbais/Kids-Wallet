@@ -30,10 +30,17 @@ import com.ssafy.kidswallet.ui.components.Top
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.SpanStyle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.MakeAccountViewModel
 
 
 @Composable
-fun MakeAccountScreen(navController: NavController) {
+fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), makeAccountViewModel: MakeAccountViewModel = viewModel()) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+
+    val userId = storedUserData?.userId
+
     // 약관 동의 상태를 관리하는 변수들
     val checkedStates = remember { mutableStateListOf(*Array(4) { false }) }
     val expandedStates = remember { mutableStateListOf(*Array(4) { false }) }
@@ -182,6 +189,9 @@ fun MakeAccountScreen(navController: NavController) {
         BlueButton(
             onClick = {
                 if (checkedStates.all { itChecked -> itChecked }) {
+                    if (userId != null) {
+                        makeAccountViewModel.registerAccount(userId)
+                    }
                     navController.navigate("mainPage")
                 }
             },
@@ -192,6 +202,7 @@ fun MakeAccountScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
         )
+
     }
 }
 

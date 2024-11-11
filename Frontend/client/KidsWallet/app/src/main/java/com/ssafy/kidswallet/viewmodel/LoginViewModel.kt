@@ -1,17 +1,32 @@
 package com.ssafy.kidswallet.viewmodel
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.ssafy.kidswallet.data.model.LoginModel
+import com.ssafy.kidswallet.data.model.Relation
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.data.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class LoginViewModel : ViewModel() {
+// DataStore를 위한 Context 확장 함수
+private val Context.dataStore by preferencesDataStore(name = "user_data")
+
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val _loginState = MutableStateFlow<Boolean?>(null)
     val loginState: StateFlow<Boolean?> = _loginState
 
@@ -20,6 +35,81 @@ class LoginViewModel : ViewModel() {
 
     private val _userData = MutableStateFlow<UserDataModel?>(null)
     val userData: StateFlow<UserDataModel?> = _userData
+
+    // DataStore key definitions
+    private val USER_ID_KEY = intPreferencesKey("user_id")
+    private val USER_NAME_KEY = stringPreferencesKey("user_name")
+    private val USER_GENDER_KEY = stringPreferencesKey("user_gender")
+    private val USER_REAL_NAME_KEY = stringPreferencesKey("user_real_name")
+    private val USER_MONEY_KEY = intPreferencesKey("user_money")
+    private val USER_ROLE_KEY = stringPreferencesKey("user_role")
+    private val USER_BIRTH_KEY = stringPreferencesKey("user_birth")
+    private val HAS_CARD_KEY = booleanPreferencesKey("has_card")
+    private val REPRESENT_ACCOUNT_ID_KEY = stringPreferencesKey("represent_account_id")
+    private val RELATIONS_KEY = stringPreferencesKey("relations")
+
+    private val gson = Gson()
+
+    private suspend fun saveUserDataToDataStore(userData: UserDataModel) {
+        getApplication<Application>().applicationContext.dataStore.edit { preferences ->
+            preferences[USER_ID_KEY] = userData.userId
+            preferences[USER_NAME_KEY] = userData.userName ?: ""
+            preferences[USER_GENDER_KEY] = userData.userGender ?: ""
+            preferences[USER_REAL_NAME_KEY] = userData.userRealName ?: ""
+            preferences[USER_MONEY_KEY] = userData.userMoney
+            preferences[USER_ROLE_KEY] = userData.userRole ?: ""
+            preferences[USER_BIRTH_KEY] = userData.userBirth?.joinToString(",") ?: ""
+            preferences[HAS_CARD_KEY] = userData.hasCard
+            if (userData.representAccountId != null) {
+                preferences[REPRESENT_ACCOUNT_ID_KEY] = userData.representAccountId
+            } else {
+                preferences.remove(REPRESENT_ACCOUNT_ID_KEY) // null 값일 경우 key를 제거
+            }
+            preferences[RELATIONS_KEY] = gson.toJson(userData.relations) // Convert Relations list to JSON string
+        }
+    }
+
+    // Deserialize Relations field from JSON string
+    private fun getRelationsFromString(json: String?): List<Relation>? {
+        return if (json.isNullOrEmpty()) {
+            null
+        } else {
+            val type = object : TypeToken<List<Relation>>() {}.type
+            gson.fromJson(json, type)
+        }
+    }
+
+    fun saveUserData(userData: UserDataModel) {
+        viewModelScope.launch {
+            saveUserDataToDataStore(userData)
+        }
+    }
+
+    fun getStoredUserData(): StateFlow<UserDataModel?> {
+        val dataFlow = getApplication<Application>().applicationContext.dataStore.data
+            .map { preferences ->
+                UserDataModel(
+                    userId = preferences[USER_ID_KEY] ?: 0,
+                    userName = preferences[USER_NAME_KEY] ?: "",
+                    userGender = preferences[USER_GENDER_KEY] ?: "",
+                    userRealName = preferences[USER_REAL_NAME_KEY] ?: "",
+                    userMoney = preferences[USER_MONEY_KEY] ?: 0,
+                    userRole = preferences[USER_ROLE_KEY] ?: "",
+                    userBirth = preferences[USER_BIRTH_KEY]?.split(",")?.map { it.toInt() },
+                    hasCard = preferences[HAS_CARD_KEY] ?: false,
+                    representAccountId = preferences[REPRESENT_ACCOUNT_ID_KEY],
+                    relations = preferences[RELATIONS_KEY]?.let {
+                        gson.fromJson(it, object : TypeToken<List<Relation>>() {}.type)
+                    }
+                )
+            }
+        val userDataStateFlow = MutableStateFlow<UserDataModel?>(null)
+        viewModelScope.launch {
+            val userData = dataFlow.first() // Flow에서 첫 값을 읽어옴
+            userDataStateFlow.value = userData
+        }
+        return userDataStateFlow
+    }
 
     fun loginUser(userName: String, userPassword: String) {
         val loginModel = LoginModel(userName, userPassword)
@@ -34,6 +124,7 @@ class LoginViewModel : ViewModel() {
                     val userData = apiResponse?.data
                     if (userData != null) {
                         _userData.value = userData
+                        saveUserData(userData)
                     }
 
                     Log.d("LoginSuccess", "Response Body: ${response.body()}")
