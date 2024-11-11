@@ -100,8 +100,6 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
         )
     }
 
-    Log.d("DataStore", "Stored user data!!: $storedUserData")
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -127,7 +125,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp, start = 16.dp), // 아래쪽 여백 추가
+                    .padding(bottom = 32.dp, start = 16.dp), // 아래쪽 여백 추가
                 horizontalArrangement = Arrangement.Start, // Row 내부 요소를 왼쪽으로 정렬
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -151,7 +149,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp, start = 16.dp), // 아래쪽 여백 추가
+                    .padding(bottom = 30.dp, start = 16.dp), // 아래쪽 여백 추가
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -185,7 +183,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 CardApplicationBox(navController, storedUserData)
@@ -195,19 +193,20 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp),
+                    .padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 TogetherApplicationBox(navController, storedUserData)
                 QuizApplicationBox(navController, storedUserData)
             }
             
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp))
             if (storedUserData?.representAccountId == null) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.5f)
+                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 10.dp)
                         .clickable { navController.navigate("makeAccount") }
                 ) {
                     Image(
@@ -240,7 +239,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(8.dp),
+                            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 10.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceEvenly
                     ) {
@@ -272,7 +271,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
 fun CardApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
-            .size(180.dp)
+            .size(160.dp)
             .clickable {
                 if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
                     navController.navigate("card")
@@ -299,17 +298,7 @@ fun CardApplicationBox(navController: NavController, storedUserData: UserDataMod
             color = Color.White,
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(start = 40.dp, top = 16.dp)
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.icon_wallet),
-            contentDescription = "Wallet Icon",
-            modifier = Modifier
-                .size(90.dp)
-                .align(Alignment.BottomEnd)
-                .offset(x = (-20).dp)
-                .offset(y = (-10).dp)
+                .padding(start = 30.dp, top = 16.dp)
         )
     }
 }
@@ -318,7 +307,7 @@ fun CardApplicationBox(navController: NavController, storedUserData: UserDataMod
 fun BeggingApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
-            .size(180.dp)
+            .size(160.dp)
             .clickable {
                 if (storedUserData?.userRole == "CHILD") {
                     navController.navigate("begging")
@@ -347,16 +336,6 @@ fun BeggingApplicationBox(navController: NavController, storedUserData: UserData
                 .align(Alignment.TopStart)
                 .padding(start = 32.dp, top = 16.dp)
         )
-
-        Image(
-            painter = painterResource(id = R.drawable.logo_together),
-            contentDescription = "Together Icon",
-            modifier = Modifier
-                .size(80.dp)
-                .align(Alignment.BottomEnd)
-                .offset(x = (-30).dp)
-                .offset(y = (-10).dp)
-        )
     }
 }
 
@@ -364,7 +343,7 @@ fun BeggingApplicationBox(navController: NavController, storedUserData: UserData
 fun TogetherApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
-            .size(180.dp)
+            .size(160.dp)
             .clickable { navController.navigate("run") },
     ) {
 
@@ -382,18 +361,7 @@ fun TogetherApplicationBox(navController: NavController, storedUserData: UserDat
             color = Color.White,
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(start = 40.dp, top = 16.dp)
-        )
-
-
-        Image(
-            painter = painterResource(id = R.drawable.logo_together2),
-            contentDescription = "Together2 Icon",
-            modifier = Modifier
-                .size(80.dp)
-                .align(Alignment.BottomEnd)
-                .offset(x = (-30).dp)
-                .offset(y = (-10).dp)
+                .padding(start = 30.dp, top = 16.dp)
         )
     }
 }
@@ -402,7 +370,7 @@ fun TogetherApplicationBox(navController: NavController, storedUserData: UserDat
 fun QuizApplicationBox(navController: NavController, storedUserData: UserDataModel?) {
     Box(
         modifier = Modifier
-            .size(180.dp)
+            .size(160.dp)
             .clickable { navController.navigate("quiz") }
     ) {
 
@@ -420,16 +388,7 @@ fun QuizApplicationBox(navController: NavController, storedUserData: UserDataMod
             color = Color.White,
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(start = 40.dp, top = 16.dp)
-        )
-        Image(
-            painter = painterResource(id = R.drawable.logo_quiz),
-            contentDescription = "Quiz Icon",
-            modifier = Modifier
-                .size(80.dp)
-                .align(Alignment.BottomEnd)
-                .offset(x = (-20).dp)
-                .offset(y = (-20).dp)
+                .padding(start = 30.dp, top = 16.dp)
         )
     }
 }

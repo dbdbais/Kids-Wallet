@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
@@ -33,9 +35,15 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.LightGrayButton
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.MakeCardViewModel
 
 @Composable
-fun Card3Screen(navController: NavController) {
+fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), makeCardViewModel: MakeCardViewModel = viewModel()) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+
+    val userId = storedUserData?.userId
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -120,9 +128,14 @@ fun Card3Screen(navController: NavController) {
 
         // 버튼
         BlueButton(
-            onClick = { navController.navigate("mainPage") {
-                popUpTo(0) { inclusive = true } // 모든 스택 제거
-            } },
+            onClick = {
+                if (userId != null) {
+                    makeCardViewModel.registerCard(userId)
+                }
+                navController.navigate("mainPage") {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
             text = "돌아가기",
             modifier = Modifier
                 .width(400.dp)
