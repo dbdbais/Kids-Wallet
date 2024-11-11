@@ -126,9 +126,10 @@ public class AccountService {
             return StatusCode.NOT_ENOUGH_MONEY;
         }
 
+
         // 해당하는 트랙잭션 생성
-        Transaction withdrawalTransaction = makeTransaction(TransactionType.WITHDRAWAL, message, toAccountId, amount);
-        Transaction depositTransaction = makeTransaction(TransactionType.DEPOSIT, message, fromAccountId, amount);
+        Transaction withdrawalTransaction = makeTransaction(TransactionType.WITHDRAWAL,  (message == null) ? tAccount.get().getUser().getUserName() : message, toAccountId, amount);
+        Transaction depositTransaction = makeTransaction(TransactionType.DEPOSIT, (message == null) ? fAccount.get().getUser().getUserName() : message, fromAccountId, amount);
 
         // 트랜잭션을 먼저 저장
         transactionRepository.save(withdrawalTransaction);
