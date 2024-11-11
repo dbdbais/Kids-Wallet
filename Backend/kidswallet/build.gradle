@@ -20,6 +20,7 @@ configurations {
 }
 
 repositories {
+	google()  // Firebase 의존성을 가져오기 위해 필요
 	mavenCentral()
 }
 
@@ -47,6 +48,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'com.h2database:h2:2.2.224'
+
+	implementation 'com.google.firebase:firebase-admin:8.1.0'
+	implementation 'com.google.firebase:firebase-messaging:22.0.0'
 }
 
 tasks.named('test') {
