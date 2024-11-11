@@ -15,7 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ssafy.kidswallet.ui.components.Top
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
@@ -25,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +49,8 @@ import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.viewmodel.RelationViewModel
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.alpha
 
 @Composable
 fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel()) {
@@ -81,6 +88,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                             relationViewModel.addRelation(relationModel)
                             Log.d("relationModel", "Current input value: $relationModel")
                         }
+                        showDialog = false
                     },
                     height = 40,
                     modifier = Modifier.width(130.dp), // 원하는 너비 설정
@@ -169,13 +177,69 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                             .size(60.dp) // 이미지 크기 조절 (80 x 80)
                             .clickable { showDialog = true }
                     )
-                    Text(
-                        text = "아이를 추가해주세요",
-                        fontWeight = FontWeight.W900,
-                        style = FontSizes.h20,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+                    if (storedUserData?.relations?.isEmpty() == true) {
+                        Text(
+                            text = "아이를 추가해주세요",
+                            fontWeight = FontWeight.W900,
+                            style = FontSizes.h20,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    } else {
+                        Box {
+                            LazyRow(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp, vertical = 4.dp)
+                            ) {
+                                items(storedUserData?.relations ?: emptyList()) { relation ->
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(4.dp) // 각 항목의 외부 여백
+                                            .background(
+                                                color = if (relation.userGender == "MALE") Color(0xFFF4FBFE) else Color(0xFFFFF4F5),
+                                                shape = RoundedCornerShape(40.dp) // 둥근 모서리 처리
+                                            )
+                                            .padding(8.dp) // 내부 여백
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(40.dp)
+                                                    .background(
+                                                        color = if (relation.userGender == "MALE") Color(0xFFE9F8FE) else Color(
+                                                            0xFFFFEDEF
+                                                        ),
+                                                        shape = CircleShape
+                                                    ),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(
+                                                        id = if (relation.userGender == "MALE") R.drawable.character_young_man else R.drawable.character_young_girl
+                                                    ),
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .size(32.dp) // 이미지 크기 조정
+                                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            relation.userName?.let {
+                                                Text(
+                                                    text = it,
+                                                    fontWeight = FontWeight.Bold,
+                                                    style = FontSizes.h16
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                 }
             }
 
@@ -193,27 +257,26 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 0.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 TogetherApplicationBox(navController, storedUserData)
                 QuizApplicationBox(navController, storedUserData)
             }
-            
-            Spacer(modifier = Modifier.height(60.dp))
+
             if (storedUserData?.representAccountId == null) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.5f)
-                        .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 10.dp)
+                        .fillMaxSize()
+                        .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 10.dp)
                         .clickable { navController.navigate("makeAccount") }
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.account_button),
                         contentDescription = "Account Button",
                         modifier = Modifier
-                            .fillMaxSize()
+                            .size(350.dp)
+                            .align(Alignment.Center)
                     )
                     Text(
                         text = "통장 개설하기",
@@ -227,37 +290,24 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             } else {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.5f)
+                        .fillMaxSize()
+                        .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 10.dp)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.account_button),
                         contentDescription = "Account Button",
                         modifier = Modifier
-                            .fillMaxSize()
+                            .size(350.dp)
+                            .align(Alignment.Center)
                     )
-                    Column(
+                    Text(
+                        text = "주거래 통장\n${storedUserData.representAccountId}",
+                        style = FontSizes.h24,
+                        fontWeight = FontWeight.W900,
+                        color = Color.White,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 10.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Text(
-                            text = "주거래 통장",
-                            style = FontSizes.h24,
-                            fontWeight = FontWeight.W900,
-                            color = Color.White,
-                            modifier = Modifier
-                        )
-                        Text(
-                            text = storedUserData.representAccountId,
-                            style = FontSizes.h24,
-                            fontWeight = FontWeight.W900,
-                            color = Color.White,
-                            modifier = Modifier
-                        )
-                    }
+                            .align(Alignment.Center)
+                    )
                 }
             }
         }
@@ -399,6 +449,6 @@ fun QuizApplicationBox(navController: NavController, storedUserData: UserDataMod
     showSystemUi = true
 )
 @Composable
-fun MainPageScreenPreview() {
-    MainPageScreen(navController = rememberNavController())
+fun MainPageScreenPreview(navController: NavController = rememberNavController()) {
+    MainPageScreen(navController = navController)
 }
