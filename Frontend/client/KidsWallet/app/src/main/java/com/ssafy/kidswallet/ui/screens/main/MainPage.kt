@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.kidswallet.R
@@ -29,6 +30,8 @@ import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 
 @Composable
 fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
@@ -123,6 +126,20 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                 TogetherApplicationBox(navController)
                 QuizApplicationBox(navController)
             }
+
+            // 임시 카드 접근 코드
+            Box(
+                modifier = Modifier
+                    .clickable { navController.navigate("card") }
+            ) {
+                Text(
+                    text = "카드",
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.W900,
+                    color = Color.Black,
+                )
+            }
+            // 여기까지
             
             Spacer(modifier = Modifier.height(40.dp))
             
@@ -298,4 +315,14 @@ fun QuizApplicationBox(navController: NavController) {
                 .offset(y = (-20).dp)
         )
     }
+}
+
+@Preview(
+    showBackground = true,
+    device = "spec:width=1440px,height=3120px,dpi=560",
+    showSystemUi = true
+)
+@Composable
+fun MainPageScreenPreview() {
+    MainPageScreen(navController = rememberNavController())
 }
