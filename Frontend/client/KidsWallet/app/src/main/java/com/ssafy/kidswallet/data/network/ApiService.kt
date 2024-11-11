@@ -9,6 +9,7 @@ import com.ssafy.kidswallet.data.model.UserDataModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -25,6 +26,9 @@ interface ApiService {
 
     @POST("account/regist/{userId}")
     suspend fun registerAccount(@Path("userId") userId: Int): Response<Any>
+
+    @PATCH("user/card/{userId}")
+    suspend fun registerCard(@Path("userId") userId: Int): Response<Any>
 
     @GET("account/view/transaction")
     suspend fun viewTransaction(@Query("id") accountId: String): Response<AccountModel>
