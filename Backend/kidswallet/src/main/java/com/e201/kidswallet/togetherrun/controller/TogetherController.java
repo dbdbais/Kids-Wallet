@@ -2,6 +2,7 @@ package com.e201.kidswallet.togetherrun.controller;
 
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
+import com.e201.kidswallet.togetherrun.dto.TogetherRunAnswerRequestDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
 import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.service.TogetherRunService;
@@ -37,14 +38,14 @@ public class TogetherController {
     }
 
     @PostMapping("{togetherRunId}/accept")
-    public ResponseEntity<ResponseDto> postTogetherRunAccept(@PathVariable("togetherRunId") long togetherRunId) {
-        StatusCode returnCode = togetherRunService.togetherRunAnswer(togetherRunId, TogetherRunStatus.ACCEPTED);
+    public ResponseEntity<ResponseDto> postTogetherRunAccept(@PathVariable("togetherRunId") long togetherRunId, @RequestBody TogetherRunAnswerRequestDto togetherRunAnswerRequestDto) {
+        StatusCode returnCode = togetherRunService.togetherRunAnswer(togetherRunId, TogetherRunStatus.ACCEPTED, togetherRunAnswerRequestDto);
         return ResponseDto.response(returnCode);
     }
 
     @PostMapping("{togetherRunId}/reject")
-    public ResponseEntity<ResponseDto> postTogetherRunReject(@PathVariable("togetherRunId") long togetherRunId) {
-        StatusCode returnCode = togetherRunService.togetherRunAnswer(togetherRunId, TogetherRunStatus.REJECTED);
+    public ResponseEntity<ResponseDto> postTogetherRunReject(@PathVariable("togetherRunId") long togetherRunId, @RequestBody TogetherRunAnswerRequestDto togetherRunAnswerRequestDto) {
+        StatusCode returnCode = togetherRunService.togetherRunAnswer(togetherRunId, TogetherRunStatus.REJECTED, togetherRunAnswerRequestDto);
         return ResponseDto.response(returnCode);
     }
 
