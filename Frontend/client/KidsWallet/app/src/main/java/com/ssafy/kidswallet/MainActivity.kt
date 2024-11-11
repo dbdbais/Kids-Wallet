@@ -36,6 +36,8 @@ import com.ssafy.kidswallet.ui.screens.begginglist.assignmission.ParentBeggingRe
 import com.ssafy.kidswallet.ui.screens.begginglist.ParentBeggingWaitingScreen
 import com.ssafy.kidswallet.ui.screens.begginglist.testmission.ParentBeggingTestCompleteScreen
 import com.ssafy.kidswallet.ui.screens.begginglist.testmission.ParentBeggingTestMissionScreen
+import com.ssafy.kidswallet.ui.screens.card.Card2Screen
+import com.ssafy.kidswallet.ui.screens.card.Card3Screen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
@@ -95,6 +97,8 @@ class MainActivity : ComponentActivity() {
             composable("mainPage") { MainPageScreen(navController) }
             composable("myWallet") { MyWalletScreen(navController) }
             composable("card") { CardScreen(navController) }
+            composable("card2") { Card2Screen(navController) }
+            composable("card3") { Card3Screen(navController) }
             // run
             composable("run") { RunScreen(navController) }
             composable("runParentsFinish") { RunParentsFinishScreen(navController) }
