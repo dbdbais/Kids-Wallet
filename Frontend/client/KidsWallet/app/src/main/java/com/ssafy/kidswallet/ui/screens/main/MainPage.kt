@@ -17,11 +17,19 @@ import com.ssafy.kidswallet.ui.components.Top
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ssafy.kidswallet.R
@@ -29,11 +37,66 @@ import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.UserDataModel
+import com.ssafy.kidswallet.ui.components.BlueButton
+import com.ssafy.kidswallet.ui.components.GrayButton
+import com.ssafy.kidswallet.viewmodel.RelationViewModel
 
 @Composable
-fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = viewModel()) {
-    val storedUserData = viewModel.getStoredUserData().collectAsState().value
+fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel()) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    var showDialog by remember { mutableStateOf(false) }
+    var input by remember { mutableStateOf("") }
+
+    // 직접 입력을 위한 다이얼로그
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "추가하기") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = input,
+                        onValueChange = { input = it },
+                        label = { Text("아이의 ID") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            },
+            containerColor = Color.White,
+            confirmButton = {
+                BlueButton(
+                    onClick = {
+                        val relationModel = storedUserData?.userName?.let { parentName ->
+                            RelationModel(
+                                childName = input,
+                                parentName = parentName
+                            )
+                        }
+                        if (relationModel != null) {
+                            relationViewModel.addRelation(relationModel)
+                            Log.d("relationModel", "Current input value: $relationModel")
+                        }
+                    },
+                    height = 40,
+                    modifier = Modifier.width(130.dp), // 원하는 너비 설정
+                    elevation = 0,
+                    text = "확인"
+                )
+            },
+            dismissButton = {
+                GrayButton(
+                    onClick = { showDialog = false },
+                    height = 40,
+                    modifier = Modifier.width(130.dp), // 원하는 너비 설정
+                    elevation = 0,
+                    text = "취소"
+                )
+            }
+        )
+    }
 
     Log.d("DataStore", "Stored user data!!: $storedUserData")
 
@@ -104,6 +167,7 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                         contentDescription = "Waiting Message",
                         modifier = Modifier
                             .size(60.dp) // 이미지 크기 조절 (80 x 80)
+                            .clickable { showDialog = true }
                     )
                     Text(
                         text = "아이를 추가해주세요",
@@ -164,7 +228,6 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.5f)
-                        .clickable { navController.navigate("makeAccount") }
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.account_button),
@@ -174,9 +237,10 @@ fun MainPageScreen(navController: NavController, viewModel: LoginViewModel = vie
                     )
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxSize()
+                            .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                        verticalArrangement = Arrangement.SpaceEvenly
                     ) {
                         Text(
                             text = "주거래 통장",
