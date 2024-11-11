@@ -120,14 +120,14 @@ fun MyWalletScreen(
                         navController = navController,
                         imageId = R.drawable.icon_withrow,
                         text = "보내기",
-                        route = "mainPage",
+                        route = "MyWalletWithdrawal",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
                         navController = navController,
                         imageId = R.drawable.icon_deposit,
                         text = "채우기",
-                        route = "mainPage",
+                        route = "myWalletDeposit",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                 }
@@ -332,10 +332,11 @@ fun TransactionItem(transaction: TransactionModel) {
         Column(
             horizontalAlignment = Alignment.End
         ) {
+            val formattedAmount = NumberUtils.formatNumberWithCommas(transaction.amount)
             Text(
-                text = if (transaction.amount > 0) "+${transaction.amount}원" else "${transaction.amount}원",
+                text = if (transaction.transactionType == "WITHDRAWAL") "-${formattedAmount}원" else "+${formattedAmount}원",
                 style = FontSizes.h16,
-                color = if (transaction.amount > 0) Color.Red else Color.Blue,
+                color = if (transaction.transactionType == "WITHDRAWAL") Color.Blue else Color.Red,
                 fontWeight = FontWeight.Bold
             )
         }

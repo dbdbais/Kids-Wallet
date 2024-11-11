@@ -42,7 +42,9 @@ import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.makeaccount.MakeAccountScreen
+import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletDepositScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
+import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletWithdrawalScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishDetailScreen
@@ -95,7 +97,6 @@ class MainActivity : ComponentActivity() {
             composable("loginRouting") { Login(navController) }
             composable("signup") { SignUp(navController) }
             composable("mainPage") { MainPageScreen(navController) }
-            composable("myWallet") { MyWalletScreen(navController) }
             composable("card") { CardScreen(navController) }
             composable("card2") { Card2Screen(navController) }
             composable("card3") { Card3Screen(navController) }
@@ -108,6 +109,13 @@ class MainActivity : ComponentActivity() {
             composable("runParentsDetail") { RunParentsDetailScreen(navController) }
             composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
             composable("runParentsRegister") { RunParentsRegisterScreen(navController) }
+
+            // wallet
+            composable("myWallet") { MyWalletScreen(navController) }
+            composable("myWalletWithdrawal") { MyWalletWithdrawalScreen(navController) }
+            composable("myWalletDeposit") { MyWalletDepositScreen(navController) }
+
+            // begging
             composable("begging") { BeggingScreen(navController) }
 
             composable("beggingMissionPlay/{name}/{money}/{begContent}/{missionContent}") { backStackEntry ->
