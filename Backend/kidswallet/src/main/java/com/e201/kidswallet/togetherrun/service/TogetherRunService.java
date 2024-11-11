@@ -5,7 +5,12 @@ import com.e201.kidswallet.togetherrun.dto.TogetherRunCancelResponseDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunDataResponseDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunDetailResponseDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
-import com.e201.kidswallet.togetherrun.entity.*;
+import com.e201.kidswallet.togetherrun.entity.Saving;
+import com.e201.kidswallet.togetherrun.entity.SavingContract;
+import com.e201.kidswallet.togetherrun.entity.SavingPayment;
+import com.e201.kidswallet.togetherrun.entity.TogetherRun;
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
+import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingPaymentRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingRepository;
@@ -20,9 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +68,7 @@ public class TogetherRunService {
         for (Relation r : relationList) {
             if (r.getParent().getUserId() == togetherRunRegisterRequestDto.getParentsId()) {
                 relation = r;
-                break;
+//                break;
             }
         }
 
@@ -189,5 +196,18 @@ public class TogetherRunService {
         file.transferTo(filePath.toFile());
 
         return appPath + fileName;
+    }
+
+    public BigDecimal calcInterestAmount(SavingContract savingContract) {
+        Saving saving = savingRepository.findById(savingContract.getSaving().getSavingId()).orElse(null);
+        BigDecimal interestRate = saving.getInterestRate();
+
+        LocalDate startDate = savingContract.getCreatedAt().toLocalDate();
+        int days = LocalDate.now().compareTo(startDate);
+
+        BigDecimal amount = savingContract.getCurrentAmount();
+
+        BigDecimal  interestAmount = amount.multiply(interestRate).divide(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(365), 2).multiply(BigDecimal.valueOf(days));
+        return interestAmount;
     }
 }
