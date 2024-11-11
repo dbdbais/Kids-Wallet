@@ -85,6 +85,12 @@ public class UserController {
         return ResponseDto.response(statusCode);
     }
 
+    @GetMapping("/status/{userId}")
+    public ResponseEntity<ResponseDto> getStatus(@PathVariable Long userId){
+        UserLoginResponseDTO userLoginResponseDTO = userService.getUserStatus(userId);
+        return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO);
+    }
+
 //    @GetMapping("/info/{userId}")
 //    public ResponseEntity<ResponseDto> getUserInfo(@PathVariable Long userId) {
 //

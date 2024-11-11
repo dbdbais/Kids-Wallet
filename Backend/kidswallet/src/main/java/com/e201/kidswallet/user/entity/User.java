@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Entity
@@ -71,13 +72,6 @@ public class User
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accounts;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Relation> parentsRelations;
-
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "child", cascade = CascadeType.ALL)
-    private List<Relation> childrenRelations;
-
     public void makeCard(){
         this.hasCard = true;
     }
@@ -91,6 +85,8 @@ public class User
     public String toString() {
         return "User{" +
                 "userId=" + userId +
+                ", representAccountId='" + representAccountId + '\'' +
+                ", hasCard=" + hasCard +
                 ", userName='" + userName + '\'' +
                 ", userPassword='" + userPassword + '\'' +
                 ", userBirth=" + userBirth +
@@ -100,8 +96,7 @@ public class User
                 ", userRole=" + userRole +
                 ", createdAt=" + createdAt +
                 ", deleteAt=" + deleteAt +
-                ", parentsRelations=" + parentsRelations +
-                ", childrenRelations=" + childrenRelations +
+                ", accounts=" + accounts +
                 '}';
     }
 }
