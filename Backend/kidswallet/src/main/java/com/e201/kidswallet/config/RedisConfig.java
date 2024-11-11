@@ -1,6 +1,6 @@
 package com.e201.kidswallet.config;
 
-import com.e201.kidswallet.transaction.entity.Transaction;
+// import com.e201.kidswallet.transaction.entity.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +25,6 @@ public class RedisConfig {
 //    @Value("${spring.redis.password}")
 //    private String password;
 
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
@@ -36,7 +35,26 @@ public class RedisConfig {
         return lettuceConnectionFactory;
     }
 
-//    @Bean(name = "transactionRedisTemplate")
+    @Bean(name = "fcmRedisTemplate")
+    public RedisTemplate<String, String> fcmRedisTemplate() {
+        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+
+        // Custom ObjectMapper with JavaTimeModule for LocalDateTime support
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // Register JavaTimeModule for Java 8 date/time support
+
+        // JSON serializer with custom ObjectMapper
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+        // Set up serializers
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(serializer);
+
+        return redisTemplate;
+    }
+
+    //    @Bean(name = "transactionRedisTemplate")
 //    public RedisTemplate<String, Transaction> transactionRedisTemplate() {
 //        RedisTemplate<String, Transaction> redisTemplate = new RedisTemplate<>();
 //        redisTemplate.setConnectionFactory(redisConnectionFactory());
