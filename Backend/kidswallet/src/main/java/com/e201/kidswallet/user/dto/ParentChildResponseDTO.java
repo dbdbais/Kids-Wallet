@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class ParentChildResponseDTO {
+    private Long userId;
     private String userName;
     private Gender userGender;
 }
