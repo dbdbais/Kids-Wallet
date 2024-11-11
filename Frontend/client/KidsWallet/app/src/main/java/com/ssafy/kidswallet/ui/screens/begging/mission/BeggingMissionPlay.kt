@@ -260,7 +260,9 @@ fun BeggingMissionPlayScreen(navController: NavController, name: String, begMone
                     BlueButton(
                         onClick = {
                             showDialog = false
-                            navController.navigate("begging") // Navigate to main page
+                            navController.navigate("begging") {
+                                popUpTo(0) { inclusive = true }
+                            }
                         },
                         modifier = Modifier.width(130.dp),
                         text = "조르기로",
@@ -270,7 +272,9 @@ fun BeggingMissionPlayScreen(navController: NavController, name: String, begMone
                     LightGrayButton(
                         onClick = {
                             showDialog = false
-                            navController.navigate("mainPage") // Navigate to begging page
+                            navController.navigate("mainPage") {
+                                popUpTo(0) { inclusive = true }
+                            }
                         },
                         modifier = Modifier.width(130.dp),
                         text = "메인으로"
