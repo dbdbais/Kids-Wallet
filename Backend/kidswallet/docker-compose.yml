@@ -18,8 +18,18 @@ services:
       - "8000:7000"
     depends_on:
       - db  # db 서비스가 먼저 실행되도록 설정
+      - redis
     networks:
       - my-network
+
+  redis:
+    image: redis:latest # 레디스 이미지
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    networks:
+      - my-network
+
 volumes:
   mysql_data:
 
