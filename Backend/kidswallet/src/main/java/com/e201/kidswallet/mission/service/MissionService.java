@@ -46,7 +46,7 @@ public class MissionService {
     public StatusCode begging(BeggingRequestDto beggingRequestDto){
 
         //사용자 ID를 사용하여 relation엔티티 조회
-        List<Relation> relations =userRepository.findById(beggingRequestDto.getToUserId()).get().getParentsRelations();
+        List<Relation> relations = relationRepository.findRelation(beggingRequestDto.getToUserId());
 
         //부모가 없을 때 == 아무런 관계가 없을 때 예외 처리
         if(relations == null || relations.isEmpty())

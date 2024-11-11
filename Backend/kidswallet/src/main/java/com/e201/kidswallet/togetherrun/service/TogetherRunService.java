@@ -16,6 +16,7 @@ import com.e201.kidswallet.togetherrun.repository.SavingRepository;
 import com.e201.kidswallet.togetherrun.repository.TogetherRunRepository;
 import com.e201.kidswallet.user.entity.Relation;
 import com.e201.kidswallet.user.entity.User;
+import com.e201.kidswallet.user.repository.RelationRepository;
 import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,19 +45,21 @@ public class TogetherRunService {
     private final SavingPaymentRepository savingPaymentRepository;
     private final UserRepository userRepository;
     private final AccountService accountService;
+    private final RelationRepository relationRepository;
 
     private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     public TogetherRunService(TogetherRunRepository togetherRunRepository, SavingRepository savingRepository,
                               SavingContractRepository savingContractRepository, SavingPaymentRepository savingPaymentRepository,
-                              UserRepository userRepository, AccountService accountService) {
+                              UserRepository userRepository, AccountService accountService, RelationRepository relationRepository) {
         this.togetherRunRepository = togetherRunRepository;
         this.savingRepository = savingRepository;
         this.savingContractRepository = savingContractRepository;
         this.savingPaymentRepository = savingPaymentRepository;
         this.userRepository = userRepository;
         this.accountService = accountService;
+        this.relationRepository = relationRepository;
     }
 
     public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto)
@@ -69,7 +72,7 @@ public class TogetherRunService {
             return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
         }
 
-        List<Relation> relationList = user.getChildrenRelations();
+        List<Relation> relationList = relationRepository.findRelation(togetherRunRegisterRequestDto.getChildId());
         Relation relation = null;
         for (Relation r : relationList) {
             if (r.getParent().getUserId() == togetherRunRegisterRequestDto.getParentsId()) {

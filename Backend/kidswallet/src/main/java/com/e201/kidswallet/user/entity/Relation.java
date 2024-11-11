@@ -16,11 +16,12 @@ import java.util.List;
 @Getter
 @Entity
 @Builder
+//연관관계의 주인
 public class Relation {
     @Id
     @Column(name="relation_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long relationId;
+    private Long relationId;
 
     /*
         Relation 엔티티에서 parent 필드와 @JoinColumn 어노테이션을 통해 parent_id 컬럼이 생성되며,
@@ -47,4 +48,5 @@ public class Relation {
                 "relationId=" + relationId +
                 '}';
     }
+
 }
