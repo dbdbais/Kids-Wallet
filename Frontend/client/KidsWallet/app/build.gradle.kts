@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    //TODO: 1. append fcm plugin(app)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -57,6 +59,7 @@ android {
 dependencies {
 
     implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha10")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
     val nav_version = "2.7.4"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
@@ -78,6 +81,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.4")
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
     implementation ("com.google.code.gson:gson:2.8.8")
+    //runBlocking
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
 
     testImplementation("junit:junit:4.13.2")
@@ -87,4 +92,12 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //TODO: 2. append fcm dependency(app)
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ("androidx.work:work-runtime-ktx:2.8.0")
 }
