@@ -183,6 +183,7 @@ public class AccountService {
                         .amount(t.getAmount())
                         .transactionType(t.getTransactionType())
                         .transactionDate(t.getTransactionDate())
+                        .curBalance(t.getCurAmount())
                         .build())
                 .collect(Collectors.toList());
 
