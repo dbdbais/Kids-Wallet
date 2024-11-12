@@ -96,7 +96,8 @@ fun MyWalletScreen(
                     modifier = Modifier.padding(start = 20.dp, top = 25.dp)
                 )
                 Text(
-                    text = "500원",
+                    text = accountState?.data?.firstOrNull()?.curBalance?.let {
+                        "${NumberUtils.formatNumberWithCommas(it)}원" } ?: "0원",
                     style = FontSizes.h32,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
@@ -113,22 +114,28 @@ fun MyWalletScreen(
                         navController = navController,
                         imageId = R.drawable.icon_wallet,
                         text = "지출 관리",
-                        route = "mainPage",
+                        route = "myWalletManage",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
                         navController = navController,
                         imageId = R.drawable.icon_withrow,
                         text = "보내기",
-                        route = "mainPage",
+                        route = "myWalletTransfer",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
                         navController = navController,
                         imageId = R.drawable.icon_deposit,
                         text = "채우기",
-                        route = "mainPage",
+                        route = "myWalletDeposit",
                         modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    ClickableIconWithText(
+                        navController = navController,
+                        imageId = R.drawable.icon_bundle,
+                        text = "빼기",
+                        route = "myWalletWithdraw",
                     )
                 }
 
@@ -161,7 +168,11 @@ fun MyWalletScreen(
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 textAlign = TextAlign.Start,
-                                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                                modifier = Modifier.padding(
+                                    start = 16.dp,
+                                    top = 8.dp,
+                                    bottom = 8.dp
+                                )
                             )
                             Image(
                                 painter = painterResource(id = R.drawable.icon_next_white),
@@ -175,7 +186,11 @@ fun MyWalletScreen(
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
                                 textAlign = TextAlign.Start,
-                                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                                modifier = Modifier.padding(
+                                    start = 16.dp,
+                                    top = 8.dp,
+                                    bottom = 8.dp
+                                )
                             )
                             Image(
                                 painter = painterResource(id = R.drawable.icon_next_white),
@@ -188,7 +203,7 @@ fun MyWalletScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
         // Calendar Section
         Box(
@@ -290,7 +305,8 @@ fun MyWalletScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 filteredTransactions.forEach { transaction ->
-                    TransactionItem(transaction = transaction)
+                    TransactionItem(
+                        transaction = transaction)
                     Divider(
                         color = Color.LightGray,
                         thickness = 1.dp,
@@ -298,11 +314,6 @@ fun MyWalletScreen(
                     )
                 }
             }
-        }
-
-        // 에러 메시지 표시
-        errorState?.let { error ->
-            Text(text = error, color = Color.Red, style = FontSizes.h20)
         }
     }
 }
@@ -332,15 +343,24 @@ fun TransactionItem(transaction: TransactionModel) {
         Column(
             horizontalAlignment = Alignment.End
         ) {
+            val formattedAmount = NumberUtils.formatNumberWithCommas(transaction.amount)
             Text(
-                text = if (transaction.amount > 0) "+${transaction.amount}원" else "${transaction.amount}원",
+                text = if (transaction.transactionType == "WITHDRAWAL") "-${formattedAmount}원" else "+${formattedAmount}원",
                 style = FontSizes.h16,
-                color = if (transaction.amount > 0) Color.Red else Color.Blue,
+                color = if (transaction.transactionType == "WITHDRAWAL") Color.Blue else Color.Red,
                 fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "잔액 ${NumberUtils.formatNumberWithCommas(transaction.curBalance)}원",
+                style = FontSizes.h12,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF8C8595)
             )
         }
     }
 }
+
+
 
 @Composable
 fun ClickableIconWithText(

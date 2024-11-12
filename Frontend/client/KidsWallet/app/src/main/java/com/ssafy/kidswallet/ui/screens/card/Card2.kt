@@ -45,11 +45,8 @@ fun Card2Screen(navController: NavController) {
     // 카드 리스트
     val cards = listOf(
         R.drawable.card_green1_shadow to "그린1 카드",
-        R.drawable.card_green2_shadow to "그린2 카드",
         R.drawable.card_pink1_shadow to "핑크1 카드",
-        R.drawable.card_pink2_shadow to "핑크2 카드",
         R.drawable.card_black1_shadow to "블랙1 카드",
-        R.drawable.card_black2_shadow to "블랙2 카드",
         R.drawable.card_white_shadow to "화이트 카드",
     )
 
