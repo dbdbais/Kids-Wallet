@@ -13,14 +13,9 @@ public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> 
 
     @Query("SELECT new com.e201.kidswallet.togetherrun.dto.TogetherRunDataResponseDto(" +
             "sc.savingContractId, " +
-            "childUser.userRealName, " +
-            "parentUser.userRealName, " +
             "tr.targetTitle, " +
-            "tr.targetImage, " +
-            "tr.targetAmount, " +
             "sc.currentAmount, " +
-            "sc.currentInterestAmount, " +
-            "sc.expiredAt) " +
+            "DATEDIFF(sc.expiredAt, CURRENT_DATE)) " +
             "FROM TogetherRun tr " +
             "JOIN tr.relation r " +
             "JOIN r.child childUser " +
