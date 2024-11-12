@@ -1,6 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.begging.beggingmoney
 
 import BeggingReasonViewModel
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +40,8 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.BlueButton
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.viewmodel.BeggingRequestViewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,9 +49,18 @@ fun BeggingRequestReasonScreen(
     navController: NavController,
     name: String?,
     amount: Int?,
-    viewModel: BeggingReasonViewModel = viewModel()
+    viewModel: BeggingReasonViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel(),
+    beggingRequestViewModel: BeggingRequestViewModel = viewModel()
 ) {
     val textState = viewModel.textModel.collectAsState()
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+
+    val relation = storedUserData?.relations
+    val toUserId = relation?.find {it.userName == name}?.userId
+    val userId = storedUserData?.userId
+
+    val context = LocalContext.current
 
     Column {
         Column(
@@ -179,10 +192,31 @@ fun BeggingRequestReasonScreen(
                 .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) // 원하는 절대 거리 설정
         ) {
             BlueButton(
+//                onClick = {
+//                    if (textState.value.text.isNotBlank()) {
+//                        navController.navigate(
+//                            "beggingRequestComplete?name=$name&amount=$amount&reason=${textState.value.text}"
+//                        )
+//                    }
+//                },
                 onClick = {
-                    if (textState.value.text.isNotBlank()) {
-                        navController.navigate(
-                            "beggingRequestComplete?name=$name&amount=$amount&reason=${textState.value.text}"
+                    if (textState.value.text.isNotBlank() && userId != null && toUserId != null && amount != null) {
+                        beggingRequestViewModel.sendBeggingRequest(
+                            userId = userId.toString(),
+                            toUserId = toUserId.toString(),
+                            message = textState.value.text,
+                            amount = amount,
+                            onSuccess = { response ->
+                                // 성공 시 처리
+                                navController.navigate("beggingRequestComplete?name=$name&amount=$amount&reason=${textState.value.text}")
+                            },
+                            onError = { error ->
+                                Toast.makeText(
+                                    context,
+                                    "Error occurred: ${error.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         )
                     }
                 },

@@ -198,12 +198,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
 
 
                     // 유효한 경우 회원가입 정보 저장 로직 추가
-                    if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked)) {
-                        Toast.makeText(
-                           context,
-                            "아이디: $id, 비밀번호: $password, 이름: $name, 생년월일: $birth, 성별: $selectedGender, 역할: $selectedRole",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked) && password.length >= 8) {
                         viewModel.registerUser(
                             userName = id,
                             userPassword = password,
