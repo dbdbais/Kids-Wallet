@@ -82,8 +82,11 @@ public class TogetherRunService {
         }
 
         String imagePath = null;
+        String urlPath = null;
         try {
             imagePath = saveImage(togetherRunRegisterRequestDto.getTargetImage());
+            Path path = Paths.get(imagePath);
+            urlPath = path.subpath(4, path.getNameCount()).toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,7 +96,7 @@ public class TogetherRunService {
         TogetherRun togetherRun = TogetherRun.builder()
                 .relation(relation)
                 .targetTitle(togetherRunRegisterRequestDto.getTargetTitle())
-                .targetImage(imagePath)
+                .targetImage(urlPath)
                 .parentsAccount(parent.getAccounts().get(0).getAccountId())
                 .parentsContribute(togetherRunRegisterRequestDto.getParentsContribute())
                 .childAccount(user.getAccounts().get(0).getAccountId())
@@ -197,10 +200,21 @@ public class TogetherRunService {
         }
     }
 
+    public StatusCode togetherRunComplete(SavingContract savingContract) {
+
+        try {
+            savingContractRepository.save(savingContract);
+        } catch (Exception e) {
+            return StatusCode.BAD_REQUEST;
+        }
+        return StatusCode.SUCCESS;
+    }
+
     public String saveImage(MultipartFile file) throws IOException {
         String appPath = "/src/main/resources/static/uploads/";
         String systemPath = System.getProperty("user.dir") + appPath;
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String originalFileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "." + originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
         Path filePath = Paths.get(systemPath + fileName);
 
         // 디렉토리 생성 여부 확인 및 생성
