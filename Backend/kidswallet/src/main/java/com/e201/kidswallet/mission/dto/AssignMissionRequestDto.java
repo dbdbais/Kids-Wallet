@@ -10,9 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignMissionRequestDto {
-
     private long begId;
     private String missionMessage;
-    private LocalDateTime deadline;
-
 }

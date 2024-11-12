@@ -89,7 +89,6 @@ public class MissionService {
         //미션엔티티 빌드
         Mission mission = Mission.builder()
                 .missionContent(requestDto.getMissionMessage())
-                .deadLine(requestDto.getDeadline())
                 .beg(beg)
                 .build();
 
