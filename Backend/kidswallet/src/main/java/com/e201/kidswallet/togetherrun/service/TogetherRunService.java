@@ -126,6 +126,7 @@ public class TogetherRunService {
         try {
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
+            System.out.println("togetherRunRepository Error");
             return StatusCode.BAD_REQUEST;
         }
         User user = userRepository.findById(togetherRunAnswerRequestDto.getUserId())
@@ -137,6 +138,10 @@ public class TogetherRunService {
         if (isAccept == TogetherRunStatus.ACCEPTED) {
             try {
                 String accountId = accountService.makeRandomAccount();
+                Saving saving = savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId"));
+                if (saving == null) {
+                    return StatusCode.BAD_REQUEST;
+                }
                 Account newAccount = Account.builder()
                         .user(user)
                         .accountId(accountId)
@@ -145,13 +150,14 @@ public class TogetherRunService {
                 savingContract = SavingContract.builder()
                         .user(userRepository.findById(togetherRun.getRelation().getParent().getUserId())
                                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId")))
-                        .saving(savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId")))
+                        .saving(saving)
                         .savingAccount(accountId)
                         .depositDay((short)togetherRun.getCreatedAt().toLocalDate().getDayOfWeek().getValue())
                         .expiredAt(togetherRun.getTargetDate())
                         .build();
                 savingContractRepository.save(savingContract);
             } catch (Exception e) {
+                System.out.println("savingContractRepository Error");
                 return StatusCode.BAD_REQUEST;
             }
         }
