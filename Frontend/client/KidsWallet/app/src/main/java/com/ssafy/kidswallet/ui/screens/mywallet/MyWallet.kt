@@ -131,6 +131,12 @@ fun MyWalletScreen(
                         route = "myWalletDeposit",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
+                    ClickableIconWithText(
+                        navController = navController,
+                        imageId = R.drawable.icon_bundle,
+                        text = "빼기",
+                        route = "myWalletWithdraw",
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))

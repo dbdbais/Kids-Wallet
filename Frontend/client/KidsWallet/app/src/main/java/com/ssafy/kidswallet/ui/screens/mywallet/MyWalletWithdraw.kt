@@ -34,7 +34,7 @@ import com.ssafy.kidswallet.viewmodel.AccountDepositViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
-fun MyWalletDepositScreen(navController: NavController) {
+fun MyWalletWithdrawScreen(navController: NavController) {
     val focusManager = LocalFocusManager.current
     val depositViewModel: AccountDepositViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
@@ -47,11 +47,11 @@ fun MyWalletDepositScreen(navController: NavController) {
             .fillMaxSize()
             .clickable { focusManager.clearFocus() }
     ) {
-        DTopSection(navController)
+        WTopSection(navController)
         Spacer(modifier = Modifier.height(16.dp))
-        DHeaderSection()
+        WHeaderSection()
         Spacer(modifier = Modifier.height(16.dp))
-        DFormSection(
+        WFormSection(
             modifier = Modifier.padding(horizontal = 16.dp),
             navController = navController,
             depositViewModel = depositViewModel,
@@ -86,19 +86,19 @@ fun MyWalletDepositScreen(navController: NavController) {
 }
 
 @Composable
-fun DTopSection(navController: NavController) {
+fun WTopSection(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Top(title = "채우기", navController = navController)
+        Top(title = "빼기", navController = navController)
     }
 }
 
 @Composable
-fun DHeaderSection() {
+fun WHeaderSection() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +113,7 @@ fun DHeaderSection() {
                 ) {
                     append("Kid’s Wallet")
                 }
-                append(" 에\n얼마를 채울까요?")
+                append(" 에서\n얼마를 뺄까요?")
             },
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
@@ -131,7 +131,7 @@ fun DHeaderSection() {
 }
 
 @Composable
-fun DFormSection(
+fun WFormSection(
     modifier: Modifier = Modifier,
     navController: NavController,
     depositViewModel: AccountDepositViewModel,
@@ -141,9 +141,9 @@ fun DFormSection(
     var amount by remember { mutableStateOf("") }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 16.dp, top = 16.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -153,19 +153,20 @@ fun DFormSection(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "내 Kid's Wallet 계좌",
+                text = "내 계좌",
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
             Text(
-                text = "${storedUserData?.representAccountId ?: "계좌번호 없음"}",
+                text = "싸피뱅크 991223*******",
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
         }
-        Spacer(modifier = Modifier.height(8.dp))
+
+    Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = amount,
@@ -216,6 +217,6 @@ fun DFormSection(
     showSystemUi = true
 )
 @Composable
-fun MyWalletDepositScreenPreview() {
-    MyWalletDepositScreen(navController = rememberNavController())
+fun MyWalletWithdrawScreenPreview() {
+    MyWalletWithdrawScreen(navController = rememberNavController())
 }
