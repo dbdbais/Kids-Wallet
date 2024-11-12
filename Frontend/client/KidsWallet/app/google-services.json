@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525430840003",
+    "project_id": "kidswallet-d825d",
+    "storage_bucket": "kidswallet-d825d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525430840003:android:d5c11622e4c48be9202076",
+        "android_client_info": {
+          "package_name": "com.ssafy.kidswallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmQeMz8wPYDFoDnLV-UiEmdR5pV09BJWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

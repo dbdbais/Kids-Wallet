@@ -50,7 +50,8 @@ fun CardScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
         Top(title = "카드", navController = navController) // BackButton 사용
         Spacer(modifier = Modifier.height(16.dp))

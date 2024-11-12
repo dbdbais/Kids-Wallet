@@ -50,6 +50,8 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.viewmodel.RelationViewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.draw.alpha
 
 @Composable
@@ -69,7 +71,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                         value = input,
                         onValueChange = { input = it },
                         label = { Text("아이의 ID") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -126,7 +128,8 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 코인 이미지와 금액 텍스트가 포함된 이미지
@@ -330,7 +333,8 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                         painter = painterResource(id = R.drawable.account_button),
                         contentDescription = "Account Button",
                         modifier = Modifier
-                            .size(350.dp)
+                            .width(350.dp)
+                            .height(200.dp)
                             .align(Alignment.Center)
                     )
                     Text(
