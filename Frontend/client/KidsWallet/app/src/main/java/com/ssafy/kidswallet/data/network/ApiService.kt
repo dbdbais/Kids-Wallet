@@ -3,6 +3,7 @@ package com.ssafy.kidswallet.data.network
 import com.ssafy.kidswallet.data.model.AccountDepositModel
 import com.ssafy.kidswallet.data.model.AccountModel
 import com.ssafy.kidswallet.data.model.AccountTransferModel
+import com.ssafy.kidswallet.data.model.AccountWithdrawModel
 import com.ssafy.kidswallet.data.model.ApiResponse
 import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.RelationModel
@@ -39,4 +40,7 @@ interface ApiService {
 
     @PATCH("account/deposit")
     suspend fun accountDeposit(@Body accountDepositModel: AccountDepositModel): Response<Any>
+
+    @PATCH("account/withdraw")
+    suspend fun accountWithdraw(@Body accountWithdrawModel: AccountWithdrawModel): Response<Any>
 }

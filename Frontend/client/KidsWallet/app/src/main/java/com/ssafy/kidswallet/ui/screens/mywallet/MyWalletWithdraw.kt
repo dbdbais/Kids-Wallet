@@ -30,17 +30,17 @@ import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
-import com.ssafy.kidswallet.viewmodel.AccountDepositViewModel
+import com.ssafy.kidswallet.viewmodel.AccountWithdrawViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
 fun MyWalletWithdrawScreen(navController: NavController) {
     val focusManager = LocalFocusManager.current
-    val depositViewModel: AccountDepositViewModel = viewModel()
+    val withdrawViewModel: AccountWithdrawViewModel = viewModel()
     val loginViewModel: LoginViewModel = viewModel()
 
-    val depositSuccess by depositViewModel.depositSuccess.collectAsState()
-    val depositError by depositViewModel.depositError.collectAsState()
+    val withdrawSuccess by withdrawViewModel.withdrawSuccess.collectAsState()
+    val withdrawError by withdrawViewModel.withdrawError.collectAsState()
 
     Column(
         modifier = Modifier
@@ -54,15 +54,15 @@ fun MyWalletWithdrawScreen(navController: NavController) {
         WFormSection(
             modifier = Modifier.padding(horizontal = 16.dp),
             navController = navController,
-            depositViewModel = depositViewModel,
+            withdrawViewModel = withdrawViewModel,
             loginViewModel = loginViewModel
         )
 
         // 성공 또는 오류 메시지 표시
         when {
-            depositSuccess == true -> {
+            withdrawSuccess == true -> {
                 Text(
-                    text = "충전이 성공적으로 완료되었습니다!",
+                    text = "출금이 성공적으로 완료되었습니다!",
                     color = Color.Green,
                     fontSize = 16.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -73,9 +73,9 @@ fun MyWalletWithdrawScreen(navController: NavController) {
                     }
                 }
             }
-            depositError != null -> {
+            withdrawError != null -> {
                 Text(
-                    text = depositError ?: "충전 오류가 발생했습니다.",
+                    text = withdrawError ?: "출금 오류가 발생했습니다.",
                     color = Color.Red,
                     fontSize = 16.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -134,7 +134,7 @@ fun WHeaderSection() {
 fun WFormSection(
     modifier: Modifier = Modifier,
     navController: NavController,
-    depositViewModel: AccountDepositViewModel,
+    withdrawViewModel: AccountWithdrawViewModel,
     loginViewModel: LoginViewModel
 ) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
@@ -166,7 +166,7 @@ fun WFormSection(
             )
         }
 
-    Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = amount,
@@ -198,12 +198,12 @@ fun WFormSection(
                 val accountId = storedUserData?.representAccountId ?: ""
                 val amountInt = amount.toIntOrNull() ?: 0
                 if (accountId.isNotEmpty() && amountInt > 0) {
-                    depositViewModel.depositFunds(accountId, amountInt)
+                    withdrawViewModel.withdrawFunds(accountId, amountInt)
                 } else {
                     println("Error: Invalid accountId or amount")
                 }
             },
-            text = "채우기",
+            text = "빼기",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
