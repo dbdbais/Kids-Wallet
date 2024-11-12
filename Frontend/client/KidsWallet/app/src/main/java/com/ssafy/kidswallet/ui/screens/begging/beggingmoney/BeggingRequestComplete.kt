@@ -185,7 +185,7 @@ fun BeggingRequestCompleteScreen(
                 LightGrayButton(
                     onClick = {
                         navController.navigate("mainPage") {
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                            popUpTo(0) { inclusive = true }
                         }
                     },
                     text = "홈으로 가기",
@@ -197,7 +197,7 @@ fun BeggingRequestCompleteScreen(
                 BlueButton(
                     onClick = {
                         navController.navigate("begging") {
-                            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                            popUpTo(0) { inclusive = true }
                         }
                     },
                     text = "조르기로 가기",

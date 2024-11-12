@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -26,38 +25,42 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import androidx.compose.material3.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.draw.alpha
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.data.model.TransactionModel
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-
-// Sample transaction data class
-data class Transaction(
-    val storeName: String,
-    val date: String,
-    val amount: Int,
-    val balance: Int
-)
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 
 @Composable
-fun MyWalletScreen(navController: NavController) {
-    // Initialize Calendar instance for current date
+fun MyWalletScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
+    accountTransactionViewModel: AccountTransactionViewModel = viewModel()
+) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val accountState by accountTransactionViewModel.accountState.collectAsState()
+    val errorState by accountTransactionViewModel.errorState.collectAsState()
+
+    // API 요청 - representAccountId가 null이 아닐 때만 호출
+    LaunchedEffect(storedUserData?.representAccountId) {
+        storedUserData?.representAccountId?.let { accountId ->
+            accountTransactionViewModel.getTransactionData(accountId)
+        }
+    }
+
+    // 캘린더 초기화
     val calendar = Calendar.getInstance()
     var currentMonth by remember { mutableStateOf(calendar.get(Calendar.MONTH) + 1) } // 0-based month, +1 for display
     var currentYear by remember { mutableStateOf(calendar.get(Calendar.YEAR)) }
-    val role = " "
-    val transactionList = listOf( // Example transaction list; replace with actual API data
-        Transaction("아이스24", "2024.10.22", -500, 500),
-        Transaction("미션", "2024.10.22", 500, 1000),
-        Transaction("CU편의점", "2024.10.22", -1500, 500),
-        Transaction("아이스24", "2024.10.22", -500, 500),
-        Transaction("미션", "2024.10.22", 500, 1000),
-        Transaction("CU편의점", "2024.10.22", -1500, 500)
-    )
+    val startMonth = 11
+    val startYear = 2023
+    val endMonth = 11
+    val endYear = 2024
 
     Column(
         modifier = Modifier
@@ -133,10 +136,10 @@ fun MyWalletScreen(navController: NavController) {
 
                 TextButton(
                     onClick = {
-                        if (role == "parents") {
-                            navController.navigate("myWallet")
-                        } else {
+                        if (storedUserData?.userRole == "CHILD") {
                             navController.navigate("begging")
+                        } else {
+                            navController.navigate("myWallet")
                         }
                     },
                     modifier = Modifier
@@ -151,9 +154,9 @@ fun MyWalletScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (role == "parents") {
+                        if (storedUserData?.userRole == "CHILD") {
                             Text(
-                                text = "내 아이 지갑 같이보기",
+                                text = "조르러 가기",
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -167,7 +170,7 @@ fun MyWalletScreen(navController: NavController) {
                             )
                         } else {
                             Text(
-                                text = "조르러 가기",
+                                text = "내 아이 지갑 같이보기",
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -202,11 +205,6 @@ fun MyWalletScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val startMonth = 11
-                val startYear = 2023
-                val endMonth = 11
-                val endYear = 2024
-
                 val isFirstMonth = currentMonth == startMonth && currentYear == startYear
                 val isLastMonth = currentMonth == endMonth && currentYear == endYear
 
@@ -259,8 +257,14 @@ fun MyWalletScreen(navController: NavController) {
             }
         }
 
-        // Transaction Section
-        if (transactionList.isEmpty()) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 거래 내역 표시
+        val filteredTransactions = accountState?.data?.filter { transaction ->
+            transaction.transactionDate[0] == currentYear && transaction.transactionDate[1] == currentMonth
+        }
+
+        if (filteredTransactions.isNullOrEmpty()) {
             Spacer(modifier = Modifier.height(50.dp))
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -285,7 +289,7 @@ fun MyWalletScreen(navController: NavController) {
                     .padding(16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                transactionList.forEach { transaction ->
+                filteredTransactions.forEach { transaction ->
                     TransactionItem(transaction = transaction)
                     Divider(
                         color = Color.LightGray,
@@ -295,11 +299,16 @@ fun MyWalletScreen(navController: NavController) {
                 }
             }
         }
+
+        // 에러 메시지 표시
+        errorState?.let { error ->
+            Text(text = error, color = Color.Red, style = FontSizes.h20)
+        }
     }
 }
 
 @Composable
-fun TransactionItem(transaction: Transaction) {
+fun TransactionItem(transaction: TransactionModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -309,14 +318,15 @@ fun TransactionItem(transaction: Transaction) {
     ) {
         Column {
             Text(
-                text = transaction.storeName,
+                text = transaction.message,
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = transaction.date,
-                style = FontSizes.h16,
-                color = Color.Gray
+                text = "${transaction.transactionDate[0]}.${transaction.transactionDate[1]}.${transaction.transactionDate[2]}",
+                style = FontSizes.h12,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF8C8595)
             )
         }
         Column(
@@ -327,11 +337,6 @@ fun TransactionItem(transaction: Transaction) {
                 style = FontSizes.h16,
                 color = if (transaction.amount > 0) Color.Red else Color.Blue,
                 fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "잔액 ${transaction.balance}원",
-                style = FontSizes.h16,
-                color = Color.Gray
             )
         }
     }

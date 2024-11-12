@@ -53,9 +53,13 @@ import com.ssafy.kidswallet.data.model.PersonModel
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
-fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel = viewModel()) {
+fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel()) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val peopleList = storedUserData?.relations
+
     val selectedPerson by viewModel.selectedPerson.collectAsState()
 
     Box(
