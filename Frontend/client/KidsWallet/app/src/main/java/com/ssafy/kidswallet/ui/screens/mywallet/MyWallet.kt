@@ -114,14 +114,14 @@ fun MyWalletScreen(
                         navController = navController,
                         imageId = R.drawable.icon_wallet,
                         text = "지출 관리",
-                        route = "mainPage",
+                        route = "myWalletManage",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
                         navController = navController,
                         imageId = R.drawable.icon_withrow,
                         text = "보내기",
-                        route = "MyWalletTransfer",
+                        route = "myWalletTransfer",
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
                     ClickableIconWithText(
