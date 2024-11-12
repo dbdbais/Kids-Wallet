@@ -1,6 +1,9 @@
 package com.ssafy.kidswallet.data.network
 
+import com.ssafy.kidswallet.data.model.AccountDepositModel
 import com.ssafy.kidswallet.data.model.AccountModel
+import com.ssafy.kidswallet.data.model.AccountTransferModel
+import com.ssafy.kidswallet.data.model.AccountWithdrawModel
 import com.ssafy.kidswallet.data.model.ApiResponse
 import com.ssafy.kidswallet.data.model.BeggingRequestModel
 import com.ssafy.kidswallet.data.model.LoginModel
@@ -49,4 +52,13 @@ interface ApiService {
 
     @POST("fcm/token") // 기본 URL이 설정된 상태에서 상대 경로만 사용
     fun sendTokenToServer(@Body requestDto: FcmDto): Call<FcmDto> // Call<FcmDto>로 반환 타입 수정
+
+    @PATCH("account/transfer")
+    suspend fun accountTransfer(@Body accountTransferModel: AccountTransferModel): Response<Any>
+
+    @PATCH("account/deposit")
+    suspend fun accountDeposit(@Body accountDepositModel: AccountDepositModel): Response<Any>
+
+    @PATCH("account/withdraw")
+    suspend fun accountWithdraw(@Body accountWithdrawModel: AccountWithdrawModel): Response<Any>
 }

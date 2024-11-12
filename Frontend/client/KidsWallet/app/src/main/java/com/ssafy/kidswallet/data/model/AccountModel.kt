@@ -10,6 +10,7 @@ data class TransactionModel(
     val accountId: String,
     val message: String,
     val transactionType: String,
+    val curBalance: Int,
     val amount: Int,
     val transactionDate: List<Int>
 )

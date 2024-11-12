@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.ssafy.kidswallet.R
@@ -44,6 +45,8 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 
 @Composable
 fun Login(navController: NavHostController, viewModel: LoginViewModel = viewModel()) {
@@ -186,4 +189,3 @@ fun ErrorBox(errorMessage: String) {
         )
     }
 }
-
