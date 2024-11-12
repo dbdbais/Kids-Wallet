@@ -16,12 +16,16 @@ import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.Relation
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.data.network.RetrofitClient
+import com.ssafy.kidswallet.dataStore
+import com.ssafy.kidswallet.fcm.repository.FcmRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
+
 
 // DataStore를 위한 Context 확장 함수
 private val Context.dataStore by preferencesDataStore(name = "user_data")
@@ -85,6 +89,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    val fcmTokenKey = stringPreferencesKey("fcm_token")
+    suspend fun getFcmToken(): String? {
+        // DataStore에서 fcm_token 값을 동기적으로 가져기
+        val buffer = getApplication<Application>().applicationContext.dataStore.data.first()
+        return  buffer[fcmTokenKey]
+    }
     fun getStoredUserData(): StateFlow<UserDataModel?> {
         val dataFlow = getApplication<Application>().applicationContext.dataStore.data
             .map { preferences ->
@@ -130,6 +140,15 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     Log.d("LoginSuccess", "Response Body: ${response.body()}")
                     Log.d("FullResponse", "Response: $response")
                     Log.d("UserDataState", "Current user data: ${_userData.value}")
+
+                    //fcm
+                    //TODO: userData에서 token을 받아 레트로핏으로 save 요청
+                    Log.d("getFcmToken","FcmToken: "+getFcmToken())
+                    val userId: Long? = apiResponse?.data?.userId?.toLong()
+                    val fcmRepository = FcmRepository()
+                    fcmRepository.sendTokenToServer(userId,getFcmToken());
+
+
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = errorBody?.let {

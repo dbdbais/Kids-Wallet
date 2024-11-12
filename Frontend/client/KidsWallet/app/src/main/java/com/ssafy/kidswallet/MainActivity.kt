@@ -2,7 +2,12 @@ package com.ssafy.kidswallet
 
 import android.os.Build
 import QuizScreen
+import android.app.Application
+import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,12 +17,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
+import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.ui.screens.alert.AlertListScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionCheckScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionCompleteScreen
@@ -53,11 +66,46 @@ import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsRegisterScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+
+val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 위한 DataStore 인스턴스 생성
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //fcm
+        //TODO: FCM
+        // Firebase 초기화
+        FirebaseApp.initializeApp(this)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(ContentValues.TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // FCM 토큰을 DataStore에 저장
+            val fcmTokenKey = stringPreferencesKey("fcm_token")
+            lifecycleScope.launch {
+                applicationContext.dataStore.edit { preferences ->
+                    preferences[fcmTokenKey] = token
+                }
+
+                // DataStore에서 FCM 토큰을 읽어서 로그로 출력
+                val savedToken = applicationContext.dataStore.data.first()[fcmTokenKey]
+                Log.d(ContentValues.TAG, "Saved FCM Token in DataStore: $savedToken")
+            }
+
+            // Log and toast
+            val msg = getString(R.string.msg_token_fmt, token)
+            Log.d(ContentValues.TAG, msg)
+            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+        }) //FCM end
 
         setContent {
             KidsWalletTheme {
