@@ -36,6 +36,7 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,9 +45,15 @@ fun ParentBeggingAssignMissionScreen(
     name: String?,
     begMoney: Int,
     begContent: String?,
-    viewModel: BeggingReasonViewModel = viewModel()
+    viewModel: BeggingReasonViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
     val textState = viewModel.textModel.collectAsState()
+
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val relation = storedUserData?.relations
+    val begId = relation?.find {it.userName == name}?.userId
+
     Column {
         Column(
             modifier = Modifier

@@ -162,13 +162,68 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (storedUserData?.userRole == "CHILD") {
-                    Text(
-                        text = "어른이 추가될 때까지 기다려보아요",
-                        fontWeight = FontWeight.W900,
-                        style = FontSizes.h20,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
+                    if (storedUserData.relations?.isEmpty() == true) {
+                        Text(
+                            text = "어른이 추가될 때까지 기다려보아요",
+                            fontWeight = FontWeight.W900,
+                            style = FontSizes.h20,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    } else {
+                        Box {
+                            LazyRow(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp, vertical = 4.dp)
+                            ) {
+                                items(storedUserData.relations ?: emptyList()) { relation ->
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(4.dp) // 각 항목의 외부 여백
+                                            .background(
+                                                color = if (relation.userGender == "MALE") Color(0xFFF4FBFE) else Color(0xFFFFF4F5),
+                                                shape = RoundedCornerShape(40.dp) // 둥근 모서리 처리
+                                            )
+                                            .padding(8.dp) // 내부 여백
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(40.dp)
+                                                    .background(
+                                                        color = if (relation.userGender == "MALE") Color(0xFFE9F8FE) else Color(
+                                                            0xFFFFEDEF
+                                                        ),
+                                                        shape = CircleShape
+                                                    ),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(
+                                                        id = if (relation.userGender == "MALE") R.drawable.character_old_man else R.drawable.character_old_girl
+                                                    ),
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .size(32.dp) // 이미지 크기 조정
+                                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            relation.userName?.let {
+                                                Text(
+                                                    text = it,
+                                                    fontWeight = FontWeight.Bold,
+                                                    style = FontSizes.h16
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.icon_add),

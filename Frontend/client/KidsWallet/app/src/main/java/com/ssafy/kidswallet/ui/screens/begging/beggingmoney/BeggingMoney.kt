@@ -1,5 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.begging.beggingmoney
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,20 +49,21 @@ import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
-import com.ssafy.kidswallet.viewmodel.PersonViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ssafy.kidswallet.data.model.PersonModel
+import com.ssafy.kidswallet.data.model.Relation
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel()) {
+fun BeggingMoneyScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val peopleList = storedUserData?.relations
 
-    val selectedPerson by viewModel.selectedPerson.collectAsState()
+    // 선택된 사람을 관리하는 상태 추가
+    var selectedPerson by remember { mutableStateOf<Relation?>(null) }
 
     Box(
         modifier = Modifier
@@ -93,16 +96,19 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                PeopleSelect(onPersonSelected = { person ->
-                    viewModel.setSelectedPerson(person)
-                })
+                PeopleSelect(
+                    peopleList = peopleList ?: emptyList(),
+                    onPersonSelected = { person ->
+                        selectedPerson = person
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 BlueButton(
                     onClick = {
                         selectedPerson?.let { person ->
-                            navController.navigate("beggingRequest?name=${person.name}")
+                            navController.navigate("beggingRequest?name=${person.userName}")
                         }
                     },
                     modifier = Modifier.width(400.dp), // 원하는 너비 설정
@@ -139,15 +145,10 @@ fun BeggingMoneyScreen(navController: NavController ,viewModel: PersonViewModel 
 
 @Composable
 fun PeopleSelect(
-    viewModel: PersonViewModel = viewModel(),
-    onPersonSelected: (PersonModel) -> Unit
+    peopleList: List<Relation>,
+    onPersonSelected: (Relation) -> Unit
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchPeople()
-    }
-
-    val peopleList = viewModel.peopleList.collectAsState().value
-    var selectedPerson by remember { mutableStateOf<PersonModel?>(null) }
+    var selectedPerson by remember { mutableStateOf<Relation?>(null) }
 
     Box(
         modifier = Modifier
@@ -245,7 +246,7 @@ fun PeopleSelect(
                                     modifier = Modifier
                                         .size(40.dp)
                                         .background(
-                                            color = if (person.gender == "남") Color(0xFFE9F8FE) else Color(
+                                            color = if (person.userGender == "MALE") Color(0xFFE9F8FE) else Color(
                                                 0xFFFFEDEF
                                             ),
                                             shape = CircleShape
@@ -254,7 +255,7 @@ fun PeopleSelect(
                                 ) {
                                     Image(
                                         painter = painterResource(
-                                            id = if (person.gender == "남") R.drawable.character_old_man else R.drawable.character_old_girl
+                                            id = if (person.userGender == "MALE") R.drawable.character_old_man else R.drawable.character_old_girl
                                         ),
                                         contentDescription = null,
                                         modifier = Modifier
@@ -264,7 +265,7 @@ fun PeopleSelect(
                                 }
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = person.name,
+                                    text = person.userName ?: "이름 없음",
                                     fontWeight = FontWeight.Bold,
                                     style = FontSizes.h16
                                 )
@@ -277,11 +278,18 @@ fun PeopleSelect(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel()) {
+fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel()) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val userId = storedUserData?.userId
+
     LaunchedEffect(Unit) {
-        viewModel.fetchMissionList()
+        if (userId != null) {
+            viewModel.fetchMissionList(userId = userId, reset = true)
+        }
     }
+
     // ViewModel의 데이터를 관찰
     val missionList = viewModel.missionList.collectAsState().value
     val completeMission = missionList.filter { it.mission?.missionStatus == "complete" }
@@ -309,7 +317,7 @@ fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel()) {
             horizontalArrangement = Arrangement.spacedBy(16.dp) // 항목 간 간격
         ) {
             items(completeMission) { mission ->
-                val formattedDate = DateUtils.formatDate(mission.begDto.createAt)
+                val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
                 val formattedNumber = NumberUtils.formatNumberWithCommas(mission.begDto.begMoney)
                 Box(
                     modifier = Modifier

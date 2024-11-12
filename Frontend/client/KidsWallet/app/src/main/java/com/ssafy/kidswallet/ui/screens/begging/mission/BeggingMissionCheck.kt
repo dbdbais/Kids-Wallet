@@ -1,5 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.begging.mission
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -26,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,7 +47,9 @@ import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.YellowButton
 import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BeggingMissionCheckScreen(navController: NavController) {
     Column(
@@ -163,13 +169,32 @@ fun BeggingMissionCheckScreen(navController: NavController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navController: NavController) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchMissionList()
-    }
+fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel(), navController: NavController) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val userId = storedUserData?.userId
+
     val missionList = viewModel.missionList.collectAsState().value
     val ongoingMission = missionList.filter { it.mission?.missionStatus == "proceed"}
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        if (userId != null) {
+            viewModel.fetchMissionList(userId = userId, reset = true)
+        }
+    }
+
+    LaunchedEffect(lazyListState) {
+        snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastVisibleIndex ->
+                if (lastVisibleIndex == missionList.size - 1) {
+                    if (userId != null) {
+                        viewModel.fetchMissionList(userId = userId)
+                    } // 사용자 ID는 실제 데이터에 맞게 설정하세요
+                }
+            }
+    }
 
     Row(
         modifier = Modifier
@@ -195,7 +220,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
                 horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
             ) {
                 items(ongoingMission) {mission ->
-                    val formattedDate = DateUtils.formatDate(mission.begDto.createAt)
+                    val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
 
                     Column (
                         modifier = Modifier
@@ -287,14 +312,28 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), navCont
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel()) {
-    LaunchedEffect(Unit) {
-        viewModel.fetchMissionList()
-    }
+fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel()) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val userId = storedUserData?.userId
+
     val missionList = viewModel.missionList.collectAsState().value
     val waitingMission = missionList.filter {
-        (it.begDto.begAccept == true && it.mission == null) || (it.begDto.begAccept == null && it.mission == null)
+        (it.begDto.begAccept == true && it.mission?.missionStatus == null) || (it.begDto.begAccept == null && it.mission?.missionStatus == null)
+    }
+
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(lazyListState) {
+        snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+            .collect { lastVisibleIndex ->
+                if (lastVisibleIndex == missionList.size - 1) {
+                    if (userId != null) {
+                        viewModel.fetchMissionList(userId = userId)
+                    } // 사용자 ID는 실제 데이터에 맞게 설정하세요
+                }
+            }
     }
 
     Row(
@@ -321,7 +360,7 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel()) {
                 horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
             ) {
                 items(waitingMission) {mission ->
-                    val formattedDate = DateUtils.formatDate(mission.begDto.createAt)
+                    val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
                     Column (
                         modifier = Modifier
                             .width(400.dp)
