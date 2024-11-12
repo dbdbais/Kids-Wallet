@@ -9,14 +9,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -25,25 +22,90 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.AccountTransferViewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
-fun MyWalletWithdrawalScreen(navController: NavController) {
+fun MyWalletTransferScreen(
+    navController: NavController,
+    viewModel: AccountTransferViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel()
+) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+
+    val focusManager = LocalFocusManager.current
+    var accountNumber by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+    val transferSuccess by viewModel.transferSuccess.collectAsState()
+    val transferError by viewModel.transferError.collectAsState()
+
     Column(
-        modifier = Modifier.fillMaxSize() // 전체 Column에 패딩을 주지 않습니다.
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { focusManager.clearFocus() }
     ) {
         TopSection(navController)
         Spacer(modifier = Modifier.height(16.dp))
         HeaderSection()
         Spacer(modifier = Modifier.height(16.dp))
-        FormSection(modifier = Modifier.padding(horizontal = 16.dp), navController) // FormSection에 개별 패딩 적용
+
+        FormSection(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            accountNumber = accountNumber,
+            amount = amount,
+            message = message,
+            onAccountNumberChange = { accountNumber = it },
+            onAmountChange = { amount = it },
+            onMessageChange = { message = it },
+            onTransferClick = {
+                val fromId = storedUserData?.representAccountId ?: ""
+                val amountInt = amount.toIntOrNull() ?: 0
+
+                if (fromId.isNotEmpty()) {
+                    // fromId가 유효할 때만 요청을 보냅니다.
+                    viewModel.transferFunds(fromId = fromId, toId = accountNumber, message = message, amount = amountInt)
+                } else {
+                    // 에러 메시지를 표시하거나, 사용자에게 유효한 fromId가 없음을 알립니다.
+                    println("Error: fromId is empty. Cannot proceed with the transfer.")
+                }
+            }
+        )
+
+        // 성공 또는 오류 메시지 표시
+        when {
+            transferSuccess == true -> {
+                Text(
+                    text = "송금이 성공적으로 완료되었습니다!",
+                    color = Color.Green,
+                    fontSize = 16.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                LaunchedEffect(Unit) {
+                    navController.navigate("myWallet") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            }
+            transferError != null -> {
+                Text(
+                    text = transferError ?: "송금 오류가 발생했습니다.",
+                    color = Color.Red,
+                    fontSize = 16.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+        }
     }
 }
+
 
 @Composable
 fun TopSection(navController: NavController) {
@@ -91,11 +153,16 @@ fun HeaderSection() {
 }
 
 @Composable
-fun FormSection(modifier: Modifier = Modifier, navController: NavController) {
-    var accountNumber by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-
+fun FormSection(
+    modifier: Modifier = Modifier,
+    accountNumber: String,
+    amount: String,
+    message: String,
+    onAccountNumberChange: (String) -> Unit,
+    onAmountChange: (String) -> Unit,
+    onMessageChange: (String) -> Unit,
+    onTransferClick: () -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -104,12 +171,12 @@ fun FormSection(modifier: Modifier = Modifier, navController: NavController) {
     ) {
         OutlinedTextField(
             value = accountNumber,
-            onValueChange = { accountNumber = it },
+            onValueChange = onAccountNumberChange,
             label = { Text("계좌번호") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 if (accountNumber.isNotEmpty()) {
-                    IconButton(onClick = { accountNumber = "" }) {
+                    IconButton(onClick = { onAccountNumberChange("") }) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_cancel),
                             contentDescription = "Clear Account Number",
@@ -128,12 +195,12 @@ fun FormSection(modifier: Modifier = Modifier, navController: NavController) {
 
         OutlinedTextField(
             value = amount,
-            onValueChange = { amount = it },
+            onValueChange = onAmountChange,
             label = { Text("금액") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 if (amount.isNotEmpty()) {
-                    IconButton(onClick = { amount = "" }) {
+                    IconButton(onClick = { onAmountChange("") }) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_cancel),
                             contentDescription = "Clear Amount",
@@ -154,14 +221,14 @@ fun FormSection(modifier: Modifier = Modifier, navController: NavController) {
             value = message,
             onValueChange = {
                 if (it.length <= 15) { // 15자 이하로 제한
-                    message = it
+                    onMessageChange(it)
                 }
             },
             label = { Text("메세지를 적어주세요!") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 if (message.isNotEmpty()) {
-                    IconButton(onClick = { message = "" }) {
+                    IconButton(onClick = { onMessageChange("") }) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_cancel),
                             contentDescription = "Clear Message",
@@ -187,7 +254,7 @@ fun FormSection(modifier: Modifier = Modifier, navController: NavController) {
         Spacer(modifier = Modifier.weight(1f))
 
         BlueButton(
-            onClick = { navController.navigate("runParentsMoney") },
+            onClick = onTransferClick,
             text = "보내기",
             modifier = Modifier
                 .fillMaxWidth()
@@ -196,13 +263,12 @@ fun FormSection(modifier: Modifier = Modifier, navController: NavController) {
     }
 }
 
-
 @Preview(
     showBackground = true,
     device = "spec:width=1440px,height=3120px,dpi=560",
     showSystemUi = true
 )
 @Composable
-fun MyWalletWithdrawalScreenPreview() {
-    MyWalletWithdrawalScreen(navController = rememberNavController())
+fun MyWalletTransferScreenPreview() {
+    MyWalletTransferScreen(navController = rememberNavController())
 }

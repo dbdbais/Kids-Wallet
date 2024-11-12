@@ -1,11 +1,11 @@
 package com.ssafy.kidswallet.data.network
 
 import com.ssafy.kidswallet.data.model.AccountModel
+import com.ssafy.kidswallet.data.model.AccountTransferModel
 import com.ssafy.kidswallet.data.model.ApiResponse
 import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
-import com.ssafy.kidswallet.data.model.UserDataModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,4 +32,7 @@ interface ApiService {
 
     @GET("account/view/transaction")
     suspend fun viewTransaction(@Query("id") accountId: String): Response<AccountModel>
+
+    @PATCH("account/transfer")
+    suspend fun accountTransfer(@Body accountTransferModel: AccountTransferModel): Response<Any>
 }

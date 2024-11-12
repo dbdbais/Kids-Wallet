@@ -44,7 +44,7 @@ import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
 import com.ssafy.kidswallet.ui.screens.makeaccount.MakeAccountScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletDepositScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
-import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletWithdrawalScreen
+import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletTransferScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishDetailScreen
@@ -112,7 +112,7 @@ class MainActivity : ComponentActivity() {
 
             // wallet
             composable("myWallet") { MyWalletScreen(navController) }
-            composable("myWalletWithdrawal") { MyWalletWithdrawalScreen(navController) }
+            composable("myWalletTransfer") { MyWalletTransferScreen(navController) }
             composable("myWalletDeposit") { MyWalletDepositScreen(navController) }
 
             // begging

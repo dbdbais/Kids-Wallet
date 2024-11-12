@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -34,8 +35,11 @@ import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
 fun MyWalletDepositScreen(navController: NavController) {
+    val focusManager = LocalFocusManager.current // 포커스 관리 객체
     Column(
-        modifier = Modifier.fillMaxSize() // 전체 Column에 패딩을 주지 않습니다.
+        modifier = Modifier
+            .fillMaxSize() // 전체 Column에 패딩을 주지 않습니다.
+            .clickable { focusManager.clearFocus() } // 여백을 클릭하면 포커스 해제
     ) {
         DTopSection(navController)
         Spacer(modifier = Modifier.height(16.dp))
@@ -152,7 +156,9 @@ fun DFormSection(modifier: Modifier = Modifier, navController: NavController) {
         Spacer(modifier = Modifier.weight(1f))
 
         BlueButton(
-            onClick = { navController.navigate("runParentsMoney") },
+            onClick = { navController.navigate("myWallet"){
+                popUpTo(0) { inclusive = true } // 모든 스택 제거
+            }},
             text = "채우기",
             modifier = Modifier
                 .fillMaxWidth()
