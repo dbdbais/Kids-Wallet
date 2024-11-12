@@ -85,6 +85,12 @@ public class UserController {
         return ResponseDto.response(statusCode);
     }
 
+    /**
+     * FCM에서 유저의 최신 정보를 갱신하기 위한 엔드포인트
+     * @param userId
+     * @return
+     */
+
     @GetMapping("/status/{userId}")
     public ResponseEntity<ResponseDto> getStatus(@PathVariable Long userId){
         UserLoginResponseDTO userLoginResponseDTO = userService.getUserStatus(userId);
