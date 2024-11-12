@@ -198,7 +198,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
 
 
                     // 유효한 경우 회원가입 정보 저장 로직 추가
-                    if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked)) {
+                    if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked) && password.length >= 8) {
                         viewModel.registerUser(
                             userName = id,
                             userPassword = password,

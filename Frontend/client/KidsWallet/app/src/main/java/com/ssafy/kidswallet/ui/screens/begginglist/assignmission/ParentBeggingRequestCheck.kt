@@ -173,7 +173,7 @@ fun ParentBeggingRequestCheckScreen(
                 )
                 BlueButton(
                     onClick = {
-                        navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}")
+                        navController.navigate("parentBeggingAssignMission/${name}/${begMoney}/${begContent}")
                     },
                     text = "미션주기",
                     modifier = Modifier
