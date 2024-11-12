@@ -1,5 +1,6 @@
 package com.e201.kidswallet.account.service;
 
+import com.e201.kidswallet.account.dto.MonthlyExpenseDTO;
 import com.e201.kidswallet.account.dto.TransactionListDTO;
 import com.e201.kidswallet.account.dto.TransactionResponseDTO;
 import com.e201.kidswallet.account.dto.TransferMoneyDTO;
@@ -20,8 +21,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 @Slf4j
@@ -224,5 +231,89 @@ public class AccountService {
         return StatusCode.SUCCESS;
     }
 
+    public MonthlyExpenseDTO getMonthlyExpense(String accountId){
+        Optional<Account> sAccount = accountRepository.findById(accountId);
+
+        if(sAccount.isEmpty())
+        {
+            return null;
+        }
+
+        List<Transaction> transactions = sAccount.get().getTransactions();
+
+
+        // 이번 주 월요일 날짜 계산
+        LocalDate today = LocalDate.now();
+        LocalDate mondayOfThisWeek = today.with(DayOfWeek.MONDAY);
+
+        // 7일 전 날짜 및 이전 주 월요일 날짜 계산
+        LocalDate sevenDaysAgo = LocalDate.now().minusDays(7);
+        LocalDate mondayOfLastWeek = mondayOfThisWeek.minusWeeks(1);
+
+        // 7일 내 트랜잭션 필터링
+        List<Transaction> recentTransactions = transactions.stream()
+                .filter(transaction -> transaction.getTransactionDate().toLocalDate().isAfter(sevenDaysAgo) &&
+                        transaction.getTransactionDate().toLocalDate().isBefore(mondayOfThisWeek.plusDays(7)))
+                .collect(Collectors.toList());
+
+
+        // 금액 계산 (예시로 입금과 출금 구분)
+        int totDeposit = 0;
+        int totWithdraw = 0;
+        int pTotDeposit = 0;
+        int pTotWithdraw = 0;
+        // 현재 주, 이전 주 금액을 일별로 저장
+        int[] curListSpent = new int[7];  // 현재 주 지출 금액
+        int[] curListIncome = new int[7]; // 현재 주 수입 금액
+        int[] prevListSpent = new int[7];  // 현재 주 지출 금액
+        int[] prevListIncome = new int[7]; // 현재 주 수입 금액
+
+        // 트랜잭션을 날짜별로 그룹화
+        Map<LocalDate, List<Transaction>> dailyTransactions = recentTransactions.stream()
+                .collect(Collectors.groupingBy(transaction -> transaction.getTransactionDate().toLocalDate()));
+
+        // 트랜잭션을 각 날짜별로 처리
+        for (Map.Entry<LocalDate, List<Transaction>> entry : dailyTransactions.entrySet()) {
+            LocalDate date = entry.getKey();
+            List<Transaction> dayTransactions = entry.getValue();
+
+            // 현재 주와 이전 주 날짜 확인
+            int dayIndexForCurrentWeek = (int) ChronoUnit.DAYS.between(mondayOfThisWeek, date);
+            int dayIndexForLastWeek = (int) ChronoUnit.DAYS.between(mondayOfLastWeek, date);
+
+            for (Transaction transaction : dayTransactions) {
+                if (transaction.getTransactionType() == TransactionType.DEPOSIT) {
+                    if (dayIndexForCurrentWeek >= 0 && dayIndexForCurrentWeek < 7) {
+                        totDeposit += transaction.getAmount();
+                        curListIncome[dayIndexForCurrentWeek] += transaction.getAmount();  // 현재 주 수입 추가
+                    } else if (dayIndexForLastWeek >= 0 && dayIndexForLastWeek < 7) {
+                        prevListIncome[dayIndexForLastWeek] += transaction.getAmount();
+                        pTotDeposit += transaction.getAmount(); // 이전 주 수입 추가
+                    }
+                } else if (transaction.getTransactionType() == TransactionType.WITHDRAWAL) {
+                    if (dayIndexForCurrentWeek >= 0 && dayIndexForCurrentWeek < 7) {
+                        totWithdraw += transaction.getAmount();
+                        curListSpent[dayIndexForCurrentWeek] += transaction.getAmount();  // 현재 주 지출 추가
+                    } else if (dayIndexForLastWeek >= 0 && dayIndexForLastWeek < 7) {
+                        prevListSpent[dayIndexForLastWeek] += transaction.getAmount();  // 이전 주 지출 추가
+                        pTotWithdraw += transaction.getAmount();  // 이전 주 총 출금 추가
+                    }
+                }
+            }
+        }
+
+        // DTO 반환
+        return MonthlyExpenseDTO.builder()
+                .curSpentMoney(totWithdraw)
+                .curIncomeMoney(totDeposit)
+                .prevSpentMoney(pTotWithdraw)
+                .prevIncomeMoney(pTotDeposit)
+                .curListSpent(curListSpent)       // 현재 주 지출 금액
+                .curListIncome(curListIncome)     // 현재 주 수입 금액
+                .prevListSpent(prevListSpent)     // 이전 주 지출 금액
+                .prevListIncome(prevListIncome)   // 이전 주 수입 금액
+                .build();
+
+    }
 
 }
