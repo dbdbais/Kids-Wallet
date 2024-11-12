@@ -5,6 +5,8 @@ import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
 import com.ssafy.kidswallet.data.model.UserDataModel
+import com.ssafy.kidswallet.fcm.dto.FcmDto
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -22,4 +24,7 @@ interface ApiService {
 
     @POST("account/regist/{userId}")
     suspend fun registerAccount(@Path("userId") userId: Int): Response<Any>
+
+    @POST("fcm/token") // 기본 URL이 설정된 상태에서 상대 경로만 사용
+    fun sendTokenToServer(@Body requestDto: FcmDto): Call<FcmDto> // Call<FcmDto>로 반환 타입 수정
 }
