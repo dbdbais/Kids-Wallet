@@ -17,6 +17,7 @@ import com.e201.kidswallet.user.entity.Relation;
 import lombok.NonNull;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -72,7 +73,6 @@ public class SavingTransferBatchConfig {
                     currentChunk = savingContractRepository.findDepositContractForToday(pageable);
                     currentPage++;
                 }
-
                 if (!currentChunk.isEmpty()) {
                     return currentChunk.remove(0);
                 } else {
@@ -88,9 +88,6 @@ public class SavingTransferBatchConfig {
         return new ItemProcessor<SavingContract, SavingTransferProcessorDto>() {
             @Override
             public SavingTransferProcessorDto process(@NonNull SavingContract contract) {
-                if (contract.getStatus() != SavingContractStatus.PROCEED) {
-                    return null;
-                }
 
                 TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(contract.getSavingContractId()).orElse(null);
                 if (togetherRun == null) {

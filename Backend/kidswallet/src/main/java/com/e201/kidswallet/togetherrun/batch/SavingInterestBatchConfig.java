@@ -3,6 +3,7 @@ package com.e201.kidswallet.togetherrun.batch;
 import com.e201.kidswallet.togetherrun.entity.Saving;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingRepository;
 import com.e201.kidswallet.togetherrun.repository.TogetherRunRepository;
@@ -27,6 +28,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,8 +67,7 @@ public class SavingInterestBatchConfig {
             public SavingContract read() {
                 if (currentChunk == null || currentChunk.isEmpty()) {
                     Pageable pageable = PageRequest.of(currentPage, chunkSize);
-                    Page<SavingContract> page = savingContractRepository.findAll(pageable);
-                    currentChunk = new ArrayList<>(page.getContent());
+                    currentChunk = savingContractRepository.findByStatus(pageable);
                     currentPage++;
                 }
 
@@ -98,6 +99,10 @@ public class SavingInterestBatchConfig {
                 List<? extends SavingContract> items = chunk.getItems();
                 for (SavingContract item : items) {
                     try {
+                        if (item.getExpiredAt() != null && item.getExpiredAt().isEqual(LocalDate.now())) {
+                            item.setStatus(SavingContractStatus.COMPLETED);
+                            item.setDeletedAt(LocalDateTime.now());
+                        }
                         savingContractRepository.save(item);
                     } catch (Exception e) {
                         e.printStackTrace();
