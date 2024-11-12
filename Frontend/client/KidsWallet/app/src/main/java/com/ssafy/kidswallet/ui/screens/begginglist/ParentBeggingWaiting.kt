@@ -20,8 +20,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -56,6 +58,7 @@ fun ParentBeggingWaitingScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Top(title = "조르기 요청 내역", navController = navController) // BackButton 사용
         Spacer(modifier = Modifier.height(16.dp))
@@ -74,11 +77,11 @@ fun ParentBeggingWaitingScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
-                        .width(180.dp)
+                        .width(160.dp)
                         .height(50.dp)
                         .padding(start = 8.dp, end = 8.dp)
                 ) {
-                    Text(text = "조르기 요청 대기", fontWeight = FontWeight.Bold, style = FontSizes.h16)
+                    Text(text = "조르기 요청 대기", fontWeight = FontWeight.Bold, style = FontSizes.h12)
                 }
                 Button(
                     onClick = { navController.navigate("parentBeggingComplete") },
@@ -88,11 +91,11 @@ fun ParentBeggingWaitingScreen(navController: NavController) {
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
-                        .width(180.dp)
+                        .width(160.dp)
                         .height(50.dp)
                         .padding(start = 8.dp, end = 8.dp)
                 ) {
-                    Text(text = "조르기 요청 완료", fontWeight = FontWeight.Bold, style = FontSizes.h16)
+                    Text(text = "조르기 요청 완료", fontWeight = FontWeight.Bold, style = FontSizes.h12)
                 }
             }
         }

@@ -68,12 +68,12 @@ fun BeggingMoneyScreen(navController: NavController, loginViewModel: LoginViewMo
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(16.dp),
         ) {
             Top(title = "조르기", navController = navController) // BackButton 사용
             Spacer(modifier = Modifier.height(24.dp))

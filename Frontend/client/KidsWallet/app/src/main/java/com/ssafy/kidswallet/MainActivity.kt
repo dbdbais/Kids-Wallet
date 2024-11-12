@@ -58,6 +58,7 @@ import com.ssafy.kidswallet.ui.screens.makeaccount.MakeAccountScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletDepositScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletManageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
+import com.ssafy.kidswallet.ui.screens.regularlist.RegularListScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletTransferScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletWithdrawScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
@@ -124,6 +125,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun MainScreen(navController: NavHostController) {
         NavHost(navController = navController, startDestination = "splash") {
@@ -281,6 +283,8 @@ class MainActivity : ComponentActivity() {
             composable("makeAccount") { MakeAccountScreen(navController) }
 
             composable("alertList") { AlertListScreen(navController) }
+
+            composable("regularList") { RegularListScreen(navController) }
         }
     }
 }

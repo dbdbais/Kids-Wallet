@@ -62,11 +62,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun BeggingRequestScreen(navController: NavController, name: String?, viewModel: BeggingAmountViewModel = viewModel()) {
     val amount by viewModel.amount.collectAsState()
-    Column {
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+    ) {
         Column(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
-                .verticalScroll(rememberScrollState())
         ) {
             Top(title = "조르기", navController = navController) // BackButton 사용
         }
