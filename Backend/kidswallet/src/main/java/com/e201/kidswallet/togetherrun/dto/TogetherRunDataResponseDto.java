@@ -15,6 +15,7 @@ public class TogetherRunDataResponseDto {
     private String childRealName;
     private String parentsRealName;
     private String targetTitle;
+    private String targetImage;
     private BigDecimal targetAmount;
     private BigDecimal currentAmount;
     private BigDecimal currentInterestAmount;

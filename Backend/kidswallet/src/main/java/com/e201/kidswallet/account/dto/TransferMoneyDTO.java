@@ -1,12 +1,10 @@
 package com.e201.kidswallet.account.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
+@Setter
 @NoArgsConstructor
 @Getter
 public class TransferMoneyDTO {
