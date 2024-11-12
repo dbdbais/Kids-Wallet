@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.mywallet
 
+import AccountTransferViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.Top
-import com.ssafy.kidswallet.viewmodel.AccountTransferViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
@@ -68,12 +68,12 @@ fun MyWalletTransferScreen(
             onTransferClick = {
                 val fromId = storedUserData?.representAccountId ?: ""
                 val amountInt = amount.toIntOrNull() ?: 0
+                val messageToSend: String? = if (message.isBlank()) null else message // 빈 문자열이면 null로 설정
 
                 if (fromId.isNotEmpty()) {
                     // fromId가 유효할 때만 요청을 보냅니다.
-                    viewModel.transferFunds(fromId = fromId, toId = accountNumber, message = message, amount = amountInt)
+                    viewModel.transferFunds(fromId = fromId, toId = accountNumber, message = messageToSend, amount = amountInt)
                 } else {
-                    // 에러 메시지를 표시하거나, 사용자에게 유효한 fromId가 없음을 알립니다.
                     println("Error: fromId is empty. Cannot proceed with the transfer.")
                 }
             }
@@ -89,7 +89,7 @@ fun MyWalletTransferScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 LaunchedEffect(Unit) {
-                    navController.navigate("myWallet") {
+                    navController.navigate("mainPage") {
                         popUpTo(0) { inclusive = true }
                     }
                 }
@@ -105,7 +105,6 @@ fun MyWalletTransferScreen(
         }
     }
 }
-
 
 @Composable
 fun TopSection(navController: NavController) {
@@ -152,6 +151,16 @@ fun HeaderSection() {
     }
 }
 
+// 계좌번호 형식에 맞춰 자동으로 하이픈을 추가하는 함수
+fun formatAccountNumber(input: String): String {
+    return when {
+        input.length <= 6 -> input
+        input.length <= 8 -> "${input.substring(0, 6)}-${input.substring(6)}"
+        input.length <= 14 -> "${input.substring(0, 6)}-${input.substring(6, 8)}-${input.substring(8)}"
+        else -> "${input.substring(0, 6)}-${input.substring(6, 8)}-${input.substring(8, 14)}"
+    }
+}
+
 @Composable
 fun FormSection(
     modifier: Modifier = Modifier,
@@ -171,7 +180,11 @@ fun FormSection(
     ) {
         OutlinedTextField(
             value = accountNumber,
-            onValueChange = onAccountNumberChange,
+            onValueChange = {
+                val sanitizedInput = it.filter { char -> char.isDigit() } // 숫자만 남기기
+                val formattedInput = formatAccountNumber(sanitizedInput)
+                onAccountNumberChange(formattedInput)
+            },
             label = { Text("계좌번호") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {

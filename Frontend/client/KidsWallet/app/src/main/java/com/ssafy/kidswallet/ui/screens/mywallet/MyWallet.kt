@@ -300,9 +300,7 @@ fun MyWalletScreen(
             ) {
                 filteredTransactions.forEach { transaction ->
                     TransactionItem(
-                        transaction = transaction,
-                        userName = storedUserData?.userName ?: "Unknown"
-                    )
+                        transaction = transaction)
                     Divider(
                         color = Color.LightGray,
                         thickness = 1.dp,
@@ -315,7 +313,7 @@ fun MyWalletScreen(
 }
 
 @Composable
-fun TransactionItem(transaction: TransactionModel, userName: String) {
+fun TransactionItem(transaction: TransactionModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -324,9 +322,8 @@ fun TransactionItem(transaction: TransactionModel, userName: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            val messageText = if (transaction.message.trim().isEmpty()) userName else transaction.message
             Text(
-                text = messageText,
+                text = transaction.message,
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
             )

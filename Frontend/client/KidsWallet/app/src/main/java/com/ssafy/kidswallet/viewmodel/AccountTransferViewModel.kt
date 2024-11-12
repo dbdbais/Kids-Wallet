@@ -1,5 +1,3 @@
-package com.ssafy.kidswallet.viewmodel
-
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,8 +15,13 @@ class AccountTransferViewModel : ViewModel() {
     private val _transferError = MutableStateFlow<String?>(null)
     val transferError: StateFlow<String?> = _transferError
 
-    fun transferFunds(fromId: String, toId: String, message: String, amount: Int) {
-        val transferModel = AccountTransferModel(fromId, toId, message, amount)
+    fun transferFunds(fromId: String, toId: String, message: String?, amount: Int) {
+        val transferModel = AccountTransferModel(
+            fromId = fromId,
+            toId = toId,
+            message = if (message.isNullOrBlank()) null else message, // 빈 문자열일 경우 null로 설정
+            amount = amount
+        )
         Log.d("AccountTransferViewModel", "Sending PATCH request: $transferModel") // 요청 전송 로그
 
         viewModelScope.launch {

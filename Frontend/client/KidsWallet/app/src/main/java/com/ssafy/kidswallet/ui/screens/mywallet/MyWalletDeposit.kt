@@ -10,6 +10,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
@@ -28,14 +29,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
+import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
 fun MyWalletDepositScreen(navController: NavController) {
     val focusManager = LocalFocusManager.current // 포커스 관리 객체
+
     Column(
         modifier = Modifier
             .fillMaxSize() // 전체 Column에 패딩을 주지 않습니다.
@@ -95,10 +100,15 @@ fun DHeaderSection() {
 }
 
 @Composable
-fun DFormSection(modifier: Modifier = Modifier, navController: NavController) {
+fun DFormSection(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel()
+) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     var accountNumber by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("")
+    }
 
     Column(
         modifier = modifier
@@ -106,27 +116,14 @@ fun DFormSection(modifier: Modifier = Modifier, navController: NavController) {
             .padding(bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
-            value = accountNumber,
-            onValueChange = { accountNumber = it },
-            label = { Text("계좌번호") },
-            modifier = Modifier.fillMaxWidth(),
-            trailingIcon = {
-                if (accountNumber.isNotEmpty()) {
-                    IconButton(onClick = { accountNumber = "" }) {
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_cancel),
-                            contentDescription = "Clear Account Number",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                }
-            },
-            shape = RoundedCornerShape(15.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF6DCEF5),
-                unfocusedBorderColor = Color(0xFFD3D0D7)
-            )
+        Text(
+            text = "내 계좌 : ${storedUserData?.representAccountId ?: "계좌번호 없음"}",
+            style = FontSizes.h16,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -156,7 +153,7 @@ fun DFormSection(modifier: Modifier = Modifier, navController: NavController) {
         Spacer(modifier = Modifier.weight(1f))
 
         BlueButton(
-            onClick = { navController.navigate("myWallet"){
+            onClick = { navController.navigate("mainPage"){
                 popUpTo(0) { inclusive = true } // 모든 스택 제거
             }},
             text = "채우기",
