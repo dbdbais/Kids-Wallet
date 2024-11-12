@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> {
 
@@ -15,6 +16,7 @@ public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> 
             "childUser.userRealName, " +
             "parentUser.userRealName, " +
             "tr.targetTitle, " +
+            "tr.targetImage, " +
             "tr.targetAmount, " +
             "sc.currentAmount, " +
             "sc.currentInterestAmount, " +
@@ -26,6 +28,9 @@ public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> 
             "JOIN tr.savingContract sc " +
             "WHERE childUser.userId = :userId OR parentUser.userId = :userId")
     List<TogetherRunDataResponseDto> findTogetherRunInfoByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT tr FROM TogetherRun tr WHERE tr.savingContract.savingContractId = :savingContractId")
+    Optional<TogetherRun> findBySavingContractId(@Param("savingContractId") Long savingContractId);
 
 //    @Query("SELECT tr FROM TogetherRun tr WHERE tr.relation IN :relations")
 //    List<TogetherRun> findByRelationIn(@Param("relations") List<Relation> relations);

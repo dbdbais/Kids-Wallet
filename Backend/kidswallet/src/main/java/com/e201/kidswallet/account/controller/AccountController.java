@@ -1,6 +1,7 @@
 package com.e201.kidswallet.account.controller;
 
 import com.e201.kidswallet.account.dto.AccountMoneyDTO;
+import com.e201.kidswallet.account.dto.MonthlyExpenseDTO;
 import com.e201.kidswallet.account.dto.TransactionListDTO;
 import com.e201.kidswallet.account.dto.TransferMoneyDTO;
 import com.e201.kidswallet.account.service.AccountService;
@@ -79,5 +80,21 @@ public class AccountController {
        return ResponseDto.response(transactionListDTO.getStatusCode(),transactionListDTO.getLst());
     }
 
+    /**
+     * 이번 주와 이전 주의 소비내역을 7개의 배열에 넣어서 리턴
+     * @param accountId
+     * @return
+     */
+
+    @GetMapping("/weekly")
+    public ResponseEntity<ResponseDto> test(@RequestParam String accountId){
+        MonthlyExpenseDTO monthlyExpenseDTO = accountService.getMonthlyExpense(accountId);
+        if(monthlyExpenseDTO != null){
+            return ResponseDto.response(StatusCode.SUCCESS,monthlyExpenseDTO);
+        }
+        else{
+            return ResponseDto.response(StatusCode.BAD_REQUEST);
+        }
+    }
 
 }

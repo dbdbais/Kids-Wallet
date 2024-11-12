@@ -1,11 +1,15 @@
 package com.e201.kidswallet.togetherrun.service;
 
+import com.e201.kidswallet.account.entity.Account;
+import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.common.exception.StatusCode;
-import com.e201.kidswallet.togetherrun.dto.TogetherRunCancelResponseDto;
-import com.e201.kidswallet.togetherrun.dto.TogetherRunDataResponseDto;
-import com.e201.kidswallet.togetherrun.dto.TogetherRunDetailResponseDto;
-import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
-import com.e201.kidswallet.togetherrun.entity.*;
+import com.e201.kidswallet.togetherrun.dto.*;
+import com.e201.kidswallet.togetherrun.entity.Saving;
+import com.e201.kidswallet.togetherrun.entity.SavingContract;
+import com.e201.kidswallet.togetherrun.entity.SavingPayment;
+import com.e201.kidswallet.togetherrun.entity.TogetherRun;
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
+import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingPaymentRepository;
 import com.e201.kidswallet.togetherrun.repository.SavingRepository;
@@ -17,17 +21,19 @@ import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -39,6 +45,7 @@ public class TogetherRunService {
     private final SavingContractRepository savingContractRepository;
     private final SavingPaymentRepository savingPaymentRepository;
     private final UserRepository userRepository;
+    private final AccountService accountService;
     private final RelationRepository relationRepository;
 
     private RedisTemplate<String, Object> redisTemplate;
@@ -46,12 +53,13 @@ public class TogetherRunService {
     @Autowired
     public TogetherRunService(TogetherRunRepository togetherRunRepository, SavingRepository savingRepository,
                               SavingContractRepository savingContractRepository, SavingPaymentRepository savingPaymentRepository,
-                              UserRepository userRepository, RelationRepository relationRepository) {
+                              UserRepository userRepository, AccountService accountService, RelationRepository relationRepository) {
         this.togetherRunRepository = togetherRunRepository;
         this.savingRepository = savingRepository;
         this.savingContractRepository = savingContractRepository;
         this.savingPaymentRepository = savingPaymentRepository;
         this.userRepository = userRepository;
+        this.accountService = accountService;
         this.relationRepository = relationRepository;
     }
 
@@ -60,6 +68,11 @@ public class TogetherRunService {
 
         User user = userRepository.findById(togetherRunRegisterRequestDto.getChildId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+
+        if (user.getRepresentAccountId() == null) {
+            return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
+        }
+
         List<Relation> relationList = relationRepository.findRelation(togetherRunRegisterRequestDto.getChildId());
         Relation relation = null;
         for (Relation r : relationList) {
@@ -69,9 +82,16 @@ public class TogetherRunService {
             }
         }
 
+        if (relation == null) {
+            return StatusCode.NO_PARENTS;
+        }
+
         String imagePath = null;
+        String urlPath = null;
         try {
             imagePath = saveImage(togetherRunRegisterRequestDto.getTargetImage());
+            Path path = Paths.get(imagePath);
+            urlPath = path.subpath(4, path.getNameCount()).toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +101,7 @@ public class TogetherRunService {
         TogetherRun togetherRun = TogetherRun.builder()
                 .relation(relation)
                 .targetTitle(togetherRunRegisterRequestDto.getTargetTitle())
-                .targetImage(imagePath)
+                .targetImage(urlPath)
                 .parentsAccount(parent.getAccounts().get(0).getAccountId())
                 .parentsContribute(togetherRunRegisterRequestDto.getParentsContribute())
                 .childAccount(user.getAccounts().get(0).getAccountId())
@@ -95,33 +115,49 @@ public class TogetherRunService {
             togetherRunRepository.save(togetherRun);
             return StatusCode.SUCCESS;
         } catch (Exception e) {
-
             return StatusCode.BAD_REQUEST;
         }
     }
 
-    public StatusCode togetherRunAnswer(Long togetherRunId, TogetherRunStatus isAccept) {
+    public StatusCode togetherRunAnswer(Long togetherRunId, TogetherRunStatus isAccept, TogetherRunAnswerRequestDto togetherRunAnswerRequestDto) {
         TogetherRun togetherRun = togetherRunRepository.findById(togetherRunId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid togetherRunId"));
         togetherRun.setStatus(isAccept);
         try {
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
+            System.out.println("togetherRunRepository Error");
             return StatusCode.BAD_REQUEST;
+        }
+        User user = userRepository.findById(togetherRunAnswerRequestDto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+        if (user.getRepresentAccountId() == null) {
+            return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
         }
         SavingContract savingContract = null;
         if (isAccept == TogetherRunStatus.ACCEPTED) {
             try {
+                String accountId = accountService.makeRandomAccount();
+                Saving saving = savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId"));
+                if (saving == null) {
+                    return StatusCode.BAD_REQUEST;
+                }
+                Account newAccount = Account.builder()
+                        .user(user)
+                        .accountId(accountId)
+                        .build();
+                user.getAccounts().add(newAccount);
                 savingContract = SavingContract.builder()
                         .user(userRepository.findById(togetherRun.getRelation().getParent().getUserId())
                                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId")))
-                        .saving(savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId"))) //
+                        .saving(saving)
+                        .savingAccount(accountId)
                         .depositDay((short)togetherRun.getCreatedAt().toLocalDate().getDayOfWeek().getValue())
                         .expiredAt(togetherRun.getTargetDate())
                         .build();
                 savingContractRepository.save(savingContract);
             } catch (Exception e) {
-
+                System.out.println("savingContractRepository Error");
                 return StatusCode.BAD_REQUEST;
             }
         }
@@ -130,10 +166,8 @@ public class TogetherRunService {
             togetherRun.setSavingContract(savingContract);
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
-
             return StatusCode.BAD_REQUEST;
         }
-
         return StatusCode.SUCCESS;
     }
 
@@ -177,10 +211,21 @@ public class TogetherRunService {
         }
     }
 
+    public StatusCode togetherRunComplete(SavingContract savingContract) {
+
+        try {
+            savingContractRepository.save(savingContract);
+        } catch (Exception e) {
+            return StatusCode.BAD_REQUEST;
+        }
+        return StatusCode.SUCCESS;
+    }
+
     public String saveImage(MultipartFile file) throws IOException {
         String appPath = "/src/main/resources/static/uploads/";
         String systemPath = System.getProperty("user.dir") + appPath;
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String originalFileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "." + originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
         Path filePath = Paths.get(systemPath + fileName);
 
         // 디렉토리 생성 여부 확인 및 생성
@@ -193,5 +238,18 @@ public class TogetherRunService {
         file.transferTo(filePath.toFile());
 
         return appPath + fileName;
+    }
+
+    public BigDecimal calcInterestAmount(SavingContract savingContract) {
+        Saving saving = savingRepository.findById(savingContract.getSaving().getSavingId()).orElse(null);
+        BigDecimal interestRate = saving.getInterestRate();
+
+        LocalDate startDate = savingContract.getCreatedAt().toLocalDate();
+        int days = LocalDate.now().compareTo(startDate);
+
+        BigDecimal amount = savingContract.getCurrentAmount();
+
+        BigDecimal  interestAmount = amount.multiply(interestRate).divide(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(365), 2).multiply(BigDecimal.valueOf(days));
+        return interestAmount;
     }
 }

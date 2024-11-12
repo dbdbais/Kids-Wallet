@@ -1,5 +1,6 @@
 package com.e201.kidswallet.togetherrun.entity;
 
+import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.user.entity.Relation;
 import jakarta.persistence.*;
 import lombok.*;

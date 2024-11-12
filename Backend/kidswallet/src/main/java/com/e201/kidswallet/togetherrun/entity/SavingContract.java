@@ -1,11 +1,10 @@
 package com.e201.kidswallet.togetherrun.entity;
 
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractPaymentCheck;
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
 import com.e201.kidswallet.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -36,8 +35,16 @@ public class SavingContract {
     @JoinColumn(name="saving_id", nullable = false)
     private Saving saving;
 
+    @Column(name = "saving_account")
+    private String savingAccount;
+
     @Column(name = "deposit_day")
     private short depositDay;
+
+    @Builder.Default()
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "payment_check")
+    private SavingContractPaymentCheck paymentCheck = SavingContractPaymentCheck.PAYMENT;
 
     @Builder.Default()
     @Column(name="current_amount")
@@ -58,13 +65,12 @@ public class SavingContract {
     @Column(name="expired_at")
     private LocalDate expiredAt;
 
-    @Column(name="saving_account")
-    private String savingAccount;
-
     @Column(name="deleted_at")
     private LocalDateTime deletedAt;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "savingContract", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<SavingPayment> savingPayments = new ArrayList<>();
 
 }
