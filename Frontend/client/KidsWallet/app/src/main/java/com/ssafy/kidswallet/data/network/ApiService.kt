@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.data.network
 
+import com.ssafy.kidswallet.data.model.AccountDepositModel
 import com.ssafy.kidswallet.data.model.AccountModel
 import com.ssafy.kidswallet.data.model.AccountTransferModel
 import com.ssafy.kidswallet.data.model.ApiResponse
@@ -35,4 +36,7 @@ interface ApiService {
 
     @PATCH("account/transfer")
     suspend fun accountTransfer(@Body accountTransferModel: AccountTransferModel): Response<Any>
+
+    @PATCH("account/deposit")
+    suspend fun accountDeposit(@Body accountDepositModel: AccountDepositModel): Response<Any>
 }

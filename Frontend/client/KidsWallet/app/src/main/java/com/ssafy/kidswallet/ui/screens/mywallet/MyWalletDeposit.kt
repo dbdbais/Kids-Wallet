@@ -9,12 +9,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,32 +20,68 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.AccountDepositViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @Composable
 fun MyWalletDepositScreen(navController: NavController) {
-    val focusManager = LocalFocusManager.current // 포커스 관리 객체
+    val focusManager = LocalFocusManager.current
+    val depositViewModel: AccountDepositViewModel = viewModel()
+    val loginViewModel: LoginViewModel = viewModel()
+
+    val depositSuccess by depositViewModel.depositSuccess.collectAsState()
+    val depositError by depositViewModel.depositError.collectAsState()
 
     Column(
         modifier = Modifier
-            .fillMaxSize() // 전체 Column에 패딩을 주지 않습니다.
-            .clickable { focusManager.clearFocus() } // 여백을 클릭하면 포커스 해제
+            .fillMaxSize()
+            .clickable { focusManager.clearFocus() }
     ) {
         DTopSection(navController)
         Spacer(modifier = Modifier.height(16.dp))
         DHeaderSection()
         Spacer(modifier = Modifier.height(16.dp))
-        DFormSection(modifier = Modifier.padding(horizontal = 16.dp), navController) // FormSection에 개별 패딩 적용
+        DFormSection(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            navController = navController,
+            depositViewModel = depositViewModel,
+            loginViewModel = loginViewModel
+        )
+
+        // 성공 또는 오류 메시지 표시
+        when {
+            depositSuccess == true -> {
+                Text(
+                    text = "충전이 성공적으로 완료되었습니다!",
+                    color = Color.Green,
+                    fontSize = 16.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                LaunchedEffect(Unit) {
+                    navController.navigate("mainPage") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            }
+            depositError != null -> {
+                Text(
+                    text = depositError ?: "충전 오류가 발생했습니다.",
+                    color = Color.Red,
+                    fontSize = 16.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+        }
     }
 }
 
@@ -103,12 +134,11 @@ fun DHeaderSection() {
 fun DFormSection(
     modifier: Modifier = Modifier,
     navController: NavController,
-    loginViewModel: LoginViewModel = viewModel()
+    depositViewModel: AccountDepositViewModel,
+    loginViewModel: LoginViewModel
 ) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
-    var accountNumber by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("")
-    }
+    var amount by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -153,9 +183,15 @@ fun DFormSection(
         Spacer(modifier = Modifier.weight(1f))
 
         BlueButton(
-            onClick = { navController.navigate("mainPage"){
-                popUpTo(0) { inclusive = true } // 모든 스택 제거
-            }},
+            onClick = {
+                val accountId = storedUserData?.representAccountId ?: ""
+                val amountInt = amount.toIntOrNull() ?: 0
+                if (accountId.isNotEmpty() && amountInt > 0) {
+                    depositViewModel.depositFunds(accountId, amountInt)
+                } else {
+                    println("Error: Invalid accountId or amount")
+                }
+            },
             text = "채우기",
             modifier = Modifier
                 .fillMaxWidth()
