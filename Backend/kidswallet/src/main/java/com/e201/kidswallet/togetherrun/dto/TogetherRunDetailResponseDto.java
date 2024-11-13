@@ -1,12 +1,11 @@
 package com.e201.kidswallet.togetherrun.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder
 @Data
@@ -15,7 +14,10 @@ public class TogetherRunDetailResponseDto {
     private String targetImage;
     private BigDecimal targetAmount;
     private LocalDate expiredAt;
+    @JsonProperty("dDay")
     private int dDay;
+    @JsonProperty("isAccept")
+    private Boolean isAccept;
     private BigDecimal childAmount;
     private BigDecimal parentAmount;
 }
