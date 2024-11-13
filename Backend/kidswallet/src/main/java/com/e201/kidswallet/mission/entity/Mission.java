@@ -45,9 +45,6 @@ public class Mission {
     @Column(name="mission_content",nullable = false)
     private String missionContent;
 
-    @Column(name="dead_line",nullable = false)
-    private LocalDateTime deadLine;
-
     @OneToOne
     @JoinColumn(name = "beg_id", referencedColumnName = "beg_id")
     private Beg beg;
@@ -67,7 +64,6 @@ public class Mission {
                 ", completedAt=" + completedAt +
                 ", createdAt=" + createdAt +
                 ", missionContent='" + missionContent + '\'' +
-                ", deadLine=" + deadLine +
                 ", beg=" + beg +
                 '}';
     }

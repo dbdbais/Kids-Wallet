@@ -17,5 +17,4 @@ public class MissionDto {
     private LocalDateTime completedAt;
     private LocalDateTime createdAt;
     private String missionContent;
-    private LocalDateTime deadLine;
 }
