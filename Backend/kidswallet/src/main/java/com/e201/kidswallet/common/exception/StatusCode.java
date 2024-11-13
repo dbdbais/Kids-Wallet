@@ -22,7 +22,8 @@ public enum StatusCode {
     NOT_ENOUGH_MONEY(HttpStatus.BAD_REQUEST,"돈이 부족합니다."),
     ALREADY_HAS_CARD(HttpStatus.BAD_REQUEST,"이미 발급받은 카드가 있습니다."),
     NO_REPRESENTATIVE_ACCOUNT(HttpStatus.BAD_REQUEST,"대표 계좌가 없습니다."),
-    INVALID_SAVING(HttpStatus.BAD_REQUEST,"유효하지 않은 적금입니다.");
+    INVALID_SAVING(HttpStatus.BAD_REQUEST,"유효하지 않은 적금입니다."),
+    TOKEN_IS_NULL(HttpStatus.BAD_REQUEST,"토큰 값이 NULL입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
