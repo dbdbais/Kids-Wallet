@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -66,6 +67,7 @@ import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMemberListScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsMoneyScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsRegisterScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
+import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
 import kotlinx.coroutines.flow.first
@@ -74,6 +76,7 @@ import kotlinx.coroutines.launch
 val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 위한 DataStore 인스턴스 생성
 
 class MainActivity : ComponentActivity() {
+    private val stateRunViewModel: StateRunViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +119,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    MainScreen(navController)
+                    MainScreen(navController, stateRunViewModel)
                 }
             }
         }
@@ -124,7 +127,7 @@ class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun MainScreen(navController: NavHostController) {
+    fun MainScreen(navController: NavHostController, viewModel: StateRunViewModel) {
         NavHost(navController = navController, startDestination = "splash") {
             composable("main") {
                 Column(
@@ -153,11 +156,15 @@ class MainActivity : ComponentActivity() {
             composable("run") { RunScreen(navController) }
             composable("runParentsFinish") { RunParentsFinishScreen(navController) }
             composable("runParentsFinishDetail") { RunParentsFinishDetailScreen(navController) }
-            composable("runParents") { RunParentsScreen(navController) }
+            composable("runParents") {
+                RunParentsScreen(navController = navController, viewModel = viewModel)
+            }
             composable("runParentsMoney") { RunParentsMoneyScreen(navController) }
             composable("runParentsDetail") { RunParentsDetailScreen(navController) }
             composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
-            composable("runParentsRegister") { RunParentsRegisterScreen(navController) }
+            composable("runParentsRegister") {
+                RunParentsRegisterScreen(navController = navController, viewModel = viewModel)
+            }
 
             // wallet
             composable("myWallet") { MyWalletScreen(navController) }

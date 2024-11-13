@@ -20,9 +20,10 @@ import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 
 @Composable
-fun RunParentsRegisterScreen(navController: NavController) {
+fun RunParentsRegisterScreen(navController: NavController, viewModel: StateRunViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,29 +45,27 @@ fun RunParentsRegisterScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .padding(16.dp),
-            contentAlignment = Alignment.Center // Box 내부의 콘텐츠를 가운데 정렬
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth() // 컨테이너가 사용 가능한 모든 공간을 차지하도록 설정
+                    .fillMaxWidth()
                     .background(Color(0xFFF7F7F7), shape = RoundedCornerShape(25.dp))
                     .padding(16.dp)
-                    .widthIn(max = 300.dp), // 원하는 최대 너비를 설정하여 콘텐츠를 제한
-                contentAlignment = Alignment.Center // Box 내부의 콘텐츠를 가운데 정렬
+                    .widthIn(max = 300.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .wrapContentWidth() // 콘텐츠의 너비를 내용에 맞게 조정
+                        .wrapContentWidth()
                 ) {
-                    // 이미지
                     Image(
-                        painter = painterResource(id = R.drawable.icon_bundle), // 이미지 리소스 교체 필요
+                        painter = painterResource(id = R.drawable.icon_bundle),
                         contentDescription = "달리기 이미지",
                         modifier = Modifier.size(120.dp)
                     )
 
-                    // 금액 텍스트
                     Text(
                         text = "${NumberUtils.formatNumberWithCommas(25000)}원 달리기",
                         color = Color(0xFF6DCEF5),
@@ -75,9 +74,9 @@ fun RunParentsRegisterScreen(navController: NavController) {
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
 
-                    // 설명 텍스트
+                    // 목표 텍스트
                     Text(
-                        text = "코딩 공부를 위한 삼성 노트북",
+                        text = viewModel.goalText,
                         style = FontSizes.h20,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
@@ -85,7 +84,7 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
                     // 날짜 텍스트
                     Text(
-                        text = "2024.10.30까지\n멤버와 함께 목표를 달성 하세요",
+                        text = viewModel.selectedDateText,
                         style = FontSizes.h16,
                         color = Color(0xFF8C8595),
                         textAlign = TextAlign.Center,
@@ -118,9 +117,11 @@ fun RunParentsRegisterScreen(navController: NavController) {
 
         // 신청 버튼
         BlueButton(
-            onClick = { navController.navigate("run") {
-                popUpTo(0) { inclusive = true } // 모든 스택 제거
-            } },
+            onClick = {
+                navController.navigate("run") {
+                    popUpTo(0) { inclusive = true }
+                }
+            },
             text = "신청하기",
             modifier = Modifier
                 .width(400.dp)
@@ -163,14 +164,4 @@ fun ParticipantInfo(name: String, amount: String, imageResId: Int) {
             color = Color(0xFF8C8595)
         )
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560",
-    showSystemUi = true
-)
-@Composable
-fun RunParentsRegisterScreenPreview() {
-    RunParentsRegisterScreen(navController = rememberNavController())
 }
