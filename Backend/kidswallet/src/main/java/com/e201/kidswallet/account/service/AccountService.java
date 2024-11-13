@@ -46,6 +46,14 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
+    public Long getUserId(String accountId){
+        Optional<Account> sAccount = accountRepository.findById(accountId);
+        if(sAccount.isEmpty()){
+            return null;
+        }
+        return sAccount.get().getUser().getUserId();
+    }
+
     public String makeRandomAccount() {
         SecureRandom secureRandom = new SecureRandom();
 

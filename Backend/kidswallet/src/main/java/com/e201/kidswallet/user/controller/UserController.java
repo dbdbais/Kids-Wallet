@@ -3,6 +3,7 @@ package com.e201.kidswallet.user.controller;
 import com.e201.kidswallet.account.dto.AccountInfoResponseDTO;
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
+import com.e201.kidswallet.fcm.service.FcmService;
 import com.e201.kidswallet.user.dto.RegisterRequestDTO;
 import com.e201.kidswallet.user.dto.RelationRequestDTO;
 import com.e201.kidswallet.user.dto.UserLoginDTO;
@@ -19,10 +20,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final FcmService fcmService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, FcmService fcmService) {
         this.userService = userService;
+        this.fcmService = fcmService;
     }
 
     /**
@@ -45,6 +48,7 @@ public class UserController {
     
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> loginUser(@RequestBody UserLoginDTO userLoginDTO){
+
         UserLoginResponseDTO userLoginResponseDTO = userService.loginUser(userLoginDTO);
         return ResponseDto.response(userLoginResponseDTO.getStatusCode(),userLoginResponseDTO);
     }
@@ -57,7 +61,16 @@ public class UserController {
 
     @PostMapping("/relation")
     public ResponseEntity<ResponseDto> addRelation(@RequestBody RelationRequestDTO relationRequestDTO) {
+
+
         StatusCode returnCode = userService.setRelation(relationRequestDTO);
+        if(returnCode == StatusCode.SUCCESS){
+            Long childId = userService.getUserByName(relationRequestDTO.getChildName()).getUserId();
+            if(fcmService.sendMessage(fcmService.getToken(childId),"부모 등록 완료","부모가 등록되었어요.") == StatusCode.TOKEN_IS_NULL){
+                returnCode = StatusCode.TOKEN_IS_NULL;
+            }
+        }
+
         return ResponseDto.response(returnCode);
     }
 

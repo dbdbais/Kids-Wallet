@@ -35,7 +35,7 @@ public class UserService {
     private User getUserById (long userId){
         return userRepository.findById(userId).orElse(null);
     }
-    private User getUserByName(String userName){
+    public User getUserByName(String userName){
         return userRepository.findByUserName(userName).orElse(null);
     }
 
