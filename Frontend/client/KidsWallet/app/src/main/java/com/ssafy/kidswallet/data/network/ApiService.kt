@@ -3,6 +3,7 @@ package com.ssafy.kidswallet.data.network
 import com.ssafy.kidswallet.data.model.AccountDepositModel
 import com.ssafy.kidswallet.data.model.AccountModel
 import com.ssafy.kidswallet.data.model.AccountTransferModel
+import com.ssafy.kidswallet.data.model.AccountWeeklyResponse
 import com.ssafy.kidswallet.data.model.AccountWithdrawModel
 import com.ssafy.kidswallet.data.model.ApiResponse
 import com.ssafy.kidswallet.data.model.BeggingRequestModel
@@ -67,6 +68,9 @@ interface ApiService {
 
     @PATCH("account/withdraw")
     suspend fun accountWithdraw(@Body accountWithdrawModel: AccountWithdrawModel): Response<Any>
+
+    @GET("account/weekly")
+    suspend fun getAccountWeekly(@Query("accountId") accountId: String): Response<AccountWeeklyResponse>
 
     @GET("togetherrun/{userId}/list")
     suspend fun togetherList(@Path("userId") userId: Int): Response<TogetherListResponse>
