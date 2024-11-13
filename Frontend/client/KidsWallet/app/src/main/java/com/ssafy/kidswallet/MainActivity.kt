@@ -2,13 +2,11 @@ package com.ssafy.kidswallet
 
 import android.os.Build
 import QuizScreen
-import android.app.Application
 import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import android.window.SplashScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -30,7 +28,6 @@ import androidx.navigation.navArgument
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.ui.screens.alert.AlertListScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionCheckScreen
 import com.ssafy.kidswallet.ui.screens.begging.mission.BeggingMissionCompleteScreen
@@ -58,6 +55,7 @@ import com.ssafy.kidswallet.ui.screens.makeaccount.MakeAccountScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletDepositScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletManageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
+import com.ssafy.kidswallet.ui.screens.regularlist.RegularListScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletTransferScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletWithdrawScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
@@ -124,6 +122,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun MainScreen(navController: NavHostController) {
         NavHost(navController = navController, startDestination = "splash") {
@@ -170,13 +169,15 @@ class MainActivity : ComponentActivity() {
             // begging
             composable("begging") { BeggingScreen(navController) }
 
-            composable("beggingMissionPlay/{name}/{money}/{begContent}/{missionContent}") { backStackEntry ->
+            composable("beggingMissionPlay/{id}/{name}/{money}/{begContent}/{missionContent}") { backStackEntry ->
+                val idString = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val begMoneyString = backStackEntry.arguments?.getString("money") ?: "0"
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
                 val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
                 val missionContent = backStackEntry.arguments?.getString("missionContent") ?: ""
-                BeggingMissionPlayScreen(navController, name, begMoney, begContent, missionContent)
+                BeggingMissionPlayScreen(navController, id, name, begMoney, begContent, missionContent)
             }
 
             composable("beggingMissionCheck") { BeggingMissionCheckScreen(navController) }
@@ -220,23 +221,29 @@ class MainActivity : ComponentActivity() {
 
             composable("parentBeggingWaiting") { ParentBeggingWaitingScreen(navController) }
             composable("parentBeggingComplete") { ParentBeggingCompleteScreen(navController) }
-            composable("parentBeggingRequestCheck/{name}/{begMoney}/{begContent}") { backStackEntry ->
+            composable("parentBeggingRequestCheck/{id}/{name}/{begMoney}/{begContent}") { backStackEntry ->
+                val idString = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val begMoneyString = backStackEntry.arguments?.getString("begMoney") ?: "0"
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
                 val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
-                ParentBeggingRequestCheckScreen(navController, name, begMoney, begContent)
+                ParentBeggingRequestCheckScreen(navController, id, name, begMoney, begContent)
             }
 
-            composable("parentBeggingAssignMission/{name}/{begMoney}/{begContent}") { backStackEntry ->
+            composable("parentBeggingAssignMission/{id}/{name}/{begMoney}/{begContent}") { backStackEntry ->
+                val idString = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val begMoneyString = backStackEntry.arguments?.getString("begMoney") ?: "0"
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
                 val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
-                ParentBeggingAssignMissionScreen(navController, name, begMoney, begContent)
+                ParentBeggingAssignMissionScreen(navController, id, name, begMoney, begContent)
             }
 
-            composable("parentBeggingCompleteMission/{name}/{begMoney}/{begContent}/{reason}") { backStackEntry ->
+            composable("parentBeggingCompleteMission/{id}/{name}/{begMoney}/{begContent}/{reason}") { backStackEntry ->
+                val idString = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val begMoneyString = backStackEntry.arguments?.getString("begMoney") ?: "0"
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
@@ -244,6 +251,7 @@ class MainActivity : ComponentActivity() {
                 val reason = backStackEntry.arguments?.getString("reason") ?: ""
                 ParentBeggingCompleteMissionScreen(
                     navController,
+                    id,
                     name,
                     begMoney,
                     begContent,
@@ -251,7 +259,9 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            composable("parentBeggingTestMission/{name}/{begMoney}/{begContent}/{missionContent}/{completionPhoto}") { backStackEntry ->
+            composable("parentBeggingTestMission/{id}/{name}/{begMoney}/{begContent}/{missionContent}/{completionPhoto}") { backStackEntry ->
+                val idString = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val begMoneyString = backStackEntry.arguments?.getString("begMoney") ?: "0"
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
@@ -260,6 +270,7 @@ class MainActivity : ComponentActivity() {
                 val completionPhoto = backStackEntry.arguments?.getString("completionPhoto") ?: ""
                 ParentBeggingTestMissionScreen(
                     navController,
+                    id,
                     name,
                     begMoney,
                     begContent,
@@ -268,12 +279,14 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            composable("parentBeggingCompleteMission/{name}/{begMoney}/{begContent}") { backStackEntry ->
+            composable("parentBeggingTestComplete/{id}/{name}/{begMoney}/{begContent}") { backStackEntry ->
+                val idString = backStackEntry.arguments?.getString("id") ?: "0"
+                val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
                 val begMoneyString = backStackEntry.arguments?.getString("begMoney") ?: "0"
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
                 val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
-                ParentBeggingTestCompleteScreen(navController, name, begMoney, begContent)
+                ParentBeggingTestCompleteScreen(navController, id, name, begMoney, begContent)
             }
 
             composable("quiz") { QuizScreen(navController) }
@@ -281,6 +294,8 @@ class MainActivity : ComponentActivity() {
             composable("makeAccount") { MakeAccountScreen(navController) }
 
             composable("alertList") { AlertListScreen(navController) }
+
+            composable("regularList") { RegularListScreen(navController) }
         }
     }
 }

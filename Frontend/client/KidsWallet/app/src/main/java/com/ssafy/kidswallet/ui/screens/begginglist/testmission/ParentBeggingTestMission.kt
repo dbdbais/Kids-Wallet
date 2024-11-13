@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +45,7 @@ import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
-fun ParentBeggingTestMissionScreen(navController: NavController, name: String, begMoney: Int, begContent: String, missionContent: String, completionPhoto: String) {
+fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String, completionPhoto: String) {
     val formattedNumber = NumberUtils.formatNumberWithCommas(begMoney)
 
     Column(
@@ -198,7 +200,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, name: String, b
                 )
                 BlueButton(
                     onClick = {
-                        navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}")
+                        navController.navigate("parentBeggingTestComplete/${id}/${name}/${begMoney}/${begContent}")
                     },
                     text = "보내기",
                     modifier = Modifier

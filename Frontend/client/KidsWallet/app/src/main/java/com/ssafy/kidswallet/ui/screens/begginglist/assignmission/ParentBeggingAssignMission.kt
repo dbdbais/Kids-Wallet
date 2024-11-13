@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,25 +38,34 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.data.model.GiveMissionModel
+import com.ssafy.kidswallet.viewmodel.GiveMissionViewModel
+import com.ssafy.kidswallet.viewmodel.HandleMissionViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParentBeggingAssignMissionScreen(
     navController: NavController,
+    id: Int,
     name: String?,
     begMoney: Int,
     begContent: String?,
     viewModel: BeggingReasonViewModel = viewModel(),
     loginViewModel: LoginViewModel = viewModel(),
-) {
+    handleMissionViewModel: HandleMissionViewModel = viewModel(),
+    giveMissionViewModel: GiveMissionViewModel = viewModel(),
+
+    ) {
     val textState = viewModel.textModel.collectAsState()
 
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val relation = storedUserData?.relations
     val begId = relation?.find {it.userName == name}?.userId
 
-    Column {
+    Column (
+        modifier = Modifier
+    ){
         Column(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -213,7 +224,12 @@ fun ParentBeggingAssignMissionScreen(
                 BlueButton(
                     onClick = {
                         if (textState.value.text.isNotBlank()) {
-                            navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}/${textState.value.text}")
+                            handleMissionViewModel.acceptMission(begId = id)
+                            giveMissionViewModel.sendMission(
+                                begId = id,
+                                missionMessage = textState.value.text
+                            )
+                            navController.navigate("parentBeggingCompleteMission/${id}/${name}/${begMoney}/${begContent}/${textState.value.text}")
                         }
                     },
                     text = "미션 보내기",

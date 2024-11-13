@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.begginglist.assignmission
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,28 +19,34 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.HandleMissionViewModel
 
 @Composable
 fun ParentBeggingRequestCheckScreen(
     navController: NavController,
+    id: Int,
     name: String?,
     begMoney: Int,
-    begContent: String?
+    begContent: String?,
+    handleMissionViewModel: HandleMissionViewModel = viewModel()
 ) {
-    Column {
+    Column (
+        modifier = Modifier
+    ){
         Column(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
@@ -163,6 +170,7 @@ fun ParentBeggingRequestCheckScreen(
             ){
                 LightGrayButton(
                     onClick = {
+                        handleMissionViewModel.rejectMission(begId = id)
                         navController.navigate("parentBeggingWaiting")
                     },
                     text = "거절하기",
@@ -173,7 +181,7 @@ fun ParentBeggingRequestCheckScreen(
                 )
                 BlueButton(
                     onClick = {
-                        navController.navigate("parentBeggingAssignMission/${name}/${begMoney}/${begContent}")
+                        navController.navigate("parentBeggingAssignMission/${id}/${name}/${begMoney}/${begContent}")
                     },
                     text = "미션주기",
                     modifier = Modifier

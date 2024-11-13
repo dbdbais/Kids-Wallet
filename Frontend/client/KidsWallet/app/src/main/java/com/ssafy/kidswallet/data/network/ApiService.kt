@@ -6,6 +6,8 @@ import com.ssafy.kidswallet.data.model.AccountTransferModel
 import com.ssafy.kidswallet.data.model.AccountWithdrawModel
 import com.ssafy.kidswallet.data.model.ApiResponse
 import com.ssafy.kidswallet.data.model.BeggingRequestModel
+import com.ssafy.kidswallet.data.model.GiveMissionModel
+import com.ssafy.kidswallet.data.model.HandleMissionModel
 import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.MissionResponse
 import com.ssafy.kidswallet.data.model.RelationModel
@@ -21,6 +23,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -70,4 +73,10 @@ interface ApiService {
 
     @GET("togetherrun/{savingContractId}/detail")
     suspend fun togetherDetail(@Path("savingContractId") savingContractId: Int): Response<TogetherDetailResponse>
+
+    @PUT("mission/beg")
+    suspend fun handleMission(@Body handleMissionModel: HandleMissionModel): Response<Unit>
+
+    @POST("mission/assign")
+    suspend fun giveMission(@Body giveMissionModel: GiveMissionModel) :Response<Unit>
 }
