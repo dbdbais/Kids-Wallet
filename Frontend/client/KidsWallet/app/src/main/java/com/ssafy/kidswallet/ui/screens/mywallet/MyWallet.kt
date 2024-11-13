@@ -88,23 +88,30 @@ fun MyWalletScreen(
                 )
         ) {
             Column {
-                Text(
-                    text = "남은 돈",
-                    style = FontSizes.h16,
-                    color = Color(0xFF5EA0BB),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 20.dp, top = 25.dp)
-                )
-                Text(
-                    text = accountState?.data?.firstOrNull()?.curBalance?.let {
-                        "${NumberUtils.formatNumberWithCommas(it)}원" } ?: "0원",
-                    style = FontSizes.h32,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 20.dp)
-                )
-
-                Spacer(modifier = Modifier.height(25.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 25.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(
+                            text = "남은 돈ㅜ",
+                            style = FontSizes.h16,
+                            color = Color(0xFF5EA0BB),
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = accountState?.data?.firstOrNull()?.curBalance?.let {
+                                "${NumberUtils.formatNumberWithCommas(it)}원" } ?: "0원",
+                            style = FontSizes.h32,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
 
                 Row(
                     horizontalArrangement = Arrangement.Start,

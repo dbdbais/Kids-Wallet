@@ -123,9 +123,9 @@ fun WHeaderSection() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Image(
-            painter = painterResource(id = R.drawable.logo_coin),
+            painter = painterResource(id = R.drawable.icon_bundle),
             contentDescription = "송금 아이콘",
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(100.dp)
         )
     }
 }

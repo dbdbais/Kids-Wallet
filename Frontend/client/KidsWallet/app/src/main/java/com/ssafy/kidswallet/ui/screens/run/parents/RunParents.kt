@@ -31,6 +31,7 @@ import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -38,22 +39,19 @@ import java.util.Locale // `java.util.Locale`만 남김
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RunParentsScreen(navController: NavController) {
+fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel) {
     var text by remember { mutableStateOf("") }
     val maxChar = 30
 
-    // 사진 선택
+    // 사진 선택 및 날짜 설정 (기존 코드 유지)
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
     }
 
-    // 날짜 상태를 관리하는 변수
-    val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 7) } // 7일 후 날짜로 초기화
+    val calendar = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 7) }
     var selectedDate by remember { mutableStateOf(calendar.timeInMillis) }
     val context = LocalContext.current
-
-    // DatePickerDialog 설정
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
@@ -98,6 +96,7 @@ fun RunParentsScreen(navController: NavController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
+            // 목표 입력 및 날짜 선택 (기존 코드 유지)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -228,20 +227,15 @@ fun RunParentsScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.weight(1f))
 
+        // 목표와 날짜를 ViewModel에 저장하고 runParentsMoney로 이동
         BlueButton(
-            onClick = { navController.navigate("runParentsMoney") },
+            onClick = {
+                val selectedDateText = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date(selectedDate))
+                viewModel.setGoalAndDate(text, "${selectedDateText}까지\n멤버와 함께 목표를 달성 하세요")
+                navController.navigate("runParentsMoney")
+            },
             text = "다음",
             modifier = Modifier.width(400.dp).padding(bottom = 20.dp)
         )
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560",
-    showSystemUi = true
-)
-@Composable
-fun RunParentsScreenPreview() {
-    RunParentsScreen(navController = rememberNavController())
 }
