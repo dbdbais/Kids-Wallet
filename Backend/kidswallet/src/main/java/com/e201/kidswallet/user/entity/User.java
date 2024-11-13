@@ -76,6 +76,16 @@ public class User
         this.hasCard = true;
     }
 
+    public void depositMoney(int money){
+        this.userMoney += money;
+    }
+    public void withdrawMoney(int money){
+        this.userMoney -= money;
+    }
+    public void initAccount(){
+        this.userMoney = 0;
+    }
+
     public void setRepresentAccountId(String registerId){
         this.representAccountId = registerId;
     }

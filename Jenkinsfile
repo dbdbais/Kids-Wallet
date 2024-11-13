@@ -30,6 +30,22 @@ pipeline {
             }
         }
 
+         stage("Copy FCM_SECRET_KEY"){
+             steps {
+                withCredentials([file(credentialsId: 'FCM_SECRET_KEY', variable: 'fcm')]) {
+        	        script {
+                        // static 디렉토리가 없으면 생성
+                        sh 'chmod +r $fcm'
+                        echo 'fcm file location: $fcm'
+        	            sh 'rm -f ${PROJECT_DIR}/src/main/resources/kidswallet-d825d-firebase-adminsdk-cp0ac-b53c5a5b26.json'
+                        sh 'cp $fcm ${PROJECT_DIR}/src/main/resources/kidswallet-d825d-firebase-adminsdk-cp0ac-b53c5a5b26.json'
+                    }
+                }
+            }
+        }
+
+
+
          stage("Copy index.html"){
              steps {
                 withCredentials([file(credentialsId: 'HTMLFILE', variable: 'html')]) {

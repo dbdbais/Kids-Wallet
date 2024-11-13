@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Slf4j
 @Service
 public class FcmService {
@@ -28,34 +30,41 @@ public class FcmService {
     public StatusCode tokenToRedis(FcmTokenRequestDto requestDto) {
         // Redis 키 구성: transaction:계좌번호:트랜잭션ID
         String key = "fcmToken:" + requestDto.getUserId();
-        fcmRedisTemplate.opsForValue().set(key, requestDto.getTokenValue());
+        fcmRedisTemplate.opsForValue().set(key, requestDto.getTokenValue(), Duration.ofDays(365));
         return StatusCode.SUCCESS;
     }
 
     //get FCMtoken in redis
     public String getToken(long toUserId){
         String key = "fcmToken:" + toUserId;
-        return fcmRedisTemplate.opsForValue().get(key);
-        //없으면 Null
-        //return "cHoQ5ExZTjy6OUjR5lJY19:APA91bG0ZKysLox7BtElV657-5JlK333EMI1s97URrIgMJoiq6e7pCDYr-g-Z6gcYaquQrs3yBwvPmVMjYZyVMFvHOCgFSdnh2VsZUjMJi86zlOlYi20sM8";
+        String token = fcmRedisTemplate.opsForValue().get(key);
+        if (token != null) {
+            // 키가 존재하면 TTL을 1년(365일)로 초기화
+            fcmRedisTemplate.expire(key, Duration.ofDays(365));
+        }
+        return token;
     }
 
-//    public StatusCode sendMessage(String token, String title, String body) {
-//        try{
-//            String message = FirebaseMessaging.getInstance().send(Message.builder()
-//                    .setNotification(Notification.builder()
-//                            .setTitle(title)
-//                            .setBody(body)
-//                            .build())
-//                    .setToken(token)  // 대상 디바이스의 등록 토큰
-//                    .build());
-//        }
-//        catch (FirebaseMessagingException e){
-//            log.error(e.getMessage());
-//            return StatusCode.BAD_REQUEST;
-//        }
-//        return StatusCode.SUCCESS;
-//
-//    }
+    public StatusCode sendMessage(String token, String title, String body) {
+        if (token == null) {
+            log.error("Token is null");
+            return StatusCode.TOKEN_IS_NULL;
+        }
+        try{
+            String message = FirebaseMessaging.getInstance().send(Message.builder()
+                    .setNotification(Notification.builder()
+                            .setTitle(title)
+                            .setBody(body)
+                            .build())
+                    .setToken(token)  // 대상 디바이스의 등록 토큰
+                    .build());
+        }
+        catch (FirebaseMessagingException e){
+            log.error(e.getMessage());
+            return StatusCode.BAD_REQUEST;
+        }
+        return StatusCode.SUCCESS;
+
+    }
 
 }

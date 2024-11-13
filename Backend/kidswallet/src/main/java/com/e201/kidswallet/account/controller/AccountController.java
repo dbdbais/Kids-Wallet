@@ -1,11 +1,13 @@
 package com.e201.kidswallet.account.controller;
 
 import com.e201.kidswallet.account.dto.AccountMoneyDTO;
+import com.e201.kidswallet.account.dto.MonthlyExpenseDTO;
 import com.e201.kidswallet.account.dto.TransactionListDTO;
 import com.e201.kidswallet.account.dto.TransferMoneyDTO;
 import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
+import com.e201.kidswallet.fcm.service.FcmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final AccountService accountService;
+    private final FcmService fcmService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, FcmService fcmService) {
         this.accountService = accountService;
+        this.fcmService = fcmService;
     }
 
     /**
@@ -64,6 +68,12 @@ public class AccountController {
     @PatchMapping("/transfer")
     public ResponseEntity<ResponseDto> transferAccount(@RequestBody TransferMoneyDTO transferMoneyDTO){
         StatusCode returnCode = accountService.transferMoney(transferMoneyDTO);
+        if(returnCode == StatusCode.SUCCESS){
+
+            if(fcmService.sendMessage(fcmService.getToken(accountService.getUserId(transferMoneyDTO.getToId())),"송금 봉투 도착","송금 봉투가 도착했습니다.") == StatusCode.TOKEN_IS_NULL){
+                returnCode = StatusCode.TOKEN_IS_NULL;
+            }
+        }
         return ResponseDto.response(returnCode);
     }
 
@@ -79,5 +89,21 @@ public class AccountController {
        return ResponseDto.response(transactionListDTO.getStatusCode(),transactionListDTO.getLst());
     }
 
+    /**
+     * 이번 주와 이전 주의 소비내역을 7개의 배열에 넣어서 리턴
+     * @param accountId
+     * @return
+     */
+
+    @GetMapping("/weekly")
+    public ResponseEntity<ResponseDto> test(@RequestParam String accountId){
+        MonthlyExpenseDTO monthlyExpenseDTO = accountService.getMonthlyExpense(accountId);
+        if(monthlyExpenseDTO != null){
+            return ResponseDto.response(StatusCode.SUCCESS,monthlyExpenseDTO);
+        }
+        else{
+            return ResponseDto.response(StatusCode.BAD_REQUEST);
+        }
+    }
 
 }

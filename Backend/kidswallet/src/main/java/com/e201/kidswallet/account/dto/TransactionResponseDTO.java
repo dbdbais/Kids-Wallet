@@ -16,6 +16,7 @@ public class TransactionResponseDTO {
     private String accountId;
     private String message;
     private TransactionType transactionType;
+    private int curBalance;
     private int amount;
     private LocalDateTime transactionDate;
 }

@@ -28,7 +28,7 @@ public class Transaction {
     @Column(name = "account_id", nullable = false)
     private String accountId;
 
-    @Column(name="transaction_message",nullable = true)
+    @Column(name="transaction_message",length = 15)
     private String message;
 
     // Transaction Type
@@ -39,6 +39,12 @@ public class Transaction {
     // Transaction amount 작성
     @Column(name = "amount", nullable = false)
     private int amount;
+
+    // Transaction 현재 잔액
+    @Column(name= "current_balance")
+    private int curAmount;
+
+
 
     // Transaction TimeStamp
     @CreatedDate

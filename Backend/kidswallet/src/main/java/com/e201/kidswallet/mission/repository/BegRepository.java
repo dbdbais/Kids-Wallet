@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BegRepository extends JpaRepository<Beg,Long> {
     @Modifying
-    @Query(value="update Beg set beg_accept = :isAccept where beg_id = :begId;",nativeQuery = true)
+    @Query(value="update beg set beg_accept = :isAccept where beg_id = :begId;",nativeQuery = true)
     public int updateAccept(@Param("isAccept") boolean isAccept, @Param("begId") long begId );
 }

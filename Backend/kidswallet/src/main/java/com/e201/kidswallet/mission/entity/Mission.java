@@ -18,7 +18,7 @@ import java.util.Arrays;
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "Mission")
+@Table(name = "mission")
 public class Mission {
 
     @Id
@@ -29,7 +29,7 @@ public class Mission {
     @Builder.Default
     @Enumerated(value=EnumType.STRING)
     @Column(name="mission_status",nullable = false)
-    private Status missionStatus=Status.request;
+    private Status missionStatus=Status.proceed;
 
     @Column(name="completion_photo",nullable = true,columnDefinition = "LONGBLOB")
     @Lob // 큰 데이터 저장을 위한 어노테이션
@@ -44,9 +44,6 @@ public class Mission {
 
     @Column(name="mission_content",nullable = false)
     private String missionContent;
-
-    @Column(name="dead_line",nullable = false)
-    private LocalDateTime deadLine;
 
     @OneToOne
     @JoinColumn(name = "beg_id", referencedColumnName = "beg_id")
@@ -67,7 +64,6 @@ public class Mission {
                 ", completedAt=" + completedAt +
                 ", createdAt=" + createdAt +
                 ", missionContent='" + missionContent + '\'' +
-                ", deadLine=" + deadLine +
                 ", beg=" + beg +
                 '}';
     }
