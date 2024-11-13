@@ -174,10 +174,12 @@ public class MissionService {
                 // insert mission data
                 MissionDto missionDto;
                 if(m!=null){ // 조르기는 있어도 미션이 없을 수도 있기 때문에 예외처리
+                    //base64로 인코딩
+                    String base64String = Base64.getEncoder().encodeToString(m.getCompletionPhoto());
                     missionDto = new MissionDto(
                             m.getMissionId(),
                             m.getMissionStatus(),
-                            m.getCompletionPhoto(),
+                            base64String,
                             m.getCompletedAt(),
                             m.getCreatedAt(),
                             m.getMissionContent()
@@ -203,8 +205,20 @@ public class MissionService {
         return missionListResponseDtos;
     }
 
-    public long getBeg(long begId) {
+    public long UseBegIdGetChildId(long begId) {
         long childId = begRepository.findById(begId).get().getRelation().getChild().getUserId();
+        log.info("childId: " + childId);
+        return childId;
+    }
+
+    public long UseMissionIdGetParentId(long missionId) {
+        long parentId = missionRepository.findById(missionId).get().getBeg().getRelation().getParent().getUserId();
+        log.info("parentId: " + parentId);
+        return parentId;
+    }
+
+    public long UseMissionIdGetChildId(long missionId) {
+        long childId = missionRepository.findById(missionId).get().getBeg().getRelation().getChild().getUserId();
         log.info("childId: " + childId);
         return childId;
     }
