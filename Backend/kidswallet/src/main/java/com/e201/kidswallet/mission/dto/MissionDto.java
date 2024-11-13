@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class MissionDto {
     private Long MissionId;
     private Status missionStatus;
-    private byte[] completionPhoto;
+    private String completionPhoto;
     private LocalDateTime completedAt;
     private LocalDateTime createdAt;
     private String missionContent;
