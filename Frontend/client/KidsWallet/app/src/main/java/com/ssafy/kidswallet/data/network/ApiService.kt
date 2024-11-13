@@ -10,6 +10,9 @@ import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.MissionResponse
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
+import com.ssafy.kidswallet.data.model.TogetherDetailResponse
+import com.ssafy.kidswallet.data.model.TogetherListModel
+import com.ssafy.kidswallet.data.model.TogetherListResponse
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.fcm.dto.FcmDto
 import retrofit2.Call
@@ -61,4 +64,10 @@ interface ApiService {
 
     @PATCH("account/withdraw")
     suspend fun accountWithdraw(@Body accountWithdrawModel: AccountWithdrawModel): Response<Any>
+
+    @GET("togetherrun/{userId}/list")
+    suspend fun togetherList(@Path("userId") userId: Int): Response<TogetherListResponse>
+
+    @GET("togetherrun/{savingContractId}/detail")
+    suspend fun togetherDetail(@Path("savingContractId") savingContractId: Int): Response<TogetherDetailResponse>
 }

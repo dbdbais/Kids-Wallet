@@ -235,3 +235,232 @@ fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResI
 fun RunParentsDetailScreenPreview() {
     RunParentsDetailScreen(navController = rememberNavController())
 }
+
+
+//package com.ssafy.kidswallet.ui.screens.run.parents
+//
+//import androidx.compose.foundation.Image
+//import androidx.compose.foundation.background
+//import androidx.compose.foundation.layout.*
+//import androidx.compose.foundation.shape.RoundedCornerShape
+//import androidx.compose.material3.Text
+//import androidx.compose.runtime.Composable
+//import androidx.compose.runtime.collectAsState
+//import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.draw.shadow
+//import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.res.painterResource
+//import androidx.compose.ui.text.font.FontWeight
+//import androidx.compose.ui.text.style.TextAlign
+//import androidx.compose.ui.tooling.preview.Preview
+//import androidx.compose.ui.unit.dp
+//import androidx.lifecycle.viewmodel.compose.viewModel
+//import androidx.navigation.NavController
+//import androidx.navigation.compose.rememberNavController
+//import com.ssafy.kidswallet.R
+//import com.ssafy.kidswallet.ui.components.DdayBadge
+//import com.ssafy.kidswallet.ui.components.FontSizes
+//import com.ssafy.kidswallet.ui.components.LightGrayButton
+//import com.ssafy.kidswallet.ui.components.Top
+//import com.ssafy.kidswallet.viewmodel.LoginViewModel
+//import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
+//
+//@Composable
+//fun RunParentsDetailScreen(
+//    navController: NavController,
+//    loginViewModel: LoginViewModel = viewModel(),
+//    togetherDetailViewModel: TogetherDetailViewModel = viewModel()
+//) {
+//    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+//    val togetherDetail = togetherDetailViewModel.togetherDetail.collectAsState().value
+//
+//    // API 호출을 통해 데이터 로드
+//    storedUserData?.userId?.let { savingContractId ->
+//        togetherDetailViewModel.fetchTogetherDetail(savingContractId)
+//    }
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(top = 16.dp, bottom = 16.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        Top(
+//            title = "같이 달리기",
+//            navController = navController
+//        )
+//
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(Color(0xFF6DCEF5))
+//                .padding(16.dp)
+//                .padding(top = 30.dp, bottom = 14.dp),
+//            contentAlignment = Alignment.TopCenter
+//        ) {
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                verticalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        .shadow(elevation = 8.dp, shape = RoundedCornerShape(45.dp))
+//                        .background(Color(0xFF99DDF8), RoundedCornerShape(16.dp))
+//                        .padding(16.dp)
+//                ) {
+//                    // D-Day 배지
+//                    togetherDetail?.let {
+//                        DdayBadge(remainingDays = it.dday)
+//                    }
+//
+//                    Column(
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        verticalArrangement = Arrangement.spacedBy(8.dp)
+//                    ) {
+//                        // 목표 이미지 (이미지는 임의로 남겨둠)
+//                        Image(
+//                            painter = painterResource(id = R.drawable.icon_labtop),
+//                            contentDescription = "목표 이미지",
+//                            modifier = Modifier.size(250.dp)
+//                        )
+//
+//                        // 모은 금액 텍스트 (childAmount + parentAmount)
+//                        Text(
+//                            text = "${NumberUtils.formatNumberWithCommas((togetherDetail?.childAmount ?: 0) + (togetherDetail?.parentAmount ?: 0))}원을 모았어요!",
+//                            style = FontSizes.h20,
+//                            fontWeight = FontWeight.Bold,
+//                            textAlign = TextAlign.Center,
+//                            modifier = Modifier.fillMaxWidth()
+//                        )
+//                    }
+//                }
+//
+//                // 목표 금액과 마감 기한 텍스트
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp, vertical = 16.dp),
+//                    horizontalArrangement = Arrangement.SpaceBetween,
+//                ) {
+//                    // 마감 기한 텍스트
+//                    togetherDetail?.expiredAt?.let { date ->
+//                        Text(
+//                            text = "${date[0]}.${date[1].toString().padStart(2, '0')}.${date[2].toString().padStart(2, '0')} 까지",
+//                            style = FontSizes.h16,
+//                            fontWeight = FontWeight.Bold,
+//                            color = Color.White
+//                        )
+//                    }
+//
+//                    // 목표 금액 텍스트
+//                    Text(
+//                        text = "목표 ${NumberUtils.formatNumberWithCommas(togetherDetail?.targetAmount ?: 0)}원",
+//                        style = FontSizes.h16,
+//                        fontWeight = FontWeight.Bold,
+//                        color = Color.White
+//                    )
+//                }
+//            }
+//        }
+//
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        // 참여자 정보
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .background(Color.White, RoundedCornerShape(16.dp))
+//                .padding(16.dp),
+//            verticalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//            // 나의 정보
+//            ParticipantInfo(
+//                name = "나",
+//                currentAmount = togetherDetail?.childAmount ?: 0,
+//                goalAmount = (togetherDetail?.targetAmount ?: 0) / 2,
+//                imageResId = R.drawable.character_me
+//            )
+//
+//            Spacer(modifier = Modifier.height(8.dp))
+//
+//            // 응애재훈 정보
+//            ParticipantInfo(
+//                name = "응애재훈",
+//                currentAmount = togetherDetail?.parentAmount ?: 0,
+//                goalAmount = (togetherDetail?.targetAmount ?: 0) / 2,
+//                imageResId = R.drawable.character_run_member
+//            )
+//        }
+//
+//        Spacer(modifier = Modifier.weight(1f))
+//
+//        // 그만하기 버튼
+//        LightGrayButton(
+//            onClick = {
+//                navController.navigate("run") {
+//                    popUpTo(0) { inclusive = true }
+//                }
+//            },
+//            text = "그만하기",
+//            modifier = Modifier
+//                .width(400.dp)
+//                .padding(horizontal = 16.dp, vertical = 20.dp)
+//        )
+//    }
+//}
+//
+//@Composable
+//fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResId: Int) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 16.dp),
+//        horizontalArrangement = Arrangement.SpaceBetween,
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Row(verticalAlignment = Alignment.CenterVertically) {
+//            Image(
+//                painter = painterResource(id = imageResId),
+//                contentDescription = "$name 이미지",
+//                modifier = Modifier.size(55.dp)
+//            )
+//
+//            Spacer(modifier = Modifier.width(8.dp))
+//
+//            Text(
+//                text = name,
+//                style = FontSizes.h16,
+//                fontWeight = FontWeight.Bold
+//            )
+//        }
+//
+//        Column(horizontalAlignment = Alignment.End) {
+//            // 현재 금액 텍스트
+//            Text(
+//                text = "${NumberUtils.formatNumberWithCommas(currentAmount)}원",
+//                style = FontSizes.h16,
+//                fontWeight = FontWeight.Bold,
+//                color = Color(0xFF6DCEF5)
+//            )
+//
+//            // 목표 금액 텍스트
+//            Text(
+//                text = "목표 ${NumberUtils.formatNumberWithCommas(goalAmount)}원",
+//                style = FontSizes.h16,
+//                fontWeight = FontWeight.Bold,
+//                color = Color(0xFF8C8595)
+//            )
+//        }
+//    }
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    device = "spec:width=1440px,height=3120px,dpi=560",
+//    showSystemUi = true
+//)
+//@Composable
+//fun RunParentsDetailScreenPreview() {
+//    RunParentsDetailScreen(navController = rememberNavController())
+//}
