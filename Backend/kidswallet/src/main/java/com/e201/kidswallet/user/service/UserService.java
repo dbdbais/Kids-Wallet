@@ -36,7 +36,7 @@ public class UserService {
         return userRepository.findById(userId).orElse(null);
     }
     private User getUserByName(String userName){
-        return userRepository.findByUserRealName(userName).orElse(null);
+        return userRepository.findByUserName(userName).orElse(null);
     }
 
     private boolean isPasswordCorrect(User user,String password){
