@@ -13,7 +13,7 @@ android {
         create("release") {
             storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
             storePassword = "kidswallet"
-            keyAlias = "kidswallet"
+            keyAlias = "my-key-alias"
             keyPassword = "kidswallet"
         }
     }
@@ -109,4 +109,6 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
     implementation ("androidx.work:work-runtime-ktx:2.8.0")
+    //runBlocking
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 }

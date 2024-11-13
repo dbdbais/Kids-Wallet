@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.ssafy.kidswallet.R
@@ -43,9 +44,11 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.PlayMissionViewModel
+import com.ssafy.kidswallet.viewmodel.TestMissionViewModel
 
 @Composable
-fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String, completionPhoto: String) {
+fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String, completionPhoto: String, testMissionViewModel: TestMissionViewModel = viewModel()) {
     val formattedNumber = NumberUtils.formatNumberWithCommas(begMoney)
 
     Column(
@@ -190,6 +193,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
             ) {
                 LightGrayButton(
                     onClick = {
+                        testMissionViewModel.testMission(missionId = id, isComplete = false)
                         navController.navigate("parentBeggingWaiting")
                     },
                     text = "거절하기",
@@ -200,6 +204,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                 )
                 BlueButton(
                     onClick = {
+                        testMissionViewModel.testMission(missionId = id, isComplete = true)
                         navController.navigate("parentBeggingTestComplete/${id}/${name}/${begMoney}/${begContent}")
                     },
                     text = "보내기",

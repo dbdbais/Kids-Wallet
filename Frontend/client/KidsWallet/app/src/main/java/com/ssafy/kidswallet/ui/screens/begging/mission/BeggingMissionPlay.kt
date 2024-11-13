@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -33,25 +32,33 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.ImageUtils
+import com.ssafy.kidswallet.ui.components.ImageUtils.getBase64FromDrawable
+import com.ssafy.kidswallet.ui.components.ImageUtils.getBase64FromUri
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.PlayMissionViewModel
 
 @Composable
-fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String) {
+fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String, playMissionViewModel: PlayMissionViewModel = viewModel()) {
     val formattedNumber = NumberUtils.formatNumberWithCommas(begMoney)
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
     }
     var showDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -210,6 +217,13 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
         ) {
             BlueButton(
                 onClick = {
+                    // 이미지가 있는 경우와 없는 경우를 처리
+                    val base64String = imageUri?.let { uri ->
+                        getBase64FromUri(context, uri)
+                    } ?: getBase64FromDrawable(context, R.drawable.logo_full) // 기본 이미지를 처리할 경우
+
+                    val missionId = id
+                    playMissionViewModel.sendMission(missionId, base64String ?: "")
                     showDialog = true
                 },
                 text = "보내기",

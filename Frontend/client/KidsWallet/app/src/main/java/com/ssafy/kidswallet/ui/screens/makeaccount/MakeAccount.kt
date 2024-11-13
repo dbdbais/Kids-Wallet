@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.makeaccount
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,11 +34,13 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.MakeAccountViewModel
+import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
 
 
 @Composable
-fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), makeAccountViewModel: MakeAccountViewModel = viewModel()) {
+fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), makeAccountViewModel: MakeAccountViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val updatedUserData by updateUserViewModel.updatedUserData.collectAsState()
 
     val userId = storedUserData?.userId
 
@@ -45,6 +48,25 @@ fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewMod
     val checkedStates = remember { mutableStateListOf(*Array(4) { false }) }
     val expandedStates = remember { mutableStateListOf(*Array(4) { false }) }
     var allChecked by remember { mutableStateOf(false) }
+
+    var isAccountRegistered by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isAccountRegistered) {
+        if (isAccountRegistered && userId != null) {
+            updateUserViewModel.updateUser(userId)
+        }
+    }
+
+    LaunchedEffect(updatedUserData) {
+        if (updatedUserData != null) {
+            // updatedUserData가 업데이트된 후 처리
+            Log.d("Hello", updatedUserData.toString())
+            loginViewModel.saveUserData(updatedUserData!!)
+            navController.navigate("mainPage") {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -190,9 +212,10 @@ fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewMod
             onClick = {
                 if (checkedStates.all { itChecked -> itChecked }) {
                     if (userId != null) {
-                        makeAccountViewModel.registerAccount(userId)
+                        makeAccountViewModel.registerAccount(userId) {
+                            isAccountRegistered = true
+                        }
                     }
-                    navController.navigate("mainPage")
                 }
             },
             height = 50,

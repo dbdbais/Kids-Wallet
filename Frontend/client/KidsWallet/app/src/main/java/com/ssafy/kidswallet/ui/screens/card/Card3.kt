@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.card
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,7 +21,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,12 +46,37 @@ import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.MakeCardViewModel
+import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 
 @Composable
-fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), makeCardViewModel: MakeCardViewModel = viewModel()) {
+fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), makeCardViewModel: MakeCardViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val updatedUserData by updateUserViewModel.updatedUserData.collectAsState()
 
     val userId = storedUserData?.userId
+
+    var isCardRegistered by remember { mutableStateOf(false) }
+
+    // isCardRegistered가 true로 바뀌면 updateUser 호출
+    LaunchedEffect(isCardRegistered) {
+        if (isCardRegistered && userId != null) {
+            updateUserViewModel.updateUser(userId)
+        }
+    }
+
+    // updateUser 성공 시 updatedUserData가 업데이트되면 실행
+    LaunchedEffect(updatedUserData) {
+        if (updatedUserData != null) {
+            // updatedUserData가 업데이트된 후 처리
+            Log.d("Hello", updatedUserData.toString())
+            loginViewModel.saveUserData(updatedUserData!!)
+            navController.navigate("mainPage") {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -132,10 +164,10 @@ fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = v
         BlueButton(
             onClick = {
                 if (userId != null) {
-                    makeCardViewModel.registerCard(userId)
-                }
-                navController.navigate("mainPage") {
-                    popUpTo(0) { inclusive = true }
+                    // 카드 등록 완료 후, isCardRegistered를 true로 변경하여 업데이트 로직을 트리거
+                    makeCardViewModel.registerCard(userId) {
+                        isCardRegistered = true // 카드를 등록한 후 업데이트를 수행
+                    }
                 }
             },
             text = "돌아가기",

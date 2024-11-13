@@ -228,7 +228,7 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                             } else {
                                 YellowButton(
                                     onClick = {
-                                        navController.navigate("parentBeggingTestMission/${mission.begDto.begId}/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}/${mission.mission?.completionPhoto}")
+                                        navController.navigate("parentBeggingTestMission/${mission.mission?.missionId}/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}/${mission.mission?.completionPhoto}")
                                     },
                                     text = "미션 확인",
                                     height = 40

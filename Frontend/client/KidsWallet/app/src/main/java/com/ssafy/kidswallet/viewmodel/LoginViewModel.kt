@@ -55,6 +55,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val gson = Gson()
 
     private suspend fun saveUserDataToDataStore(userData: UserDataModel) {
+        Log.d("DataStoreSave", "Saving user data: $userData")
         getApplication<Application>().applicationContext.dataStore.edit { preferences ->
             preferences[USER_ID_KEY] = userData.userId
             preferences[USER_NAME_KEY] = userData.userName ?: ""
@@ -71,6 +72,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
             preferences[RELATIONS_KEY] = gson.toJson(userData.relations) // Convert Relations list to JSON string
         }
+        Log.d("DataStoreSave", "User data saved successfully.")
+        Log.d("SecondDataStoreSave", "Saving user data: $userData")
     }
 
     // Deserialize Relations field from JSON string
@@ -127,6 +130,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.loginUser(loginModel)
+
                 if (response.isSuccessful) {
                     _loginState.value = true
 
