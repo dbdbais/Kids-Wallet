@@ -64,8 +64,7 @@ fun Card2Screen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally // 텍스트를 가운데 정렬
     ) {
         Top(title = "카드", navController = navController)

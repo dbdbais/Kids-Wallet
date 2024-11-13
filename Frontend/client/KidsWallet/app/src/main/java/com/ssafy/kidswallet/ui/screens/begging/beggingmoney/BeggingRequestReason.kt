@@ -66,7 +66,6 @@ fun BeggingRequestReasonScreen(
 
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier

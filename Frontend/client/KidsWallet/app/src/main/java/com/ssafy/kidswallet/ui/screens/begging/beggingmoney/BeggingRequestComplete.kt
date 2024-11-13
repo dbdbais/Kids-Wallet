@@ -45,7 +45,6 @@ fun BeggingRequestCompleteScreen(
 ) {
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier

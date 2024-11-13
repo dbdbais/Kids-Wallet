@@ -55,8 +55,7 @@ fun BeggingMissionPlayScreen(navController: NavController, name: String, begMone
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Top(title = "미션 수행하기", navController = navController) // BackButton 사용

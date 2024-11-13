@@ -43,7 +43,6 @@ fun ParentBeggingRequestCheckScreen(
 ) {
     Column (
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
     ){
         Column(
             modifier = Modifier

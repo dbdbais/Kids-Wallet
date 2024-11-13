@@ -64,7 +64,6 @@ fun BeggingRequestScreen(navController: NavController, name: String?, viewModel:
     val amount by viewModel.amount.collectAsState()
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier

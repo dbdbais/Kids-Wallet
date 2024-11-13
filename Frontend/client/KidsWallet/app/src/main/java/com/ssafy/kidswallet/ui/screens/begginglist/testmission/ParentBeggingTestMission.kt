@@ -51,8 +51,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, name: String, b
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Top(title = "미션 확인", navController = navController) // BackButton 사용

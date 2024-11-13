@@ -57,7 +57,6 @@ fun BeggingMissionCompleteScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         Top(title = "미션", navController = navController) // BackButton 사용
         Spacer(modifier = Modifier.height(16.dp))
