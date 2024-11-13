@@ -9,10 +9,12 @@ import com.e201.kidswallet.mission.repository.MissionRepository;
 import com.e201.kidswallet.mission.service.MissionService;
 import com.e201.kidswallet.transaction.repository.TransactionRepository;
 import com.e201.kidswallet.user.entity.Relation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 public class TransactionService {
     private final MissionService missionService;
@@ -31,12 +33,19 @@ public class TransactionService {
 
         Beg findBeg = missionRepository.findById(requestDto.getMissionId()).get().getBeg();
         int money = findBeg.getBegMoney();
-        long toUserId = findBeg.getRelation().getChild().getUserId();
-        long fromUserId = findBeg.getRelation().getParent().getUserId();
+        log.info("money:"+money);
+        String toAccountId = findBeg.getRelation().getChild().getRepresentAccountId();
+        log.info("toUserId:"+toAccountId);
+        String fromAccountId = findBeg.getRelation().getParent().getRepresentAccountId();
+        log.info("fromUserId:"+fromAccountId);
         String fromUserName = findBeg.getRelation().getParent().getUserRealName();
+        log.info("fromUserName:"+fromUserName);
+
+
+
 
         StatusCode missionCompleteCheckResult= missionService.missionCompleteCheck(requestDto);
-        StatusCode transferResult = accountService.transferMoney(new TransferMoneyDTO(Long.toString(fromUserId),Long.toString(toUserId),fromUserName+"(MIssion)",money));
+        StatusCode transferResult = accountService.transferMoney(new TransferMoneyDTO(fromAccountId,toAccountId,fromUserName+"(MIssion)",money));
 
         if(missionCompleteCheckResult != StatusCode.SUCCESS){
             return missionCompleteCheckResult;
