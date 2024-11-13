@@ -41,6 +41,10 @@ public class FcmService {
     }
 
     public StatusCode sendMessage(String token, String title, String body) {
+        if (token == null) {
+            log.error("Token is null");
+            return StatusCode.TOKEN_IS_NULL;
+        }
         try{
             String message = FirebaseMessaging.getInstance().send(Message.builder()
                     .setNotification(Notification.builder()

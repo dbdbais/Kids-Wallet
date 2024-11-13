@@ -180,8 +180,7 @@ public class MissionService {
                             m.getCompletionPhoto(),
                             m.getCompletedAt(),
                             m.getCreatedAt(),
-                            m.getMissionContent(),
-                            m.getDeadLine()
+                            m.getMissionContent()
                     );
                 }
                 else{
@@ -202,5 +201,11 @@ public class MissionService {
             }
         }
         return missionListResponseDtos;
+    }
+
+    public long getBeg(long begId) {
+        long childId = begRepository.findById(begId).get().getRelation().getChild().getUserId();
+        log.info("childId: " + childId);
+        return childId;
     }
 }
