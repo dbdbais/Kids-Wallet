@@ -40,22 +40,22 @@ public class FcmService {
         //return "cHoQ5ExZTjy6OUjR5lJY19:APA91bG0ZKysLox7BtElV657-5JlK333EMI1s97URrIgMJoiq6e7pCDYr-g-Z6gcYaquQrs3yBwvPmVMjYZyVMFvHOCgFSdnh2VsZUjMJi86zlOlYi20sM8";
     }
 
-//    public StatusCode sendMessage(String token, String title, String body) {
-//        try{
-//            String message = FirebaseMessaging.getInstance().send(Message.builder()
-//                    .setNotification(Notification.builder()
-//                            .setTitle(title)
-//                            .setBody(body)
-//                            .build())
-//                    .setToken(token)  // 대상 디바이스의 등록 토큰
-//                    .build());
-//        }
-//        catch (FirebaseMessagingException e){
-//            log.error(e.getMessage());
-//            return StatusCode.BAD_REQUEST;
-//        }
-//        return StatusCode.SUCCESS;
-//
-//    }
+    public StatusCode sendMessage(String token, String title, String body) {
+        try{
+            String message = FirebaseMessaging.getInstance().send(Message.builder()
+                    .setNotification(Notification.builder()
+                            .setTitle(title)
+                            .setBody(body)
+                            .build())
+                    .setToken(token)  // 대상 디바이스의 등록 토큰
+                    .build());
+        }
+        catch (FirebaseMessagingException e){
+            log.error(e.getMessage());
+            return StatusCode.BAD_REQUEST;
+        }
+        return StatusCode.SUCCESS;
+
+    }
 
 }
