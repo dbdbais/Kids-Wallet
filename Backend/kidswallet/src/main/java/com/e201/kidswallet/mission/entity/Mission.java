@@ -18,7 +18,7 @@ import java.util.Arrays;
 @NoArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "Mission")
+@Table(name = "mission")
 public class Mission {
 
     @Id

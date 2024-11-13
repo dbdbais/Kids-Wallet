@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public interface MissionRepository extends JpaRepository<Mission,Long> {
 
     @Modifying
-    @Query(value="update Mission set completion_photo = :uploadCompleteImage , mission_status = :status where mission_id= :missionId",nativeQuery = true)
+    @Query(value="update mission set completion_photo = :uploadCompleteImage , mission_status = :status where mission_id= :missionId",nativeQuery = true)
     public int uploadCompleteImage(@Param("uploadCompleteImage") byte[] uploadCompleteImage, @Param("missionId") Long missionId, @Param("status") String status);
 
 //    @Modifying
