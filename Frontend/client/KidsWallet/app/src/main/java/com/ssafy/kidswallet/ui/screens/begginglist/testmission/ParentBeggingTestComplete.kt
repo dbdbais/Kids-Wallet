@@ -35,6 +35,7 @@ import com.ssafy.kidswallet.ui.components.Top
 @Composable
 fun ParentBeggingTestCompleteScreen(
     navController: NavController,
+    id: Int,
     name: String?,
     begMoney: Int,
     begContent: String?
