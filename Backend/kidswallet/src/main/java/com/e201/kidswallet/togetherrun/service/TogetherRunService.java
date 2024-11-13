@@ -172,26 +172,31 @@ public class TogetherRunService {
     }
 
     public List<TogetherRunDataResponseDto> togetherRunList(Long userId) {
-        // targetImage 추가
         List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = togetherRunRepository.findTogetherRunInfoByUserId(userId);
         return togetherRunDataResponseDtoList;
     }
 
-    public List<TogetherRunDetailResponseDto> togetherRunDetail(Long SavingContractId) {
-        SavingContract savingContract = savingContractRepository.findById(SavingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
-        List<SavingPayment> savingPayment = savingContract.getSavingPayments();
-        List<TogetherRunDetailResponseDto> togetherRunDetailResponseDtoList = new ArrayList<>();
-        User user = null;
-        for (SavingPayment payment : savingPayment) {
-            TogetherRunDetailResponseDto togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
-                    .userRealName(payment.getUser().getUserRealName())
-                    .currentAmount(payment.getSavingContract().getCurrentAmount())
-                    .depositAmount(payment.getDepositAmount())
-                    .depositedAt(payment.getDepositDate())
-                    .build();
-            togetherRunDetailResponseDtoList.add(togetherRunDetailResponseDto);
+    public TogetherRunDetailResponseDto togetherRunDetail(Long savingContractId) {
+        SavingContract savingContract = savingContractRepository.findById(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
+        if (savingContract == null) {
+            return null;
         }
-        return togetherRunDetailResponseDtoList;
+        TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
+        TogetherRunDetailResponseDto togetherRunDetailResponseDto = null;
+        try {
+            togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
+                    .targetTitle(togetherRun.getTargetTitle())
+                    .targetImage(togetherRun.getTargetImage())
+                    .targetAmount(togetherRun.getTargetAmount())
+                    .expiredAt(savingContract.getExpiredAt())
+                    .dDay(LocalDate.now().compareTo(savingContract.getExpiredAt()))
+                    .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getChild().getUserId()))
+                    .parentAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getParent().getUserId()))
+                    .build();
+        } catch (Exception e) {
+            return null;
+        }
+        return togetherRunDetailResponseDto;
     }
 
     public TogetherRunCancelResponseDto togetherRunDelete(Long savingContractId) {

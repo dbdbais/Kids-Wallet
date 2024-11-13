@@ -3,6 +3,8 @@ package com.e201.kidswallet.togetherrun.controller;
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunAnswerRequestDto;
+import com.e201.kidswallet.togetherrun.dto.TogetherRunDataResponseDto;
+import com.e201.kidswallet.togetherrun.dto.TogetherRunDetailResponseDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
 import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.service.TogetherRunService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/togetherrun")
@@ -51,12 +54,22 @@ public class TogetherController {
 
     @GetMapping("{userId}/list")
     public ResponseEntity<ResponseDto> getTogetherRunList(@PathVariable("userId") long userId) {
-        return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunList(userId));
+        List<TogetherRunDataResponseDto> togetherRunDataResponseDto = togetherRunService.togetherRunList(userId);
+        if (togetherRunDataResponseDto == null) {
+            return ResponseDto.response(StatusCode.BAD_REQUEST);
+        } else {
+            return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunList(userId));
+        }
     }
 
     @GetMapping("{savingContractId}/detail")
     public ResponseEntity<ResponseDto> getTogetherRunDetail(@PathVariable("savingContractId") long savingContractId) {
-        return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunDetail(savingContractId));
+        TogetherRunDetailResponseDto togetherRunDetailResponseDto = togetherRunService.togetherRunDetail(savingContractId);
+        if (togetherRunDetailResponseDto == null) {
+            return ResponseDto.response(StatusCode.BAD_REQUEST);
+        } else {
+            return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunDetail(savingContractId));
+        }
     }
 
     @DeleteMapping("savings/{savingContractId}")
