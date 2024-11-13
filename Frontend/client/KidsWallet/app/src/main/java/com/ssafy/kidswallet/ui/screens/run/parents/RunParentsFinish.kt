@@ -141,7 +141,7 @@ fun RunParentsFinishScreen(navController: NavController) {
                                 shape = RoundedCornerShape(16.dp),
                             )
                             .background(Color(0xFF6DCEF5))
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(16.dp))
+                            .border(1.dp, Color(0xFF6DCEF5), RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
                                 navController.navigate("runParentsFinishDetail")
