@@ -171,8 +171,8 @@ fun MyWalletManageScreen(
 
 @Composable
 fun DayExpenseBar(day: String, amount: Int, maxAmount: Int) {
-    // 바의 최대 높이를 200dp로 설정
-    val maxBarHeight = 200.dp
+    // 바의 최대 높이를 250dp로 설정
+    val maxBarHeight = 250.dp
     // 현재 금액에 따라 바 길이를 비례적으로 계산
     val barHeight = if (maxAmount > 0) {
         (amount.toFloat() / maxAmount * maxBarHeight.value).dp
