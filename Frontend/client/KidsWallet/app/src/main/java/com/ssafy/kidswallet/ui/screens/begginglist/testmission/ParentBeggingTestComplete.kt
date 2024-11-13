@@ -41,7 +41,6 @@ fun ParentBeggingTestCompleteScreen(
 ) {
     Column (
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
     ){
         Column(
             modifier = Modifier

@@ -47,7 +47,6 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
     val userGender = storedUserData?.userGender
     Box(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier

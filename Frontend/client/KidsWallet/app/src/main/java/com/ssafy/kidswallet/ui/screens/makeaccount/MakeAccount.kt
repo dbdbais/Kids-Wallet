@@ -50,7 +50,6 @@ fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewMod
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         // 상단 고정된 헤더 부분
         Top(title = "통장 개설", navController = navController)

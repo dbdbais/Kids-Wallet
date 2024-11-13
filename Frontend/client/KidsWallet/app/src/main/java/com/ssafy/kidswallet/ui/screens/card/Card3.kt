@@ -49,8 +49,7 @@ fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = v
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
+            .padding(16.dp),
     ) {
         Top(title = "카드", navController = navController) // BackButton 사용
         Spacer(modifier = Modifier.height(16.dp))

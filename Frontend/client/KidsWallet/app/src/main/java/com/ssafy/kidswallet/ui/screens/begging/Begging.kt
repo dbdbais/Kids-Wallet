@@ -47,7 +47,6 @@ fun BeggingScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier
