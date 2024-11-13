@@ -16,13 +16,15 @@ class MakeCardViewModel : ViewModel() {
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState
 
-    fun registerCard(userId: Int) {
+    fun registerCard(userId: Int, onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.registerCard(userId)
-                if (response.isSuccessful) {
+                if (response.isSuccessful && response.code() == 200) {
                     _apiResponseState.value = true
                     Log.d("CardRegister", "Card registered successfully")
+                    Log.d("CardRegister", "HTTP Status Code: ${response.code()}")
+                    onSuccess()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     _errorState.value = "Failed to register Card: $errorBody"

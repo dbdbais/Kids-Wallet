@@ -10,8 +10,10 @@ import com.ssafy.kidswallet.data.model.GiveMissionModel
 import com.ssafy.kidswallet.data.model.HandleMissionModel
 import com.ssafy.kidswallet.data.model.LoginModel
 import com.ssafy.kidswallet.data.model.MissionResponse
+import com.ssafy.kidswallet.data.model.PlayMissionModel
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
+import com.ssafy.kidswallet.data.model.TestMissionModel
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.fcm.dto.FcmDto
 import retrofit2.Call
@@ -69,5 +71,14 @@ interface ApiService {
     suspend fun handleMission(@Body handleMissionModel: HandleMissionModel): Response<Unit>
 
     @POST("mission/assign")
-    suspend fun giveMission(@Body giveMissionModel: GiveMissionModel) :Response<Unit>
+    suspend fun giveMission(@Body giveMissionModel: GiveMissionModel): Response<Unit>
+
+    @PUT("mission/complete")
+    suspend fun playMission(@Body playMissionModel: PlayMissionModel): Response<Unit>
+
+    @PUT("mission/complete/check")
+    suspend fun testMission(@Body testMissionModel: TestMissionModel): Response<Unit>
+
+    @GET("user/status/{userId}")
+    suspend fun updateUser(@Path("userId") userId: Int): Response<ApiResponse>
 }

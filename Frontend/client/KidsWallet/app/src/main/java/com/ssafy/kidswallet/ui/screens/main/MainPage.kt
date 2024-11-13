@@ -52,14 +52,40 @@ import com.ssafy.kidswallet.viewmodel.RelationViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.alpha
+import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
 
 @Composable
-fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel()) {
+fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val userId = storedUserData?.userId
     var showDialog by remember { mutableStateOf(false) }
     var input by remember { mutableStateOf("") }
+    val updatedUserData by updateUserViewModel.updatedUserData.collectAsState()
 
+    var isRelationRegistered by remember { mutableStateOf(false) }
+
+    // isCardRegistered가 true로 바뀌면 updateUser 호출
+    LaunchedEffect(isRelationRegistered) {
+        if (isRelationRegistered && userId != null) {
+            updateUserViewModel.updateUser(userId)
+        }
+    }
+
+    // updateUser 성공 시 updatedUserData가 업데이트되면 실행
+    LaunchedEffect(updatedUserData) {
+        if (updatedUserData != null) {
+            // updatedUserData가 업데이트된 후 처리
+            Log.d("Hello", updatedUserData.toString())
+            loginViewModel.saveUserData(updatedUserData!!)
+            navController.navigate("mainPage") {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+        }
+    }
+
+    Log.d("MainPageScreen", "Stored User Data: ${storedUserData?.toString() ?: "No Data"}")
     // 직접 입력을 위한 다이얼로그
     if (showDialog) {
         AlertDialog(
@@ -87,7 +113,9 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                             )
                         }
                         if (relationModel != null) {
-                            relationViewModel.addRelation(relationModel)
+                            relationViewModel.addRelation(relationModel) {
+                                isRelationRegistered = true
+                            }
                             Log.d("relationModel", "Current input value: $relationModel")
                         }
                         showDialog = false
@@ -356,7 +384,8 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                         painter = painterResource(id = R.drawable.account_button),
                         contentDescription = "Account Button",
                         modifier = Modifier
-                            .size(350.dp)
+                            .width(350.dp)
+                            .height(200.dp)
                             .align(Alignment.Center)
                     )
                     Text(

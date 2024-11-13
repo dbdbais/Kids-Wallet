@@ -18,13 +18,14 @@ class RelationViewModel : ViewModel() {
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState
 
-    fun addRelation(relationModel: RelationModel) {
+    fun addRelation(relationModel: RelationModel, onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
                 val response: Response<Any> = RetrofitClient.apiService.addRelation(relationModel)
-                if (response.isSuccessful) {
+                if (response.isSuccessful && response.code() == 200) {
                     _relationState.value = true
                     Log.d("RelationViewModel", "Relation added successfully.")
+                    onSuccess()
                 } else {
                     _relationState.value = false
                     val errorMessage = response.errorBody()?.string() ?: "Unknown error"
