@@ -9,6 +9,15 @@ android {
     namespace = "com.ssafy.kidswallet"
     compileSdk = 34
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
+            storePassword = "kidswallet"
+            keyAlias = "kidswallet"
+            keyPassword = "kidswallet"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.ssafy.kidswallet"
         minSdk = 24
@@ -33,6 +42,7 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

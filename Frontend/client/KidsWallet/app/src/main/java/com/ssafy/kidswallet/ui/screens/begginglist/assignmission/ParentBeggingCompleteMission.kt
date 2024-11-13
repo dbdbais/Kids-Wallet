@@ -46,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun ParentBeggingCompleteMissionScreen(
     navController: NavController,
+    id: Int,
     name: String?,
     begMoney: Int,
     begContent: String?,

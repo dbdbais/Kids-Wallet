@@ -38,18 +38,25 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ssafy.kidswallet.data.model.GiveMissionModel
+import com.ssafy.kidswallet.viewmodel.GiveMissionViewModel
+import com.ssafy.kidswallet.viewmodel.HandleMissionViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParentBeggingAssignMissionScreen(
     navController: NavController,
+    id: Int,
     name: String?,
     begMoney: Int,
     begContent: String?,
     viewModel: BeggingReasonViewModel = viewModel(),
     loginViewModel: LoginViewModel = viewModel(),
-) {
+    handleMissionViewModel: HandleMissionViewModel = viewModel(),
+    giveMissionViewModel: GiveMissionViewModel = viewModel(),
+
+    ) {
     val textState = viewModel.textModel.collectAsState()
 
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
@@ -217,7 +224,12 @@ fun ParentBeggingAssignMissionScreen(
                 BlueButton(
                     onClick = {
                         if (textState.value.text.isNotBlank()) {
-                            navController.navigate("parentBeggingCompleteMission/${name}/${begMoney}/${begContent}/${textState.value.text}")
+                            handleMissionViewModel.acceptMission(begId = id)
+                            giveMissionViewModel.sendMission(
+                                begId = id,
+                                missionMessage = textState.value.text
+                            )
+                            navController.navigate("parentBeggingCompleteMission/${id}/${name}/${begMoney}/${begContent}/${textState.value.text}")
                         }
                     },
                     text = "미션 보내기",

@@ -258,7 +258,7 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                 )
                             BlueButton(
                                 onClick = {
-                                    navController.navigate("beggingMissionPlay/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
+                                    navController.navigate("beggingMissionPlay/${mission.begDto.begId}/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
                                 },
                                 text = "미션 수행하기",
                                 height = 40
