@@ -1,16 +1,12 @@
 package com.e201.kidswallet.togetherrun.service;
 
-import com.e201.kidswallet.account.dto.TransferMoneyDTO;
 import com.e201.kidswallet.account.entity.Account;
-import com.e201.kidswallet.account.repository.AccountRepository;
 import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.togetherrun.dto.*;
 import com.e201.kidswallet.togetherrun.entity.Saving;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
-import com.e201.kidswallet.togetherrun.entity.SavingPayment;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
-import com.e201.kidswallet.togetherrun.entity.enums.SavingContractPaymentCheck;
 import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
 import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
@@ -22,11 +18,9 @@ import com.e201.kidswallet.user.entity.User;
 import com.e201.kidswallet.user.repository.RelationRepository;
 import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -51,14 +45,13 @@ public class TogetherRunService {
     private final UserRepository userRepository;
     private final AccountService accountService;
     private final RelationRepository relationRepository;
-    private final AccountRepository accountRepository;
 
     private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     public TogetherRunService(TogetherRunRepository togetherRunRepository, SavingRepository savingRepository,
                               SavingContractRepository savingContractRepository, SavingPaymentRepository savingPaymentRepository,
-                              UserRepository userRepository, AccountService accountService, RelationRepository relationRepository, AccountRepository accountRepository) {
+                              UserRepository userRepository, AccountService accountService, RelationRepository relationRepository) {
         this.togetherRunRepository = togetherRunRepository;
         this.savingRepository = savingRepository;
         this.savingContractRepository = savingContractRepository;
@@ -66,7 +59,6 @@ public class TogetherRunService {
         this.userRepository = userRepository;
         this.accountService = accountService;
         this.relationRepository = relationRepository;
-        this.accountRepository = accountRepository;
     }
 
     public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto)
@@ -90,10 +82,6 @@ public class TogetherRunService {
 
         if (relation == null) {
             return StatusCode.NO_PARENTS;
-        }
-
-        if (isCheckAccountBalance(togetherRunRegisterRequestDto.getChildId(), togetherRunRegisterRequestDto.getChildContribute())) {
-            return StatusCode.NOT_ENOUGH_MONEY;
         }
 
         String imagePath = null;
@@ -139,18 +127,13 @@ public class TogetherRunService {
             System.out.println("togetherRunRepository Error");
             return StatusCode.BAD_REQUEST;
         }
-        User parents = userRepository.findById(togetherRunAnswerRequestDto.getUserId())
+        User user = userRepository.findById(togetherRunAnswerRequestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
-        if (parents.getRepresentAccountId() == null) {
+        if (user.getRepresentAccountId() == null) {
             return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
         }
         SavingContract savingContract = null;
-        User child = togetherRun.getRelation().getChild();
         if (isAccept == TogetherRunStatus.ACCEPTED) {
-            if (isCheckAccountBalance(parents.getUserId(), togetherRun.getParentsContribute())) {
-                return StatusCode.NOT_ENOUGH_MONEY;
-            }
-
             try {
                 String accountId = accountService.makeRandomAccount();
                 Saving saving = savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId"));
@@ -158,10 +141,10 @@ public class TogetherRunService {
                     return StatusCode.INVALID_SAVING;
                 }
                 Account newAccount = Account.builder()
-                        .user(parents)
+                        .user(user)
                         .accountId(accountId)
                         .build();
-                accountRepository.save(newAccount);
+                user.getAccounts().add(newAccount);
                 savingContract = SavingContract.builder()
                         .user(userRepository.findById(togetherRun.getRelation().getParent().getUserId())
                                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId")))
@@ -171,35 +154,6 @@ public class TogetherRunService {
                         .expiredAt(togetherRun.getTargetDate())
                         .build();
                 savingContractRepository.save(savingContract);
-
-                TransferMoneyDTO childTransferMoneyDTO = makeTransferMoneyDTO(togetherRun.getRelation().getChild().getRepresentAccountId(), accountId, togetherRun.getChildContribute().intValue());
-                TransferMoneyDTO parentsTransferMoneyDTO = makeTransferMoneyDTO(parents.getRepresentAccountId(), accountId, togetherRun.getParentsContribute().intValue());
-
-                StatusCode childTransferResult = null;
-                StatusCode parentsTransferResult = null;
-                childTransferResult = accountService.transferMoney(childTransferMoneyDTO);
-                parentsTransferResult = accountService.transferMoney(parentsTransferMoneyDTO);
-                if (childTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus() || parentsTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus()) {
-                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return StatusCode.TEST;
-                }
-
-                SavingPayment childPayment = SavingPayment.builder()
-                        .user(child)
-                        .depositAmount(togetherRun.getChildContribute())
-                        .depositDate(LocalDateTime.now())
-                        .savingContract(savingContract)
-                        .build();
-                SavingPayment parentsPayment = SavingPayment.builder()
-                        .user(parents)
-                        .depositAmount(togetherRun.getParentsContribute())
-                        .depositDate(LocalDateTime.now())
-                        .savingContract(savingContract)
-                        .build();
-
-                savingPaymentRepository.save(childPayment);
-                savingPaymentRepository.save(parentsPayment);
-
             } catch (Exception e) {
                 System.out.println("savingContractRepository Error");
                 return StatusCode.BAD_REQUEST;
@@ -230,51 +184,27 @@ public class TogetherRunService {
         return togetherRunDataResponseDtoList;
     }
 
-    public TogetherRunDetailResponseDto togetherRunDetail(Long togetherRunId) {
-        TogetherRun togetherRun = togetherRunRepository.findById(togetherRunId).orElseThrow(() -> new IllegalArgumentException("Invalid togetherRunId"));
-        TogetherRunDetailResponseDto togetherRunDetailResponseDto = null;
-        SavingContract savingContract = togetherRun.getSavingContract();
-        // 수락 전
+    public TogetherRunDetailResponseDto togetherRunDetail(Long savingContractId) {
+        SavingContract savingContract = savingContractRepository.findById(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
         if (savingContract == null) {
-            try {
-                togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
-                        .targetTitle(togetherRun.getTargetTitle())
-                        .targetImage(togetherRun.getTargetImage())
-                        .targetAmount(togetherRun.getTargetAmount())
-                        .expiredAt(togetherRun.getTargetDate())
-                        .dDay(LocalDate.now().compareTo(togetherRun.getCreatedAt().toLocalDate()))
-                        .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
-                        .childGoalAmount(togetherRun.getChildContribute())
-                        .childName(togetherRun.getRelation().getChild().getUserRealName())
-                        .parentGoalAmount(togetherRun.getParentsContribute())
-                        .parentName(togetherRun.getRelation().getParent().getUserRealName())
-                        .build();
-            } catch (Exception e) {
-                return null;
-            }
-        // 수락 후
-        } else {
-            Long savingContractId = savingContract.getSavingContractId();
-            try {
-                togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
-                        .targetTitle(togetherRun.getTargetTitle())
-                        .targetImage(togetherRun.getTargetImage())
-                        .targetAmount(togetherRun.getTargetAmount())
-                        .expiredAt(savingContract.getExpiredAt())
-                        .dDay(LocalDate.now().compareTo(savingContract.getExpiredAt()))
-                        .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
-                        .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getChild().getUserId()))
-                        .childGoalAmount(togetherRun.getChildContribute())
-                        .childName(togetherRun.getRelation().getChild().getUserRealName())
-                        .parentAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getParent().getUserId()))
-                        .parentGoalAmount(togetherRun.getParentsContribute())
-                        .parentName(togetherRun.getRelation().getParent().getUserRealName())
-                        .build();
-            } catch (Exception e) {
-                return null;
-            }
+            return null;
         }
-
+        TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
+        TogetherRunDetailResponseDto togetherRunDetailResponseDto = null;
+        try {
+            togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
+                    .targetTitle(togetherRun.getTargetTitle())
+                    .targetImage(togetherRun.getTargetImage())
+                    .targetAmount(togetherRun.getTargetAmount())
+                    .expiredAt(savingContract.getExpiredAt())
+                    .dDay(LocalDate.now().compareTo(savingContract.getExpiredAt()))
+                    .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
+                    .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getChild().getUserId()))
+                    .parentAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getParent().getUserId()))
+                    .build();
+        } catch (Exception e) {
+            return null;
+        }
         return togetherRunDetailResponseDto;
     }
 
@@ -337,19 +267,9 @@ public class TogetherRunService {
         return interestAmount;
     }
 
-    public Boolean isCheckAccountBalance(Long userId, BigDecimal amount) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
-        Account account = accountRepository.getReferenceById(user.getRepresentAccountId());
-        return account.getBalance() - amount.intValue() < 0;
-    }
-
-    public TransferMoneyDTO makeTransferMoneyDTO(String fromId, String toId, int amount) {
-        TransferMoneyDTO transferMoneyDTO = null;
-        transferMoneyDTO = TransferMoneyDTO.builder()
-                .fromId(fromId)
-                .toId(toId)
-                .amount(amount)
-                .build();
-        return transferMoneyDTO;
-    }
+//    public Boolean isCheckAccountBalance(Long userId, BigDecimal amount) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+//        Account account = user.getAccounts().get(0);
+//        return account.getBalance()  >= 0;
+//    }
 }

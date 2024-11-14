@@ -98,11 +98,28 @@ public class SavingTransferBatchConfig {
                 TransferMoneyDTO parentsTransferMoneyDTO = null;
                 if (contract.getPaymentCheck() == SavingContractPaymentCheck.PAYMENT)
                 {
-                    childTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getChildAccount(), contract.getSavingAccount(), togetherRun.getChildContribute().intValue());
-                    parentsTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getParentsAccount(), contract.getSavingAccount(), togetherRun.getParentsContribute().intValue());
+                    childTransferMoneyDTO = TransferMoneyDTO.builder()
+                            .fromId(togetherRun.getChildAccount())
+                            .toId(contract.getSavingAccount())
+                            .amount(togetherRun.getChildContribute().intValue())
+                            .build();
+
+                    parentsTransferMoneyDTO = TransferMoneyDTO.builder()
+                            .fromId(togetherRun.getParentsAccount())
+                            .toId(contract.getSavingAccount())
+                            .amount(togetherRun.getParentsContribute().intValue())
+                            .build();
                 } else {
-                    childTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getChildAccount(), contract.getSavingAccount(), togetherRun.getChildContribute().intValue() * 2);
-                    parentsTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getParentsAccount(), contract.getSavingAccount(), togetherRun.getParentsContribute().intValue() * 2);
+                    childTransferMoneyDTO = TransferMoneyDTO.builder()
+                            .fromId(contract.getSavingAccount())
+                            .toId(togetherRun.getChildAccount())
+                            .amount(togetherRun.getChildContribute().intValue() * 2)
+                            .build();
+                    parentsTransferMoneyDTO = TransferMoneyDTO.builder()
+                            .fromId(contract.getSavingAccount())
+                            .toId(togetherRun.getParentsAccount())
+                            .amount(togetherRun.getParentsContribute().intValue() * 2)
+                            .build();
                 }
 
                 StatusCode childTransferResult = null;
