@@ -1,18 +1,23 @@
 package com.e201.kidswallet.togetherrun.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Builder
 @Data
 @AllArgsConstructor
+@Setter
 public class TogetherRunDataResponseDto {
-    private long savingContractId;
+    private Long savingContractId;
     private String targetTitle;
     private BigDecimal currentAmount;
-    private int dDay;
+    @JsonProperty("dDay")
+    private Long dDay;
+    @JsonProperty("isAccept")
+    private Boolean isAccept;
 }

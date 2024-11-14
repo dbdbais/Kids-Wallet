@@ -6,7 +6,6 @@ import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.togetherrun.dto.*;
 import com.e201.kidswallet.togetherrun.entity.Saving;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
-import com.e201.kidswallet.togetherrun.entity.SavingPayment;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
 import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
@@ -21,7 +20,6 @@ import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -172,7 +170,18 @@ public class TogetherRunService {
     }
 
     public List<TogetherRunDataResponseDto> togetherRunList(Long userId) {
-        List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = togetherRunRepository.findTogetherRunInfoByUserId(userId);
+        List<Object[]> result = togetherRunRepository.findTogetherRunInfoByUserId(userId);
+        List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = new ArrayList<>();
+        for (Object[] obj : result) {
+            TogetherRunDataResponseDto togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
+                    .savingContractId((Long) obj[0])
+                    .targetTitle((String) obj[1])
+                    .currentAmount((BigDecimal) obj[2])
+                    .dDay((Long) obj[3])
+                    .isAccept(((Long) obj[4]) == 1L)
+                    .build();
+            togetherRunDataResponseDtoList.add(togetherRunDataResponseDto);
+        }
         return togetherRunDataResponseDtoList;
     }
 
@@ -190,6 +199,7 @@ public class TogetherRunService {
                     .targetAmount(togetherRun.getTargetAmount())
                     .expiredAt(savingContract.getExpiredAt())
                     .dDay(LocalDate.now().compareTo(savingContract.getExpiredAt()))
+                    .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
                     .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getChild().getUserId()))
                     .parentAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getParent().getUserId()))
                     .build();
