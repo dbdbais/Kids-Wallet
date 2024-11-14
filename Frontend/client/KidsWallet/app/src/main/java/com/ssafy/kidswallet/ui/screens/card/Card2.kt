@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.card
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -92,7 +94,7 @@ fun Card2Screen(navController: NavController) {
 
         // 가운데 정렬된 텍스트
         Text(
-            text = "카드 디자인 고르기",
+            text = "이런 카드는 어때요?",
             style = FontSizes.h32,
             fontWeight = FontWeight.Bold
         )
@@ -107,18 +109,32 @@ fun Card2Screen(navController: NavController) {
             horizontalArrangement = Arrangement.Center
         ) {
             cards.forEachIndexed { index, (cardRes, description) ->
+                val isSelected = selectedCardIndex.value == index
+                val cardWidth by animateDpAsState(targetValue = if (isSelected) 180.dp else 160.dp,
+                    label = ""
+                ) // 애니메이션 적용
+                val cardHeight by animateDpAsState(targetValue = if (isSelected) 280.dp else 250.dp,
+                    label = ""
+                ) // 애니메이션 적용
+
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .clickable { selectedCardIndex.value = index } // 클릭 시 해당 카드 선택
                 ) {
+                    // 카드 이미지
                     Image(
                         painter = painterResource(id = cardRes),
                         contentDescription = description,
                         modifier = Modifier
-                            .width(160.dp)    // 가로 크기 조정
-                            .height(250.dp)   // 세로 크기 조정
+                            .width(cardWidth) // 애니메이션된 너비
+                            .height(cardHeight) // 애니메이션된 높이
+                            .background(
+                                color = if (isSelected) Color.LightGray.copy(alpha = 0.3f) else Color.Transparent,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(4.dp)
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -126,9 +142,9 @@ fun Card2Screen(navController: NavController) {
                     // 체크 아이콘, 선택된 카드만 체크된 아이콘 표시
                     Image(
                         painter = painterResource(
-                            id = if (selectedCardIndex.value == index) R.drawable.icon_card_check else R.drawable.icon_card_noncheck
+                            id = if (isSelected) R.drawable.icon_card_check else R.drawable.icon_card_noncheck
                         ),
-                        contentDescription = if (selectedCardIndex.value == index) "카드 체크 됨" else "카드 체크 안됨",
+                        contentDescription = if (isSelected) "카드 체크 됨" else "카드 체크 안됨",
                         modifier = Modifier
                             .size(40.dp)
                             .clickable { selectedCardIndex.value = index } // 아이콘 클릭 시에도 선택 가능
