@@ -181,7 +181,7 @@ public class TogetherRunService {
                 parentsTransferResult = accountService.transferMoney(parentsTransferMoneyDTO);
                 if (childTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus() || parentsTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus()) {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return StatusCode.TEST;
+                    return StatusCode.BAD_REQUEST;
                 }
 
                 SavingPayment childPayment = SavingPayment.builder()
