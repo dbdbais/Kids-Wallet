@@ -19,5 +19,9 @@ public class TogetherRunDetailResponseDto {
     @JsonProperty("isAccept")
     private Boolean isAccept;
     private BigDecimal childAmount;
+    private BigDecimal childGoalAmount;
+    private String childName;
     private BigDecimal parentAmount;
+    private BigDecimal parentGoalAmount;
+    private String parentName;
 }
