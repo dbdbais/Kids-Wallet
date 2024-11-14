@@ -25,7 +25,7 @@ public class SavingContract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="saving_contract_id")
-    private long savingContractId;
+    private Long savingContractId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", referencedColumnName = "user_id")
