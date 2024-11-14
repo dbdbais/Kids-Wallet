@@ -70,6 +70,7 @@ import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
+import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -77,6 +78,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
 
     class MainActivity : ComponentActivity() {
         private val stateRunViewModel: StateRunViewModel by viewModels()
+        private val stateBeggingMissionViewModel: StateBeggingMissionViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +121,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    MainScreen(navController, stateRunViewModel)
+                    MainScreen(navController, stateRunViewModel, stateBeggingMissionViewModel)
                 }
             }
         }
@@ -127,7 +129,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun MainScreen(navController: NavHostController, stateRunviewModel: StateRunViewModel) {
+    fun MainScreen(navController: NavHostController, stateRunViewModel: StateRunViewModel, stateBeggingMissionViewModel: StateBeggingMissionViewModel) {
         NavHost(navController = navController, startDestination = "splash") {
             composable("main") {
                 Column(
@@ -157,13 +159,13 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("runParentsFinish") { RunParentsFinishScreen(navController) }
             composable("runParentsFinishDetail") { RunParentsFinishDetailScreen(navController) }
             composable("runParents") {
-                RunParentsScreen(navController = navController, viewModel = stateRunviewModel)
+                RunParentsScreen(navController = navController, viewModel = stateRunViewModel)
             }
             composable("runParentsMoney") { RunParentsMoneyScreen(navController) }
             composable("runParentsDetail") { RunParentsDetailScreen(navController) }
             composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
             composable("runParentsRegister") {
-                RunParentsRegisterScreen(navController = navController, viewModel = stateRunviewModel)
+                RunParentsRegisterScreen(navController = navController, viewModel = stateRunViewModel)
             }
 
             // wallet
@@ -226,7 +228,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                 BeggingRequestCompleteScreen(navController, name, amount, reason)
             }
 
-            composable("parentBeggingWaiting") { ParentBeggingWaitingScreen(navController) }
+            composable("parentBeggingWaiting") { ParentBeggingWaitingScreen(navController, viewModel = stateBeggingMissionViewModel) }
             composable("parentBeggingComplete") { ParentBeggingCompleteScreen(navController) }
             composable("parentBeggingRequestCheck/{id}/{name}/{begMoney}/{begContent}") { backStackEntry ->
                 val idString = backStackEntry.arguments?.getString("id") ?: "0"
@@ -266,7 +268,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                 )
             }
 
-            composable("parentBeggingTestMission/{id}/{name}/{begMoney}/{begContent}/{missionContent}/{completionPhoto}") { backStackEntry ->
+            composable("parentBeggingTestMission/{id}/{name}/{begMoney}/{begContent}/{missionContent}") { backStackEntry ->
                 val idString = backStackEntry.arguments?.getString("id") ?: "0"
                 val id = idString.toIntOrNull() ?: 0
                 val name = backStackEntry.arguments?.getString("name") ?: ""
@@ -274,7 +276,6 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                 val begMoney = begMoneyString.toIntOrNull() ?: 0
                 val begContent = backStackEntry.arguments?.getString("begContent") ?: ""
                 val missionContent = backStackEntry.arguments?.getString("missionContent") ?: ""
-                val completionPhoto = backStackEntry.arguments?.getString("completionPhoto") ?: ""
                 ParentBeggingTestMissionScreen(
                     navController,
                     id,
@@ -282,7 +283,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                     begMoney,
                     begContent,
                     missionContent,
-                    completionPhoto
+                    viewModel = stateBeggingMissionViewModel
                 )
             }
 

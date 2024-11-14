@@ -8,6 +8,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.util.Base64
 import android.net.Uri
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 object ImageUtils {
@@ -44,6 +45,15 @@ object ImageUtils {
             Base64.encodeToString(byteArray, Base64.NO_WRAP)
         } catch (e: Exception) {
             e.printStackTrace()
+            null
+        }
+    }
+
+    fun base64ToBitmap(base64Str: String): Bitmap? {
+        return try {
+            val decodedBytes = Base64.decode(base64Str, Base64.DEFAULT)
+            BitmapFactory.decodeStream(ByteArrayInputStream(decodedBytes))
+        } catch (e: Exception) {
             null
         }
     }
