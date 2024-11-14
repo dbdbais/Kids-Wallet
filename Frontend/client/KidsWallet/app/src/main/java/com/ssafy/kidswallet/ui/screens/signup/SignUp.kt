@@ -42,9 +42,19 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.viewmodel.SignUpViewModel
@@ -71,6 +81,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
     var nameError by remember { mutableStateOf(false) }
     var birthError by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     if (navigateToLogin) {
         navController.navigate("loginRouting")
@@ -79,7 +90,15 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+            .clickable(
+                indication = null, // 터치 피드백을 제거
+                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+            ) {
+                // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+                focusManager.clearFocus()
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ){
@@ -99,8 +118,11 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             OutlinedTextField(
                 value = id,
                 onValueChange = {
-                    id = it
-                    idError = it.isEmpty() // 이름이 비었는지 체크
+                    val filteredInput = it.filter { char -> char.isLetterOrDigit() } // 특수문자 필터링 (영문자와 숫자만 허용)
+                    if (filteredInput.length <= 15) { // 15자 입력 제한
+                        id = filteredInput
+                        idError = filteredInput.isEmpty() // 이름이 비었는지 체크
+                    }
                 },
                 label = { Text("아이디", color = if (idError) Color.Red else Color(0xFF8C8595)) },
                 modifier = Modifier
@@ -110,7 +132,8 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = if (idError) Color.Red else Color(0xFF6DCEF5),
                     unfocusedBorderColor = if (idError) Color.Red else Color(0xFFD3D0D7)
-                )
+                ),
+                singleLine = true
             )
             OutlinedTextField(
                 value = password,
@@ -128,7 +151,8 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = if (passwordError) Color.Red else Color(0xFF6DCEF5),
                     unfocusedBorderColor = if (passwordError) Color.Red else Color(0xFFD3D0D7)
-                )
+                ),
+                singleLine = true
             )
             OutlinedTextField(
                 value = passwordChecked,
@@ -146,6 +170,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                     focusedBorderColor = if (passwordMismatchError) Color.Red else Color(0xFF6DCEF5),
                     unfocusedBorderColor = if (passwordMismatchError) Color.Red else Color(0xFFD3D0D7)
                 ),
+                singleLine = true,
                 isError = passwordMismatchError // 에러 상태 반영
             )
             if (passwordMismatchError) {
@@ -161,8 +186,11 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             OutlinedTextField(
                 value = name,
                 onValueChange = {
-                    name = it
-                    nameError = it.isEmpty() // 이름이 비었는지 체크
+                    val filteredInput = it.filter { char -> char.isLetterOrDigit() } // 특수문자 필터링 (영문자, 숫자, 공백만 허용)
+                    if (filteredInput.length <= 15) {
+                        name = filteredInput
+                        nameError = filteredInput.isEmpty() // 이름이 비었는지 체크
+                    }
                 },
                 label = { Text("이름", color = if (nameError) Color.Red else Color(0xFF8C8595)) },
                 modifier = Modifier
@@ -172,7 +200,8 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = if (nameError) Color.Red else Color(0xFF6DCEF5),
                     unfocusedBorderColor = if (nameError) Color.Red else Color(0xFFD3D0D7)
-                )
+                ),
+                singleLine = true
             )
             BirthdayInputField(
                 birth = birth,
@@ -185,7 +214,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             GenderSelection(selectedGender) { selectedGender = it }
             RoleSelection(selectedRole) { selectedRole = it }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             BlueButton(
                 onClick = {
@@ -266,22 +295,63 @@ fun GenderButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
 
 @Composable
 fun RoleSelection(selectedRole: String, onRoleSelected: (String) -> Unit) {
+    val showParentHelp = remember { mutableStateOf(false) }
+    val showKidHelp = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        RoleButton(
-            text = "부모",
-            isSelected = selectedRole == "PARENT",
-            onClick = { onRoleSelected("PARENT") }
+        Column(
+            modifier = Modifier
+        ) {
+            RoleButton(
+                text = "부모",
+                isSelected = selectedRole == "PARENT",
+                onClick = { onRoleSelected("PARENT") }
+            )
+            Image(
+                painter = painterResource(id = R.drawable.icon_search),
+                contentDescription = "부모 설명 아이콘",
+                modifier = Modifier
+                    // .padding(top = 8.dp)
+                    .clickable { showParentHelp.value = true } // 아이콘을 터치했을 때 도움말 표시
+                    .size(24.dp) // 아이콘 크기 조절
+            )
+        }
+        Column (
+            modifier = Modifier
+        ){
+            RoleButton(
+                text = "아이",
+                isSelected = selectedRole == "CHILD",
+                onClick = { onRoleSelected("CHILD")}
+            )
+            Image(
+                painter = painterResource(id = R.drawable.icon_search),
+                contentDescription = "아이 설명 아이콘",
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clickable { showKidHelp.value = true } // 아이콘을 터치했을 때 도움말 표시
+                    .size(24.dp) // 아이콘 크기 조절
+            )
+        }
+    }
+    // 팝업은 Row 외부에 두어 레이아웃에 영향을 미치지 않음
+    if (showParentHelp.value) {
+        PopupHelp(
+            text1 = "아이에게 미션을 주고 용돈을 줄 수 있어요!",
+            text2 = "더 많은 기능을 사용해 보세요!",
+            onDismiss = { showParentHelp.value = false }
         )
+    }
 
-        RoleButton(
-            text = "아이",
-            isSelected = selectedRole == "CHILD",
-            onClick = { onRoleSelected("CHILD")}
+    if (showKidHelp.value) {
+        PopupHelp(
+            text1 = "미션을 수행하고 용돈을 받을 수 있어요!",
+            text2 = "미션을 하고 부자가 되어봐요!",
+            onDismiss = { showKidHelp.value = false }
         )
     }
 }
@@ -349,4 +419,55 @@ fun showDatePicker(context: Context, onDateSelected: (String) -> Unit) {
         },
         year, month, day
     ).show()
+}
+
+@Composable
+fun PopupHelp(text1: String, text2: String, onDismiss: () -> Unit) {
+    Box(
+        modifier = Modifier.fillMaxSize(), // 화면 전체를 덮도록 설정
+        contentAlignment = Alignment.Center // 중앙 정렬
+    ) {
+        Popup(
+            alignment = Alignment.Center,
+            onDismissRequest = { onDismiss() },
+            properties = PopupProperties(focusable = true)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .shadow(8.dp, shape = RoundedCornerShape(16.dp))
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFF6DCEF5),
+                                Color(0xFF99DDF8)
+                            )
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .border(
+                        BorderStroke(2.dp, Color(0xFF6DCEF5)),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(24.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = text1,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = text2,
+                        color = Color.White,
+                        fontSize = 15.sp
+                    )
+                }
+            }
+        }
+    }
 }

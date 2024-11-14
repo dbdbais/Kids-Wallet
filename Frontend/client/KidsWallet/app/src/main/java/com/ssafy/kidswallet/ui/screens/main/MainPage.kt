@@ -54,17 +54,25 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.alpha
+import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
 
 @Composable
-fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel()) {
+fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel(), accountTransactionViewModel: AccountTransactionViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val userId = storedUserData?.userId
     var showDialog by remember { mutableStateOf(false) }
     var input by remember { mutableStateOf("") }
     val updatedUserData by updateUserViewModel.updatedUserData.collectAsState()
+    val accountState by accountTransactionViewModel.accountState.collectAsState()
 
     var isRelationRegistered by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        storedUserData?.representAccountId?.let { accountId ->
+            accountTransactionViewModel.getTransactionData(accountId)
+        }
+    }
 
     // isCardRegistered가 true로 바뀌면 updateUser 호출
     LaunchedEffect(isRelationRegistered) {
@@ -95,9 +103,15 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 Column {
                     OutlinedTextField(
                         value = input,
-                        onValueChange = { input = it },
+                        onValueChange = {
+                            val filteredInput = it.filter { char -> char.isLetterOrDigit() } // 영문자와 숫자만 허용
+                            if (filteredInput.length <= 15) { // 15자 입력 제한
+                                input = filteredInput
+                            }
+                        },
                         label = { Text("아이의 ID") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        singleLine = true // 한 줄 제한
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -177,7 +191,9 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 )
 
                 Text(
-                    text = storedUserData?.userMoney?.toString() ?: "알 수 없음",
+                    //ㅏtext = storedUserData?.userMoney?.toString() ?: "알 수 없음",
+                    text = accountState?.data?.firstOrNull()?.curBalance?.let {
+                        "${NumberUtils.formatNumberWithCommas(it)}원" } ?: "0원",
                     fontWeight = FontWeight.W900,
                     style = FontSizes.h24,
                     modifier = Modifier.padding(start = 8.dp)
