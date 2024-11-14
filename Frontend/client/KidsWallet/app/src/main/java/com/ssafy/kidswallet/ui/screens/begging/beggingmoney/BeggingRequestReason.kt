@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -133,7 +134,7 @@ fun BeggingRequestReasonScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(290.dp)
+                    .height(250.dp)
                     .border(3.dp, Color(0xFFB2EBF2), RoundedCornerShape(16.dp))
                     .border(6.dp, Color(0xFF99DDF8).copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                     .border(9.dp, Color(0xFF99DDF8).copy(alpha = 0.1f), RoundedCornerShape(16.dp))
@@ -149,7 +150,7 @@ fun BeggingRequestReasonScreen(
                         painter = painterResource(id = R.drawable.character_old_girl),
                         contentDescription = "Female Character",
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(160.dp)
                     )
                     TextField(
                         value = textState.value.text,
@@ -228,7 +229,6 @@ fun BeggingRequestReasonScreen(
                 modifier = Modifier
                     .width(400.dp) // 원하는 너비 설정
                     .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
-                height = 50,
                 elevation = 4
             )
         }

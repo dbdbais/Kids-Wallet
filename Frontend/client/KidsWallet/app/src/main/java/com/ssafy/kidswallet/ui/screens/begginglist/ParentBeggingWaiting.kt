@@ -50,10 +50,11 @@ import com.ssafy.kidswallet.ui.components.YellowButton
 import com.ssafy.kidswallet.ui.components.DateUtils
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ParentBeggingWaitingScreen(navController: NavController) {
+fun ParentBeggingWaitingScreen(navController: NavController, viewModel: StateBeggingMissionViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -106,14 +107,14 @@ fun ParentBeggingWaitingScreen(navController: NavController) {
                 .weight(0.5f)
                 .fillMaxWidth()
         ) {
-            WaitingMissionList(navController = navController)
+            WaitingMissionList(navController = navController, stateViewModel = viewModel)
         }
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel(), navController: NavController) {
+fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginViewModel: LoginViewModel = viewModel(), navController: NavController, stateViewModel: StateBeggingMissionViewModel) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val userId = storedUserData?.userId
     val missionList = viewModel.missionList.collectAsState().value
@@ -228,7 +229,8 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                             } else {
                                 YellowButton(
                                     onClick = {
-                                        navController.navigate("parentBeggingTestMission/${mission.mission?.missionId}/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}/${mission.mission?.completionPhoto}")
+                                        stateViewModel.setBase64Text(mission.mission?.completionPhoto ?: "")
+                                        navController.navigate("parentBeggingTestMission/${mission.mission?.missionId}/${mission.name}/${mission.begDto.begMoney}/${mission.begDto.begContent}/${mission.mission?.missionContent}")
                                     },
                                     text = "미션 확인",
                                     height = 40
