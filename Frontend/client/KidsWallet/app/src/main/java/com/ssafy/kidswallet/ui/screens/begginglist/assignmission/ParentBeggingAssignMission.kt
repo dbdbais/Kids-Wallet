@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -127,7 +128,7 @@ fun ParentBeggingAssignMissionScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(290.dp)
+                    .height(250.dp)
                     .border(3.dp, Color(0xFFB2EBF2), RoundedCornerShape(16.dp))
                     .border(6.dp, Color(0xFF99DDF8).copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                     .border(9.dp, Color(0xFF99DDF8).copy(alpha = 0.1f), RoundedCornerShape(16.dp))
@@ -217,8 +218,8 @@ fun ParentBeggingAssignMissionScreen(
                     },
                     text = "돌아가기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
-                    height = 50,
+                        .width(130.dp) // 원하는 너비 설정
+                        .heightIn(min = 48.dp, max = 56.dp),
                     elevation = 4
                 )
                 BlueButton(
@@ -234,8 +235,8 @@ fun ParentBeggingAssignMissionScreen(
                     },
                     text = "미션 보내기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
-                    height = 50,
+                        .width(230.dp) // 원하는 너비 설정
+                        .heightIn(min = 48.dp, max = 56.dp),
                     elevation = 4
                 )
             }

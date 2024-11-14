@@ -132,7 +132,7 @@ fun BeggingRequestCompleteScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(290.dp)
+                    .height(250.dp)
                     .border(3.dp, Color(0xFFB2EBF2), RoundedCornerShape(16.dp))
                     .border(6.dp, Color(0xFF99DDF8).copy(alpha = 0.3f), RoundedCornerShape(16.dp))
                     .border(9.dp, Color(0xFF99DDF8).copy(alpha = 0.1f), RoundedCornerShape(16.dp))
@@ -148,7 +148,7 @@ fun BeggingRequestCompleteScreen(
                         painter = painterResource(id = R.drawable.character_old_girl),
                         contentDescription = "Female Character",
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(160.dp)
                     )
                     Text(
                         text = reason ?: "알 수 없음",

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,7 +23,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +35,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,13 +48,16 @@ import coil.compose.AsyncImage
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.ImageUtils.base64ToBitmap
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.PlayMissionViewModel
 import com.ssafy.kidswallet.viewmodel.TestMissionViewModel
+import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String, completionPhoto: String, testMissionViewModel: TestMissionViewModel = viewModel()) {
+fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: String, begMoney: Int, begContent: String, missionContent: String, testMissionViewModel: TestMissionViewModel = viewModel(), viewModel: StateBeggingMissionViewModel) {
     val formattedNumber = NumberUtils.formatNumberWithCommas(begMoney)
 
     Column(
@@ -175,9 +184,19 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = completionPhoto
-            )
+            val bitmap = base64ToBitmap(viewModel.imageText)
+            if (bitmap != null) {
+                Image(
+                    bitmap = bitmap.asImageBitmap(),
+                    contentDescription = "미션 이미지",
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(16.dp)),
+                    contentScale = ContentScale.Fit // 필요에 따라 조정 가능
+                )
+            } else {
+                Text(text = "이미지를 불러올 수 없습니다.")
+            }
         }
         
         Box(
@@ -198,8 +217,8 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     },
                     text = "거절하기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
-                    height = 50,
+                        .width(130.dp) // 원하는 너비 설정
+                        .heightIn(min = 48.dp, max = 56.dp),
                     elevation = 4
                 )
                 BlueButton(
@@ -209,8 +228,8 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     },
                     text = "보내기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
-                    height = 50,
+                        .width(230.dp) // 원하는 너비 설정
+                        .heightIn(min = 48.dp, max = 56.dp),
                     elevation = 4
                 )
             }
