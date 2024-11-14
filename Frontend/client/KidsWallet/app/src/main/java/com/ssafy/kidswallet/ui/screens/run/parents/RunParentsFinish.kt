@@ -137,7 +137,7 @@ fun RunParentsFinishScreen(navController: NavController) {
                             .width(150.dp)
                             .height(GoldenRatioUtils.goldenHeight(150f).dp)
                             .shadow(
-                                elevation = 8.dp,
+                                elevation = 2.dp,
                                 shape = RoundedCornerShape(16.dp),
                             )
                             .background(Color(0xFF6DCEF5))
