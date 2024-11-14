@@ -48,6 +48,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.kidswallet.ui.components.BlueButton
@@ -228,8 +229,9 @@ fun CircularSlider(
         }
 
         // 텍스트 표시 (현재 금액)
+        val formattedNumber = NumberUtils.formatNumberWithCommas(amount)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "${amount}원", style = FontSizes.h24, fontWeight = FontWeight.Bold)
+            Text(text = "${formattedNumber}원", style = FontSizes.h24, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             LightBlueButton(
                 onClick = { showDialog = true },
@@ -247,9 +249,18 @@ fun CircularSlider(
                     Column {
                         OutlinedTextField(
                             value = inputAmount,
-                            onValueChange = { inputAmount = it },
+                            onValueChange = {
+                                val filteredInput = it.text.filter { char -> char.isDigit() } // 숫자만 허용
+                                if (filteredInput.length <= 9) { // 9자리 제한
+                                    inputAmount = TextFieldValue(
+                                        text = filteredInput,
+                                        selection = TextRange(filteredInput.length) // 커서를 항상 텍스트 끝에 위치하도록 설정
+                                    )
+                                }
+                            },
                             label = { Text("금액") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            singleLine = true
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }

@@ -3,6 +3,7 @@ package com.ssafy.kidswallet.ui.screens.login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -56,6 +58,7 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
     var passwordFocused by remember { mutableStateOf((false)) }
     val loginState by viewModel.loginState.collectAsState()
     val errorState by viewModel.errorState.collectAsState()
+    val focusManager = LocalFocusManager.current
 
     if (loginState == true) {
         navController.navigate("mainPage")
@@ -65,7 +68,14 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .clickable(
+                    indication = null, // 터치 피드백을 제거
+                    interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+                ) {
+                    // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+                    focusManager.clearFocus()
+                },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ){
@@ -85,7 +95,11 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
 
             OutlinedTextField(
                 value = id,
-                onValueChange = { id = it },
+                onValueChange = {
+                    if (it.length <= 15) { // 15자 입력 제한
+                        id = it
+                    }
+                },
                 label = { Text("아이디") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,7 +119,8 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF6DCEF5),
                     unfocusedBorderColor = Color( 0xFFD3D0D7)
-                )
+                ),
+                singleLine = true
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -132,7 +147,8 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF6DCEF5),
                     unfocusedBorderColor = Color( 0xFFD3D0D7),
-                )
+                ),
+                singleLine = true
             )
 
             Spacer(modifier = Modifier.height(20.dp))

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -196,8 +195,8 @@ fun ParentBeggingCompleteMissionScreen(
                     },
                     text = "돌아가기",
                     modifier = Modifier
-                        .width(400.dp) // 원하는 너비 설정
-                        .heightIn(min = 48.dp, max = 56.dp),
+                        .width(400.dp), // 원하는 너비 설정
+                    height = 50,
                     elevation = 4
                 )
             }

@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -217,8 +216,8 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     },
                     text = "거절하기",
                     modifier = Modifier
-                        .width(130.dp) // 원하는 너비 설정
-                        .heightIn(min = 48.dp, max = 56.dp),
+                        .width(130.dp), // 원하는 너비 설정
+                    height = 50,
                     elevation = 4
                 )
                 BlueButton(
@@ -228,8 +227,8 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     },
                     text = "보내기",
                     modifier = Modifier
-                        .width(230.dp) // 원하는 너비 설정
-                        .heightIn(min = 48.dp, max = 56.dp),
+                        .width(230.dp), // 원하는 너비 설정
+                    height = 50,
                     elevation = 4
                 )
             }
