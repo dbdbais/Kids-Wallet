@@ -13,9 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Setter
 public class TogetherRunDataResponseDto {
-    private Long savingContractId;
     private String targetTitle;
-    private BigDecimal currentAmount;
+    private BigDecimal targetAmount;
     @JsonProperty("dDay")
     private Long dDay;
     @JsonProperty("isAccept")
