@@ -138,7 +138,7 @@ public class TogetherRunService {
                 String accountId = accountService.makeRandomAccount();
                 Saving saving = savingRepository.findById((long)1).orElseThrow(() -> new IllegalArgumentException("Invalid savingId"));
                 if (saving == null) {
-                    return StatusCode.BAD_REQUEST;
+                    return StatusCode.INVALID_SAVING;
                 }
                 Account newAccount = Account.builder()
                         .user(user)
@@ -174,11 +174,10 @@ public class TogetherRunService {
         List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = new ArrayList<>();
         for (Object[] obj : result) {
             TogetherRunDataResponseDto togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
-                    .savingContractId((Long) obj[0])
-                    .targetTitle((String) obj[1])
-                    .currentAmount((BigDecimal) obj[2])
-                    .dDay((Long) obj[3])
-                    .isAccept(((Long) obj[4]) == 1L)
+                    .targetTitle((String) obj[0])
+                    .targetAmount((BigDecimal) obj[1])
+                    .dDay((Long) obj[2])
+                    .isAccept(((Long) obj[3]) == 1L)
                     .build();
             togetherRunDataResponseDtoList.add(togetherRunDataResponseDto);
         }
@@ -267,4 +266,10 @@ public class TogetherRunService {
         BigDecimal  interestAmount = amount.multiply(interestRate).divide(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(365), 2).multiply(BigDecimal.valueOf(days));
         return interestAmount;
     }
+
+//    public Boolean isCheckAccountBalance(Long userId, BigDecimal amount) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+//        Account account = user.getAccounts().get(0);
+//        return account.getBalance()  >= 0;
+//    }
 }
