@@ -4,8 +4,10 @@ import AccountTransferViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -19,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -50,7 +53,13 @@ fun MyWalletTransferScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { focusManager.clearFocus() }
+            .clickable(
+                indication = null, // 터치 피드백을 제거
+                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+            ) {
+                // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+                focusManager.clearFocus()
+            },
     ) {
         TopSection(navController)
         Spacer(modifier = Modifier.height(16.dp))
@@ -68,18 +77,21 @@ fun MyWalletTransferScreen(
             onTransferClick = {
                 val fromId = storedUserData?.representAccountId ?: ""
                 val amountInt = amount.toIntOrNull() ?: 0
-                val messageToSend: String? = if (message.isBlank()) null else message // 빈 문자열이면 null로 설정
+                val messageToSend: String? = if (message.isBlank()) null else message
 
                 if (fromId.isNotEmpty()) {
-                    // fromId가 유효할 때만 요청을 보냅니다.
-                    viewModel.transferFunds(fromId = fromId, toId = accountNumber, message = messageToSend, amount = amountInt)
+                    viewModel.transferFunds(
+                        fromId = fromId,
+                        toId = accountNumber,
+                        message = messageToSend,
+                        amount = amountInt
+                    )
                 } else {
                     println("Error: fromId is empty. Cannot proceed with the transfer.")
                 }
             }
         )
 
-        // 성공 또는 오류 메시지 표시
         when {
             transferSuccess == true -> {
                 Text(
@@ -88,9 +100,9 @@ fun MyWalletTransferScreen(
                     fontSize = 16.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                LaunchedEffect(Unit) {
-                    navController.navigate("mainPage") {
-                        popUpTo(0) { inclusive = true }
+                LaunchedEffect(transferSuccess) {
+                    navController.navigate("myWallet") {
+                        popUpTo("home") { inclusive = true }
                     }
                 }
             }
@@ -105,6 +117,7 @@ fun MyWalletTransferScreen(
         }
     }
 }
+
 
 @Composable
 fun TopSection(navController: NavController) {
@@ -199,6 +212,8 @@ fun FormSection(
                 }
             },
             shape = RoundedCornerShape(15.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF6DCEF5),
                 unfocusedBorderColor = Color(0xFFD3D0D7)
@@ -208,7 +223,11 @@ fun FormSection(
 
         OutlinedTextField(
             value = amount,
-            onValueChange = onAmountChange,
+            onValueChange = { newValue ->
+                if (newValue.all { it.isDigit() }) {  // 숫자만 입력되도록 필터링
+                    onAmountChange(newValue)
+                }
+            },
             label = { Text("금액") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
@@ -223,6 +242,8 @@ fun FormSection(
                 }
             },
             shape = RoundedCornerShape(15.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF6DCEF5),
                 unfocusedBorderColor = Color(0xFFD3D0D7)
@@ -251,7 +272,7 @@ fun FormSection(
                 }
             },
             shape = RoundedCornerShape(15.dp),
-            maxLines = 1,
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF6DCEF5),
                 unfocusedBorderColor = Color(0xFFD3D0D7)
@@ -267,7 +288,10 @@ fun FormSection(
         Spacer(modifier = Modifier.weight(1f))
 
         BlueButton(
-            onClick = onTransferClick,
+            onClick = {
+                println("보내기 버튼 클릭됨") // 디버깅 출력 추가
+                onTransferClick()
+            },
             text = "보내기",
             modifier = Modifier
                 .fillMaxWidth()

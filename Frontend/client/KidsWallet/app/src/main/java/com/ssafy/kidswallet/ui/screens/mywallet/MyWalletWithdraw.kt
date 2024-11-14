@@ -3,8 +3,10 @@ package com.ssafy.kidswallet.ui.screens.mywallet
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -18,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +48,13 @@ fun MyWalletWithdrawScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { focusManager.clearFocus() }
+            .clickable(
+                indication = null, // 터치 피드백을 제거
+                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+            ) {
+                // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+                focusManager.clearFocus()
+            },
     ) {
         WTopSection(navController)
         Spacer(modifier = Modifier.height(16.dp))
@@ -68,7 +77,7 @@ fun MyWalletWithdrawScreen(navController: NavController) {
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 LaunchedEffect(Unit) {
-                    navController.navigate("mainPage") {
+                    navController.navigate("myWallet") {
                         popUpTo(0) { inclusive = true }
                     }
                 }
@@ -170,7 +179,12 @@ fun WFormSection(
 
         OutlinedTextField(
             value = amount,
-            onValueChange = { amount = it },
+            onValueChange = { newValue ->
+                // 숫자만 포함된 입력값만 업데이트
+                if (newValue.all { it.isDigit() }) {
+                    amount = newValue
+                }
+            },
             label = { Text("금액") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
@@ -185,6 +199,8 @@ fun WFormSection(
                 }
             },
             shape = RoundedCornerShape(15.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF6DCEF5),
                 unfocusedBorderColor = Color(0xFFD3D0D7)
