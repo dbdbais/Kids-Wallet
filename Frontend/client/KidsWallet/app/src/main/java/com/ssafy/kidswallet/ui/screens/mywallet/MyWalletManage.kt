@@ -37,7 +37,6 @@ fun MyWalletManageScreen(
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val weeklyData = accountWeeklyViewModel.accountWeeklyData.collectAsState().value
 
-    // API 호출을 통해 데이터 로드
     storedUserData?.representAccountId?.let { accountId ->
         LaunchedEffect(accountId) {
             accountWeeklyViewModel.fetchAccountWeekly(accountId)
@@ -49,16 +48,15 @@ fun MyWalletManageScreen(
     val balanceDifference = curIncomeMoney - curSpentMoney
     val dailyAmounts = weeklyData?.curListSpent ?: listOf(0, 0, 0, 0, 0, 0, 0)
     val maxAmount = dailyAmounts.maxOrNull() ?: 0
+    val maxAmountIndex = dailyAmounts.indexOf(maxAmount)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Header
         Top(title = "지출 관리", navController = navController)
 
-        // Balance summary
         Column(
             modifier = Modifier.padding(start = 16.dp, top = 50.dp)
         ) {
@@ -95,7 +93,6 @@ fun MyWalletManageScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Weekly Expense Summary Card with white background
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -146,7 +143,6 @@ fun MyWalletManageScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Bar Chart with each day aligned at the bottom
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,7 +156,8 @@ fun MyWalletManageScreen(
                     ) {
                         val days = listOf("월", "화", "수", "목", "금", "토", "일")
                         dailyAmounts.forEachIndexed { index, amount ->
-                            DayExpenseBar(day = days[index], amount = amount, maxAmount = maxAmount)
+                            val showAmount = index == maxAmountIndex
+                            DayExpenseBar(day = days[index], amount = amount, maxAmount = maxAmount, showAmount = showAmount)
                         }
                     }
                 }
@@ -170,10 +167,8 @@ fun MyWalletManageScreen(
 }
 
 @Composable
-fun DayExpenseBar(day: String, amount: Int, maxAmount: Int) {
-    // 바의 최대 높이를 250dp로 설정
+fun DayExpenseBar(day: String, amount: Int, maxAmount: Int, showAmount: Boolean) {
     val maxBarHeight = 250.dp
-    // 현재 금액에 따라 바 길이를 비례적으로 계산
     val barHeight = if (maxAmount > 0) {
         (amount.toFloat() / maxAmount * maxBarHeight.value).dp
     } else {
@@ -182,12 +177,11 @@ fun DayExpenseBar(day: String, amount: Int, maxAmount: Int) {
 
     Box(
         modifier = Modifier
-            .width(40.dp) // Bar와 금액 텍스트의 width가 겹치지 않도록 설정
-            .height(maxBarHeight + 40.dp), // 최대 높이에 텍스트 공간 추가
+            .width(40.dp)
+            .height(maxBarHeight + 40.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        // 금액 텍스트를 Bar와 겹치지 않게 Box의 상단에 별도로 배치
-        if (amount > 0) {
+        if (showAmount) {
             Text(
                 text = NumberUtils.formatNumberWithCommas(amount),
                 style = FontSizes.h16,
@@ -196,25 +190,22 @@ fun DayExpenseBar(day: String, amount: Int, maxAmount: Int) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .offset(y = (-30).dp) // 위로 위치를 조정하여 Bar와 겹치지 않도록
+                    .offset(y = (-30).dp)
             )
         }
 
-        // Bar와 요일 텍스트를 독립적인 Column으로 배치
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier.fillMaxHeight()
         ) {
-            // Bar itself
             Box(
                 modifier = Modifier
                     .width(20.dp)
                     .height(barHeight)
-                    .background(Color(0xFF3290FF), shape = RoundedCornerShape(4.dp)) // 둥근 모서리 적용
+                    .background(Color(0xFF3290FF), shape = RoundedCornerShape(4.dp))
             )
 
-            // Day text (below the bar)
             Text(
                 text = day,
                 style = FontSizes.h16,
