@@ -207,17 +207,23 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (ongoingMission.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_no_transaction),
-                contentDescription = "조르기 내역 없음",
-                modifier = Modifier.size(100.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "진행 미션이 없어요",
-                style = FontSizes.h20,
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_no_transaction),
+                    contentDescription = "조르기 내역 없음",
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "진행 미션이 없어요",
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -279,7 +285,9 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                 modifier = Modifier
                                     .size(40.dp)
                                     .background(
-                                        color = if (kotlin.random.Random.nextBoolean()) Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
+                                        color = if (kotlin.random.Random.nextBoolean()) Color(
+                                            0xFFE9F8FE
+                                        ) else Color(0xFFFFEDEF),
                                         shape = CircleShape
                                     ),
                                 contentAlignment = Alignment.Center
@@ -354,17 +362,23 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (waitingMission.isEmpty() && submitMission.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_no_transaction),
-                contentDescription = "조르기 내역 없음",
-                modifier = Modifier.size(100.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "대기 내역이 없어요",
-                style = FontSizes.h20,
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_no_transaction),
+                    contentDescription = "조르기 내역 없음",
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "대기 내역이 없어요",
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -419,7 +433,9 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                 modifier = Modifier
                                     .size(40.dp)
                                     .background(
-                                        color = if (kotlin.random.Random.nextBoolean()) Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
+                                        color = if (kotlin.random.Random.nextBoolean()) Color(
+                                            0xFFE9F8FE
+                                        ) else Color(0xFFFFEDEF),
                                         shape = CircleShape
                                     ),
                                 contentAlignment = Alignment.Center
@@ -508,7 +524,9 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                 modifier = Modifier
                                     .size(40.dp)
                                     .background(
-                                        color = if (kotlin.random.Random.nextBoolean()) Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
+                                        color = if (kotlin.random.Random.nextBoolean()) Color(
+                                            0xFFE9F8FE
+                                        ) else Color(0xFFFFEDEF),
                                         shape = CircleShape
                                     ),
                                 contentAlignment = Alignment.Center

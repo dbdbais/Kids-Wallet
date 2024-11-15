@@ -148,17 +148,23 @@ fun CompleteMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginV
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (completeMission.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_no_transaction),
-                contentDescription = "조르기 내역 없음",
-                modifier = Modifier.size(100.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "승인 내역이 없어요",
-                style = FontSizes.h20,
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_no_transaction),
+                    contentDescription = "조르기 내역 없음",
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "승인 내역이 없어요",
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         } else {
             LazyColumn(
                 modifier = Modifier
@@ -214,7 +220,9 @@ fun CompleteMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginV
                                 modifier = Modifier
                                     .size(40.dp)
                                     .background(
-                                        color = if (Random.nextBoolean()) Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
+                                        color = if (Random.nextBoolean()) Color(0xFFE9F8FE) else Color(
+                                            0xFFFFEDEF
+                                        ),
                                         shape = CircleShape
                                     ),
                                 contentAlignment = Alignment.Center

@@ -54,6 +54,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.zIndex
 import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
 
@@ -175,28 +176,50 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // 코인 이미지와 금액 텍스트가 포함된 이미지
-            Row(
+            Row (
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp, start = 16.dp), // 아래쪽 여백 추가
-                horizontalArrangement = Arrangement.Start, // Row 내부 요소를 왼쪽으로 정렬
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_coin),
-                    contentDescription = "Coin with Amount",
+            ){
+                Row(
                     modifier = Modifier
+                        .padding(top = 8.dp, bottom = 32.dp, start = 16.dp), // 아래쪽 여백 추가
+                    horizontalArrangement = Arrangement.Start, // Row 내부 요소를 왼쪽으로 정렬
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logo_coin),
+                        contentDescription = "Coin with Amount",
+                        modifier = Modifier
+                            .width(50.dp) // 가로 크기 조절
+                            .height(50.dp) // 세로 크기 조절
+                    )
+
+                    Text(
+                        text = accountState?.data?.firstOrNull()?.curBalance?.let {
+                            "${NumberUtils.formatNumberWithCommas(it)}원" } ?: "0원",
+                        fontWeight = FontWeight.W900,
+                        style = FontSizes.h24,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                Image(
+                    painter = painterResource(id = R.drawable.logout),
+                    contentDescription = "Logout",
+                    modifier = Modifier
+                        .padding(end = 16.dp)
                         .width(50.dp) // 가로 크기 조절
                         .height(50.dp) // 세로 크기 조절
-                )
-
-                Text(
-                    //ㅏtext = storedUserData?.userMoney?.toString() ?: "알 수 없음",
-                    text = accountState?.data?.firstOrNull()?.curBalance?.let {
-                        "${NumberUtils.formatNumberWithCommas(it)}원" } ?: "0원",
-                    fontWeight = FontWeight.W900,
-                    style = FontSizes.h24,
-                    modifier = Modifier.padding(start = 8.dp)
+                        .zIndex(1f) // 요소를 앞으로 가져오기 위해 zIndex 사용
+                        .offset(y= -5.dp)
+                        .clickable {
+                            navController.navigate("loginRouting") {
+                                popUpTo(0) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                 )
             }
 
@@ -371,7 +394,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 8.dp, end = 8.dp, top = 0.dp, bottom = 10.dp)
-                        .clickable { navController.navigate("makeAccount") }
+                        .clickable { navController.navigate("myData") }
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.account_button),
@@ -428,7 +451,7 @@ fun CardApplicationBox(navController: NavController, storedUserData: UserDataMod
             .size(160.dp)
             .clickable {
                 if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false && storedUserData.representAccountId == null) {
-                    navController.navigate("makeAccount")
+                    navController.navigate("myData")
                 } else if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
                     navController.navigate("card")
                 } else {

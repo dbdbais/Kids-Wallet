@@ -246,7 +246,9 @@ fun PeopleSelect(
                                     modifier = Modifier
                                         .size(40.dp)
                                         .background(
-                                            color = if (person.userGender == "MALE") Color(0xFFE9F8FE) else Color(
+                                            color = if (person.userGender == "MALE") Color(
+                                                0xFFE9F8FE
+                                            ) else Color(
                                                 0xFFFFEDEF
                                             ),
                                             shape = CircleShape
@@ -300,17 +302,23 @@ fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel(), loginViewMode
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter,
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_no_transaction),
-                contentDescription = "조르기 내역 없음",
-                modifier = Modifier.size(100.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "최근 내역이 없어요",
-                style = FontSizes.h20,
-                fontWeight = FontWeight.Bold
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_no_transaction),
+                    contentDescription = "조르기 내역 없음",
+                    modifier = Modifier.size(100.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "최근 내역이 없어요",
+                    style = FontSizes.h20,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     } else {
         // 데이터가 있을 때는 가로로 아이템들을 나열
