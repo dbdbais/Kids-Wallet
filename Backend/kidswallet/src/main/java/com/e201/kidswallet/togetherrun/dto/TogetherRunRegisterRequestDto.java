@@ -11,6 +11,7 @@ public class TogetherRunRegisterRequestDto {
     private long parentsId;
     private long childId;
     private String targetTitle;
+    private String targetImage;
     private BigDecimal targetAmount;
     private LocalDate targetDate;
     private BigDecimal parentsContribute;

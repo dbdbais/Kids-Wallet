@@ -2,7 +2,8 @@ package com.e201.kidswallet.togetherrun.controller;
 
 import com.e201.kidswallet.common.ResponseDto;
 import com.e201.kidswallet.common.exception.StatusCode;
-import com.e201.kidswallet.togetherrun.dto.*;
+import com.e201.kidswallet.togetherrun.dto.TogetherRunAnswerRequestDto;
+import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
 import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
@@ -12,15 +13,12 @@ import com.e201.kidswallet.togetherrun.service.TogetherRunService;
 import com.e201.kidswallet.user.entity.User;
 import com.e201.kidswallet.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/togetherrun")
@@ -41,15 +39,9 @@ public class TogetherController {
         this.togetherRunRepository = togetherRunRepository;
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ResponseDto> postTogetherRunRegister(@Parameter(description = "JSON data for target") @RequestPart("json") TogetherRunRegisterRequestDto togetherRunRegisterRequestDto,
-                                                               @Parameter(description = "File to upload") @RequestPart(value = "targetImage", required = false) MultipartFile targetImage) throws IOException {
-        StatusCode returnCode = null;
-        if (targetImage == null) {
-            returnCode = togetherRunService.togetherRunRegister(togetherRunRegisterRequestDto, null);
-        } else {
-            returnCode = togetherRunService.togetherRunRegister(togetherRunRegisterRequestDto, targetImage);
-        }
+    @PostMapping(value = "/register")
+    public ResponseEntity<ResponseDto> postTogetherRunRegister(@RequestBody TogetherRunRegisterRequestDto togetherRunRegisterRequestDto) throws IOException {
+        StatusCode returnCode = togetherRunService.togetherRunRegister(togetherRunRegisterRequestDto);
         return ResponseDto.response(returnCode);
     }
 
