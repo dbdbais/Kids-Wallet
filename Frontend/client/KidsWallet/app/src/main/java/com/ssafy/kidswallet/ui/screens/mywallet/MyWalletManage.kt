@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.mywallet
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,6 +12,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.AccountWeeklyViewModel
@@ -49,6 +52,7 @@ fun MyWalletManageScreen(
     val dailyAmounts = weeklyData?.curListSpent ?: listOf(0, 0, 0, 0, 0, 0, 0)
     val maxAmount = dailyAmounts.maxOrNull() ?: 0
     val maxAmountIndex = dailyAmounts.indexOf(maxAmount)
+    val allAmountsZero = dailyAmounts.all { it == 0 }
 
     Column(
         modifier = Modifier
@@ -91,73 +95,94 @@ fun MyWalletManageScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 16.dp),
-            shape = RoundedCornerShape(45.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
-        ) {
+        if (allAmountsZero) {
+            // 거래내역이 없는 경우 표시
             Column(
-                modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "이번주 동안",
-                    style = FontSizes.h20,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
+                Image(
+                    painter = painterResource(id = R.drawable.icon_no_transaction),
+                    contentDescription = "거래내역 없음",
+                    modifier = Modifier.size(100.dp)
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color(0xFF3290FF))) {
-                            append("${NumberUtils.formatNumberWithCommas(curSpentMoney)}원")
-                        }
-                        append(" 썼어요")
-                    },
+                    text = "거래내역이 없어요",
                     style = FontSizes.h20,
                     fontWeight = FontWeight.Bold
                 )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = buildAnnotatedString {
-                        append("지난주 보다 ")
-                        withStyle(style = SpanStyle(color = Color(0x803290FF))) {
-                            val prevSpentMoney = weeklyData?.prevSpentMoney ?: 0
-                            val spentDifference = curSpentMoney - prevSpentMoney
-                            append("${NumberUtils.formatNumberWithCommas(spentDifference)}원")
-                        }
-                        append(" 더 썼어요")
-                    },
-                    style = FontSizes.h16,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0x808C8595)
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Box(
+            }
+        } else {
+            // 거래내역이 있는 경우 기존 카드와 바 차트 표시
+            Spacer(modifier = Modifier.height(50.dp))
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 16.dp),
+                shape = RoundedCornerShape(45.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                        .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Bottom
+                    Text(
+                        text = "이번주 동안",
+                        style = FontSizes.h20,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color(0xFF3290FF))) {
+                                append("${NumberUtils.formatNumberWithCommas(curSpentMoney)}원")
+                            }
+                            append(" 썼어요")
+                        },
+                        style = FontSizes.h20,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = buildAnnotatedString {
+                            append("지난주 보다 ")
+                            withStyle(style = SpanStyle(color = Color(0x803290FF))) {
+                                val prevSpentMoney = weeklyData?.prevSpentMoney ?: 0
+                                val spentDifference = curSpentMoney - prevSpentMoney
+                                append("${NumberUtils.formatNumberWithCommas(spentDifference)}원")
+                            }
+                            append(" 더 썼어요")
+                        },
+                        style = FontSizes.h16,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0x808C8595)
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                     ) {
-                        val days = listOf("월", "화", "수", "목", "금", "토", "일")
-                        dailyAmounts.forEachIndexed { index, amount ->
-                            val showAmount = index == maxAmountIndex
-                            DayExpenseBar(day = days[index], amount = amount, maxAmount = maxAmount, showAmount = showAmount)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            val days = listOf("월", "화", "수", "목", "금", "토", "일")
+                            dailyAmounts.forEachIndexed { index, amount ->
+                                val showAmount = index == maxAmountIndex
+                                DayExpenseBar(day = days[index], amount = amount, maxAmount = maxAmount, showAmount = showAmount)
+                            }
                         }
                     }
                 }
@@ -165,6 +190,7 @@ fun MyWalletManageScreen(
         }
     }
 }
+
 
 @Composable
 fun DayExpenseBar(day: String, amount: Int, maxAmount: Int, showAmount: Boolean) {
@@ -175,13 +201,16 @@ fun DayExpenseBar(day: String, amount: Int, maxAmount: Int, showAmount: Boolean)
         0.dp
     }
 
+    // 금액이 0일 때 showAmount를 false로 설정하여 숫자가 보이지 않도록 합니다.
+    val displayAmount = showAmount && amount != 0
+
     Box(
         modifier = Modifier
             .width(40.dp)
             .height(maxBarHeight + 40.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        if (showAmount) {
+        if (displayAmount) {
             Text(
                 text = NumberUtils.formatNumberWithCommas(amount),
                 style = FontSizes.h16,
@@ -216,4 +245,5 @@ fun DayExpenseBar(day: String, amount: Int, maxAmount: Int, showAmount: Boolean)
         }
     }
 }
+
 
