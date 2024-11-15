@@ -19,7 +19,7 @@ android {
 
         // 배포서버
         create("release") {
-            storeFile = file("/root/kidswallet-release-key.jks")
+            storeFile = file("/kidswallet-release-key.jks")
             storePassword = "kidswallet"
             keyAlias = "kidswallet-key-alias"
             keyPassword = "kidswallet"
