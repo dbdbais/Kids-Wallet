@@ -1,10 +1,11 @@
 package com.ssafy.kidswallet.data.model
 
 data class TogetherListModel(
-    val savingContractId: Int,
+    val togetherRunId: Int,
     val targetTitle: String,
-    val currentAmount: Int,
-    val dDay: Int
+    val targetAmount: Int,
+    val dDay: Int,
+    val isAccept : Boolean
 )
 
 data class TogetherListResponse(
