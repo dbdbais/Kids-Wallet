@@ -43,7 +43,7 @@ public class TransactionService {
 
 
 
-        StatusCode transferResult = accountService.transferMoney(new TransferMoneyDTO(fromAccountId,toAccountId,fromUserName+"(MIssion)",money));
+        StatusCode transferResult = accountService.transferMoney(new TransferMoneyDTO(fromAccountId,toAccountId,"MIssion비!",money));
         if(transferResult != StatusCode.SUCCESS){
             log.error("transferMoney fail");
             return transferResult;
