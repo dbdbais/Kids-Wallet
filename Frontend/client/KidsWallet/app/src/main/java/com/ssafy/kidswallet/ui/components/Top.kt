@@ -46,3 +46,31 @@ fun Top(title: String, navController: NavController) {
         )
     }
 }
+
+@Composable
+fun TopToMain(title: String, navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.icon_back),
+            contentDescription = "Back to Main",
+            modifier = Modifier
+                .size(24.dp)
+                .clickable {
+                    navController.navigate("mainPage") {
+                        popUpTo("mainPage") { inclusive = true }
+                    }
+                }
+        )
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}

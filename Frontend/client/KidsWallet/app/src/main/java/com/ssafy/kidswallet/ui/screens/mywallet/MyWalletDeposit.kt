@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -45,6 +46,18 @@ fun MyWalletDepositScreen(navController: NavController) {
     val depositSuccess by depositViewModel.depositSuccess.collectAsState()
     val depositError by depositViewModel.depositError.collectAsState()
 
+    // Dialog 상태 관리
+    val showDialog = remember { mutableStateOf(false) }
+    val dialogMessage = remember { mutableStateOf("") }
+
+    // 입금 성공 시 다이얼로그 표시
+    LaunchedEffect(depositSuccess) {
+        if (depositSuccess == true) {
+            dialogMessage.value = "입금이 성공적으로 완료되었습니다!"
+            showDialog.value = true
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,32 +80,56 @@ fun MyWalletDepositScreen(navController: NavController) {
             loginViewModel = loginViewModel
         )
 
-        // 성공 또는 오류 메시지 표시
-        when {
-            depositSuccess == true -> {
-                Text(
-                    text = "충전이 성공적으로 완료되었습니다!",
-                    color = Color.Green,
-                    fontSize = 16.sp,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                LaunchedEffect(Unit) {
-                    navController.navigate("myWallet") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
-            }
-            depositError != null -> {
-                Text(
-                    text = depositError ?: "충전 오류가 발생했습니다.",
-                    color = Color.Red,
-                    fontSize = 16.sp,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-            }
+        // 오류 메시지 표시
+        if (depositError != null) {
+            Text(
+                text = depositError ?: "충전 오류가 발생했습니다.",
+                color = Color.Red,
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
+
+    // 성공 메시지를 위한 AlertDialog
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                showDialog.value = false
+            },
+            title = {
+                Text(
+                    text = "성공",
+                    color = Color(0xFF77DD77),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = dialogMessage.value,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF8C8595)
+                )
+            },
+            containerColor = Color.White,
+            confirmButton = {
+                BlueButton(
+                    onClick = {
+                        showDialog.value = false
+                        navController.navigate("myWallet") {
+                            popUpTo("home") { inclusive = true }
+                        }
+                    },
+                    height = 40,
+                    modifier = Modifier.width(260.dp),
+                    elevation = 0,
+                    text = "확인"
+                )
+            }
+        )
+    }
 }
+
 
 @Composable
 fun DTopSection(navController: NavController) {
@@ -180,7 +217,7 @@ fun DFormSection(
             value = amount,
             onValueChange = { newValue ->
                 // 숫자만 포함된 입력값만 업데이트
-                if (newValue.all { it.isDigit() }) {
+                if (newValue.all { it.isDigit() } && newValue.length <= 8) {
                     amount = newValue
                 }
             },
