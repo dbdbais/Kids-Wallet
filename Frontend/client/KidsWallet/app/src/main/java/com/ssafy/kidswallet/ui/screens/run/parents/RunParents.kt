@@ -30,6 +30,8 @@ import coil.compose.AsyncImage
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.ImageUtils.getBase64FromDrawable
+import com.ssafy.kidswallet.ui.components.ImageUtils.getBase64FromUri
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import java.text.SimpleDateFormat
@@ -231,7 +233,10 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
         BlueButton(
             onClick = {
                 val selectedDateText = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date(selectedDate))
-                viewModel.setGoalAndDate(text, "${selectedDateText}까지\n멤버와 함께 목표를 달성 하세요")
+                val base64String = imageUri?.let { uri ->
+                    getBase64FromUri(context, uri)
+                } ?: getBase64FromDrawable(context, R.drawable.logo_full)
+                viewModel.setGoalAndDateAndBase64Text(text, "${selectedDateText}까지\n멤버와 함께 목표를 달성 하세요", base64String ?: "")
                 navController.navigate("runParentsMoney")
             },
             text = "다음",

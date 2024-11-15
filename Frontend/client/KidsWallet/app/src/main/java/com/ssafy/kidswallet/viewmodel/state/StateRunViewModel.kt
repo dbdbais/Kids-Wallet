@@ -13,9 +13,17 @@ class StateRunViewModel : ViewModel() {
     var selectedDateText by mutableStateOf("")
         private set
 
+    var runImageText by mutableStateOf("")
+        private set
+
     // 목표와 날짜를 설정하는 함수
-    fun setGoalAndDate(goal: String, date: String) {
+    fun setGoalAndDateAndBase64Text(goal: String, date: String, text: String) {
         goalText = goal
         selectedDateText = date
+        runImageText = text
+    }
+
+    fun resetRunImageText() {
+        runImageText = ""
     }
 }

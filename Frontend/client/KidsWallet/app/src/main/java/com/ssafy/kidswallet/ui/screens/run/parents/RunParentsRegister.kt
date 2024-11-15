@@ -9,7 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.ImageUtils.base64ToBitmap
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
@@ -27,7 +31,7 @@ import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 @Composable
 fun RunParentsRegisterScreen(
     navController: NavController,
-    viewModel: StateRunViewModel,
+    viewModel: StateRunViewModel = viewModel(),
     stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel()
 ) {
     Column(
@@ -66,11 +70,20 @@ fun RunParentsRegisterScreen(
                     modifier = Modifier
                         .wrapContentWidth()
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.icon_bundle),
-                        contentDescription = "달리기 이미지",
-                        modifier = Modifier.size(120.dp)
-                    )
+                    val bitmap = base64ToBitmap(viewModel.runImageText)
+                    if (bitmap != null) {
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = "달리기 이미지",
+                            modifier = Modifier.size(120.dp)
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(id = R.drawable.icon_bundle),
+                            contentDescription = "달리기 이미지",
+                            modifier = Modifier.size(120.dp)
+                        )
+                    }
 
                     Text(
                         text = "${NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.togetherGoalMoney)}원 달리기",
@@ -126,6 +139,7 @@ fun RunParentsRegisterScreen(
             onClick = {
                 // 상태 초기화 호출
                 stateRunMoneyViewModel.resetGoals()
+                viewModel.resetRunImageText()
 
                 // 네비게이션 이동
                 navController.navigate("run") {
