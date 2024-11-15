@@ -43,17 +43,18 @@ public class TransactionService {
 
 
 
+        StatusCode transferResult = accountService.transferMoney(new TransferMoneyDTO(fromAccountId,toAccountId,fromUserName+"(MIssion)",money));
+        if(transferResult != StatusCode.SUCCESS){
+            log.error("transferMoney fail");
+            return transferResult;
+        }
 
         StatusCode missionCompleteCheckResult= missionService.missionCompleteCheck(requestDto);
-        StatusCode transferResult = accountService.transferMoney(new TransferMoneyDTO(fromAccountId,toAccountId,fromUserName+"(MIssion)",money));
-
         if(missionCompleteCheckResult != StatusCode.SUCCESS){
+            log.error("missionComplete fail");
             return missionCompleteCheckResult;
         }
 
-        if(transferResult != StatusCode.SUCCESS){
-            return transferResult;
-        }
 
         return StatusCode.SUCCESS;
     }
