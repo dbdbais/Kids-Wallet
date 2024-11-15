@@ -218,7 +218,7 @@ fun WFormSection(
             value = amount,
             onValueChange = { newValue ->
                 // 숫자만 포함된 입력값만 업데이트
-                if (newValue.all { it.isDigit() }) {
+                if (newValue.all { it.isDigit() } && newValue.length <= 8) {
                     amount = newValue
                 }
             },

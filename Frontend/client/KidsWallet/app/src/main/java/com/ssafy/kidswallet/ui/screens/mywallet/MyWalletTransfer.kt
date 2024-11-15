@@ -281,7 +281,7 @@ fun FormSection(
         OutlinedTextField(
             value = amount,
             onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {  // 숫자만 입력되도록 필터링
+                if (newValue.all { it.isDigit() } && newValue.length <= 8) {  // 숫자만 입력되도록 필터링 및 8자리 제한
                     onAmountChange(newValue)
                 }
             },
