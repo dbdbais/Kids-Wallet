@@ -135,7 +135,6 @@ public class MissionService {
         mission.changeMissionStatusAndCompleteTime(status);
 
         log.info("Updating mission status: missionId=" + requestDto.getMissionId() + ", status=" + status + ", updateTime=" + LocalDateTime.now());
-        //TODO: 계좌로 입금 로직 추가
 
         return StatusCode.SUCCESS;
     }
@@ -175,7 +174,13 @@ public class MissionService {
                 MissionDto missionDto;
                 if(m!=null){ // 조르기는 있어도 미션이 없을 수도 있기 때문에 예외처리
                     //base64로 인코딩
-                    String base64String = Base64.getEncoder().encodeToString(m.getCompletionPhoto());
+                    String base64String;
+                    if(m.getCompletionPhoto()==null) {
+                        base64String=null;
+                    }
+                    else{
+                        base64String = Base64.getEncoder().encodeToString(m.getCompletionPhoto());
+                    }
                     missionDto = new MissionDto(
                             m.getMissionId(),
                             m.getMissionStatus(),
