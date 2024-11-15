@@ -92,7 +92,7 @@ public class SavingInterestBatchConfig {
     }
 
     @Bean
-    public ItemWriter<SavingContract> interestResultWriter(SavingContractRepository savingContractRepository) {
+    public ItemWriter<SavingContract> interestResultWriter(SavingContractRepository savingContractRepository, TogetherRunService togetherRunService) {
         return new ItemWriter<SavingContract>() {
             @Override
             public void write(Chunk<? extends SavingContract> chunk) throws Exception {
@@ -102,6 +102,7 @@ public class SavingInterestBatchConfig {
                         if (item.getExpiredAt() != null && item.getExpiredAt().isEqual(LocalDate.now())) {
                             item.setStatus(SavingContractStatus.COMPLETED);
                             item.setDeletedAt(LocalDateTime.now());
+                            togetherRunService.togetherRunComplete(item.getSavingContractId());
                         }
                         savingContractRepository.save(item);
                     } catch (Exception e) {

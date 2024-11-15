@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Setter
 public class TogetherRunDataResponseDto {
+    private Long togetherRunId;
     private String targetTitle;
     private BigDecimal targetAmount;
     @JsonProperty("dDay")

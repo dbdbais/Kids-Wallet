@@ -19,6 +19,7 @@ import com.e201.kidswallet.togetherrun.repository.SavingRepository;
 import com.e201.kidswallet.togetherrun.repository.TogetherRunRepository;
 import com.e201.kidswallet.user.entity.Relation;
 import com.e201.kidswallet.user.entity.User;
+import com.e201.kidswallet.user.enums.Role;
 import com.e201.kidswallet.user.repository.RelationRepository;
 import com.e201.kidswallet.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -69,13 +70,15 @@ public class TogetherRunService {
         this.accountRepository = accountRepository;
     }
 
-    public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto)
+    public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto, MultipartFile targetImage)
             throws IOException {
 
-        User user = userRepository.findById(togetherRunRegisterRequestDto.getChildId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
-
-        if (user.getRepresentAccountId() == null) {
+        User user = userRepository.findById(togetherRunRegisterRequestDto.getChildId()).orElse(null);
+        if (user == null) {
+            return StatusCode.NO_USER;
+        } else if(!(user.getUserRole() == Role.CHILD)) {
+            return StatusCode.FORBIDDEN_ACCESS;
+        } else if (user.getRepresentAccountId() == null) {
             return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
         }
 
@@ -96,22 +99,11 @@ public class TogetherRunService {
             return StatusCode.NOT_ENOUGH_MONEY;
         }
 
-        String imagePath = null;
-        String urlPath = null;
-        try {
-            imagePath = saveImage(togetherRunRegisterRequestDto.getTargetImage());
-            Path path = Paths.get(imagePath);
-            urlPath = path.subpath(4, path.getNameCount()).toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         User parent = userRepository.findById(togetherRunRegisterRequestDto.getParentsId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
         TogetherRun togetherRun = TogetherRun.builder()
                 .relation(relation)
                 .targetTitle(togetherRunRegisterRequestDto.getTargetTitle())
-                .targetImage(urlPath)
                 .parentsAccount(parent.getAccounts().get(0).getAccountId())
                 .parentsContribute(togetherRunRegisterRequestDto.getParentsContribute())
                 .childAccount(user.getAccounts().get(0).getAccountId())
@@ -119,6 +111,19 @@ public class TogetherRunService {
                 .targetAmount(togetherRunRegisterRequestDto.getTargetAmount())
                 .targetDate(togetherRunRegisterRequestDto.getTargetDate())
                 .build();
+
+        if (targetImage != null) {
+            String imagePath = null;
+            String urlPath = null;
+            try {
+                imagePath = saveImage(targetImage);
+                Path path = Paths.get(imagePath);
+                urlPath = path.subpath(4, path.getNameCount()).toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            togetherRun.setTargetImage(urlPath);
+        }
 
         // FCM notification
         try {
@@ -130,8 +135,18 @@ public class TogetherRunService {
     }
 
     public StatusCode togetherRunAnswer(Long togetherRunId, TogetherRunStatus isAccept, TogetherRunAnswerRequestDto togetherRunAnswerRequestDto) {
-        TogetherRun togetherRun = togetherRunRepository.findById(togetherRunId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid togetherRunId"));
+        TogetherRun togetherRun = togetherRunRepository.findById(togetherRunId).orElse(null);
+        if (togetherRun == null) {
+            return StatusCode.INVALID_TOGETHERRUN;
+        }
+
+        User parents = userRepository.findById(togetherRunAnswerRequestDto.getUserId()).orElse(null);
+        if (parents == null) {
+            return StatusCode.NO_USER;
+        } else if(!(parents.getUserRole() == Role.PARENT)) {
+            return StatusCode.FORBIDDEN_ACCESS;
+        }
+
         togetherRun.setStatus(isAccept);
         try {
             togetherRunRepository.save(togetherRun);
@@ -139,8 +154,7 @@ public class TogetherRunService {
             System.out.println("togetherRunRepository Error");
             return StatusCode.BAD_REQUEST;
         }
-        User parents = userRepository.findById(togetherRunAnswerRequestDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+
         if (parents.getRepresentAccountId() == null) {
             return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
         }
@@ -220,10 +234,11 @@ public class TogetherRunService {
         List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = new ArrayList<>();
         for (Object[] obj : result) {
             TogetherRunDataResponseDto togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
-                    .targetTitle((String) obj[0])
-                    .targetAmount((BigDecimal) obj[1])
-                    .dDay((Long) obj[2])
-                    .isAccept(((Long) obj[3]) == 1L)
+                    .togetherRunId((Long) obj[0])
+                    .targetTitle((String) obj[1])
+                    .targetAmount((BigDecimal) obj[2])
+                    .dDay((Long) obj[3])
+                    .isAccept(((Long) obj[4]) == 1L)
                     .build();
             togetherRunDataResponseDtoList.add(togetherRunDataResponseDto);
         }
@@ -257,6 +272,7 @@ public class TogetherRunService {
             Long savingContractId = savingContract.getSavingContractId();
             try {
                 togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
+                        .savingContractId(savingContract.getSavingContractId())
                         .targetTitle(togetherRun.getTargetTitle())
                         .targetImage(togetherRun.getTargetImage())
                         .targetAmount(togetherRun.getTargetAmount())
@@ -278,10 +294,26 @@ public class TogetherRunService {
         return togetherRunDetailResponseDto;
     }
 
-    public TogetherRunCancelResponseDto togetherRunDelete(Long savingContractId) {
+    @Transactional
+    public TogetherRunCancelResponseDto togetherRunCancel(Long savingContractId) {
         SavingContract savingContract = savingContractRepository.findById(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
         savingContract.setStatus(SavingContractStatus.CANCELED);
         savingContract.setDeletedAt(LocalDateTime.now());
+
+        TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
+        BigDecimal childAmount = savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getChild().getUserId());
+        BigDecimal parentsAmount = savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContractId, togetherRun.getRelation().getParent().getUserId());
+        TransferMoneyDTO childTransferMoneyDTO = makeTransferMoneyDTO(savingContract.getSavingAccount(), togetherRun.getChildAccount(), childAmount.intValue());
+        TransferMoneyDTO parentsTransferMoneyDTO = makeTransferMoneyDTO(savingContract.getSavingAccount(), togetherRun.getParentsAccount(), parentsAmount.intValue());
+        StatusCode childTransferResult = null;
+        StatusCode parentsTransferResult = null;
+        childTransferResult = accountService.transferMoney(childTransferMoneyDTO);
+        parentsTransferResult = accountService.transferMoney(parentsTransferMoneyDTO);
+        if (childTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus() || parentsTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus()) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
+        }
+
         TogetherRunCancelResponseDto togetherRunCancelResponseDto = null;
         try {
             savingContractRepository.save(savingContract);
@@ -293,6 +325,13 @@ public class TogetherRunService {
 
             return togetherRunCancelResponseDto;
         }
+    }
+
+    public void togetherRunComplete(Long savingContractId) {
+        SavingContract savingContract = savingContractRepository.findById(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
+        TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
+        TransferMoneyDTO transferMoneyDTO = makeTransferMoneyDTO(savingContract.getSavingAccount(), togetherRun.getChildAccount(), savingContract.getCurrentAmount().intValue());;
+        StatusCode transferResult = accountService.transferMoney(transferMoneyDTO);
     }
 
     public StatusCode togetherRunComplete(SavingContract savingContract) {

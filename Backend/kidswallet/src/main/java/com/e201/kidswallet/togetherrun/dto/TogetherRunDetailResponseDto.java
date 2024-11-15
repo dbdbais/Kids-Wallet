@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class TogetherRunDetailResponseDto {
+    private Long savingContractId;
     private String targetTitle;
     private String targetImage;
     private BigDecimal targetAmount;
