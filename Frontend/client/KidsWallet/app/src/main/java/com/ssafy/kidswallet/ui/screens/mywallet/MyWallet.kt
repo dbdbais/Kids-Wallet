@@ -98,7 +98,7 @@ fun MyWalletScreen(
                         horizontalAlignment = Alignment.End
                     ) {
                         Text(
-                            text = "남은 돈ㅜ",
+                            text = "남은 돈",
                             style = FontSizes.h16,
                             color = Color(0xFF5EA0BB),
                             fontWeight = FontWeight.Bold
