@@ -2,6 +2,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -32,6 +33,7 @@ fun QuizScreen(navController: NavController) {
     val quiz = mapOf(
         "title" to "은행에 돈을 저축하면 받을 수 있는 것은 무엇일까요?",
         "options" to listOf("1. 이자", "2. 세금", "3. 수수료", "4. 벌금"),
+        "comment" to "은행에 돈을 저축하면 일정 기간 돈을 맡긴 대가로 '이자'라는 추가 금액을 받을 수 있습니다",
         "answer" to "1. 이자"
     )
 
@@ -94,7 +96,11 @@ fun QuizScreen(navController: NavController) {
                                         .weight(1f)
                                         .padding(4.dp)
                                         .padding(8.dp)
-                                        .clickable { selectedOptionIndex.value = globalIndex }, // 클릭 시 선택된 인덱스 업데이트
+                                        .clickable(
+                                            onClick = { selectedOptionIndex.value = globalIndex },
+                                            indication = null, // Removes the click effect
+                                            interactionSource = remember { MutableInteractionSource() } // Prevents default interaction behavior
+                                        ),
                                     contentAlignment = if (index == 0) Alignment.CenterStart else Alignment.CenterEnd
                                 ) {
                                     Text(
@@ -139,13 +145,42 @@ fun QuizScreen(navController: NavController) {
     }
     if (showDialog.value) {
         AlertDialog(
-            onDismissRequest = { showDialog.value = false },
-            title = { Text(text = "결과") },
-            text = { Text(text = dialogMessage.value) },
+            onDismissRequest = {
+                showDialog.value = false
+                if (dialogMessage.value == "정답입니다!") {
+                    showDialog.value = true
+                }},
+            title = {
+                Text(
+                    text = dialogMessage.value,
+                    color = if (dialogMessage.value == "정답입니다!") Color(0xFF77DD77) else Color(0xFFFFA1B0),
+                    fontWeight = FontWeight.Bold // Makes the text bold
+                )
+            },
+            text = {
+                Text(
+                    text = if (dialogMessage.value == "정답입니다!") {
+                        quiz["comment"] as String
+                    } else {
+                        "거의 다 왔어요! 다시 생각해보아요!"
+                    },
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            containerColor = Color.White,
             confirmButton = {
-                Button(onClick = { showDialog.value = false }) {
-                    Text("확인")
-                }
+                BlueButton(
+                    onClick = {
+                        showDialog.value = false
+                        if (dialogMessage.value == "정답입니다!") {
+                            navController.navigate("mainPage") // Navigate to the main page
+                        }
+                    },
+                    height = 40,
+                    modifier = Modifier.width(260.dp), // 원하는 너비 설정
+                    elevation = 0,
+                    text = "확인"
+                )
             }
         )
     }
