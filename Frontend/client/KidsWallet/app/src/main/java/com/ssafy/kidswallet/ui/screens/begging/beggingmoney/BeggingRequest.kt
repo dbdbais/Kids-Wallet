@@ -251,7 +251,7 @@ fun CircularSlider(
                             value = inputAmount,
                             onValueChange = {
                                 val filteredInput = it.text.filter { char -> char.isDigit() } // 숫자만 허용
-                                if (filteredInput.length <= 9) { // 9자리 제한
+                                if (filteredInput.length <= 8) { // 9자리 제한
                                     inputAmount = TextFieldValue(
                                         text = filteredInput,
                                         selection = TextRange(filteredInput.length) // 커서를 항상 텍스트 끝에 위치하도록 설정

@@ -301,11 +301,15 @@ fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel(), loginViewMode
             contentAlignment = Alignment.TopCenter,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.empty), // 이미지 리소스
-                contentDescription = "Empty Icon",
-                modifier = Modifier
-                    .size(170.dp)
-                    .graphicsLayer(alpha = 0.8f) // 투명도 조절
+                painter = painterResource(id = R.drawable.icon_no_transaction),
+                contentDescription = "조르기 내역 없음",
+                modifier = Modifier.size(100.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "최근 내역이 없어요",
+                style = FontSizes.h20,
+                fontWeight = FontWeight.Bold
             )
         }
     } else {
@@ -384,16 +388,4 @@ fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel(), loginViewMode
             }
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560", // Galaxy S24 Ultra 해상도에 맞추기
-    showSystemUi = true
-)
-@Composable
-fun BeggingMoneyScreenPreview() {
-    // 임시 NavController를 생성하여 프리뷰에서 사용
-    val navController = rememberNavController()
-    BeggingMoneyScreen(navController = navController)
 }

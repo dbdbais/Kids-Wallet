@@ -126,7 +126,7 @@ fun ParentBeggingTestCompleteScreen(
                         painter = painterResource(id = R.drawable.character_old_girl),
                         contentDescription = "Female Character",
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(160.dp)
                     )
                     Text(
                         text = begContent ?: "알 수 없음",
