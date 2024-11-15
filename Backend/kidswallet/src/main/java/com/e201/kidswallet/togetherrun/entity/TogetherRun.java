@@ -35,8 +35,9 @@ public class TogetherRun {
     @Column(name = "target_title")
     private String targetTitle;
 
+    @Lob
     @Column(name = "target_image")
-    private String targetImage;
+    private byte[] targetImage;
 
     @Column(name = "parents_account")
     private String parentsAccount;

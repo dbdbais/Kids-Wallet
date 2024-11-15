@@ -5,6 +5,8 @@ import com.e201.kidswallet.account.entity.Account;
 import com.e201.kidswallet.account.repository.AccountRepository;
 import com.e201.kidswallet.account.service.AccountService;
 import com.e201.kidswallet.common.exception.StatusCode;
+import com.e201.kidswallet.mission.dto.MissionCompleteRequestDto;
+import com.e201.kidswallet.mission.enums.Status;
 import com.e201.kidswallet.togetherrun.dto.*;
 import com.e201.kidswallet.togetherrun.entity.Saving;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
@@ -38,6 +40,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,7 +73,7 @@ public class TogetherRunService {
         this.accountRepository = accountRepository;
     }
 
-    public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto, MultipartFile targetImage)
+    public StatusCode togetherRunRegister(TogetherRunRegisterRequestDto togetherRunRegisterRequestDto)
             throws IOException {
 
         User user = userRepository.findById(togetherRunRegisterRequestDto.getChildId()).orElse(null);
@@ -111,18 +114,19 @@ public class TogetherRunService {
                 .targetAmount(togetherRunRegisterRequestDto.getTargetAmount())
                 .targetDate(togetherRunRegisterRequestDto.getTargetDate())
                 .build();
-
+        String targetImage = togetherRunRegisterRequestDto.getTargetImage();
         if (targetImage != null) {
-            String imagePath = null;
-            String urlPath = null;
-            try {
-                imagePath = saveImage(targetImage);
-                Path path = Paths.get(imagePath);
-                urlPath = path.subpath(4, path.getNameCount()).toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            togetherRun.setTargetImage(urlPath);
+//            String imagePath = null;
+//            String urlPath = null;
+//            try {
+//                imagePath = saveImage(targetImage);
+//                Path path = Paths.get(imagePath);
+//                urlPath = path.subpath(4, path.getNameCount()).toString();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            togetherRun.setTargetImage(urlPath);
+            togetherRun.setTargetImage(base64toBytes(targetImage));
         }
 
         // FCM notification
@@ -254,7 +258,6 @@ public class TogetherRunService {
             try {
                 togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
                         .targetTitle(togetherRun.getTargetTitle())
-                        .targetImage(togetherRun.getTargetImage())
                         .targetAmount(togetherRun.getTargetAmount())
                         .expiredAt(togetherRun.getTargetDate())
                         .dDay(LocalDate.now().compareTo(togetherRun.getCreatedAt().toLocalDate()))
@@ -274,7 +277,6 @@ public class TogetherRunService {
                 togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
                         .savingContractId(savingContract.getSavingContractId())
                         .targetTitle(togetherRun.getTargetTitle())
-                        .targetImage(togetherRun.getTargetImage())
                         .targetAmount(togetherRun.getTargetAmount())
                         .expiredAt(savingContract.getExpiredAt())
                         .dDay(LocalDate.now().compareTo(savingContract.getExpiredAt()))
@@ -289,6 +291,10 @@ public class TogetherRunService {
             } catch (Exception e) {
                 return null;
             }
+        }
+
+        if (togetherRun.getTargetImage() != null) {
+            togetherRunDetailResponseDto.setTargetImage(Base64.getEncoder().encodeToString(togetherRun.getTargetImage()));
         }
 
         return togetherRunDetailResponseDto;
@@ -342,6 +348,16 @@ public class TogetherRunService {
             return StatusCode.BAD_REQUEST;
         }
         return StatusCode.SUCCESS;
+    }
+
+    public byte[] base64toBytes(String base64Image) {
+        final long MAX_LONGBLOB_SIZE = 4L * 1024 * 1024 * 1024;
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+        if(imageBytes.length > MAX_LONGBLOB_SIZE) {
+            return null;
+        }
+        return imageBytes;
     }
 
     public String saveImage(MultipartFile file) throws IOException {
