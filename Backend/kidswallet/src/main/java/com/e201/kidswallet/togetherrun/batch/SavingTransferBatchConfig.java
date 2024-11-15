@@ -112,7 +112,7 @@ public class SavingTransferBatchConfig {
                 if (childTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus() || parentsTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus()) {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     if (contract.getPaymentCheck() == SavingContractPaymentCheck.NONPAYMENT) {
-                        togetherRunService.togetherRunDelete(contract.getSavingContractId());
+                        togetherRunService.togetherRunCancel(contract.getSavingContractId());
                     }
                     return SavingTransferProcessorDto.builder()
                             .paymentSuccess(false)

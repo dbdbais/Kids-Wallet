@@ -23,7 +23,9 @@ public enum StatusCode {
     ALREADY_HAS_CARD(HttpStatus.BAD_REQUEST,"이미 발급받은 카드가 있습니다."),
     NO_REPRESENTATIVE_ACCOUNT(HttpStatus.BAD_REQUEST,"대표 계좌가 없습니다."),
     INVALID_SAVING(HttpStatus.BAD_REQUEST,"유효하지 않은 적금입니다."),
-    TOKEN_IS_NULL(HttpStatus.BAD_REQUEST,"토큰 값이 NULL입니다.");
+    TOKEN_IS_NULL(HttpStatus.BAD_REQUEST,"토큰 값이 NULL입니다."),
+    INVALID_TOGETHERRUN(HttpStatus.BAD_REQUEST,"유효하지 않은 같이 달리기입니다."),
+    INVALID_SAVING_CONTRACT(HttpStatus.BAD_REQUEST,"유효하지 않은 적금 계약입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

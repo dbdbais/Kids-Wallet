@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> {
 
-    @Query(value = "SELECT tr.target_title, tr.target_amount, " +
+    @Query(value = "SELECT tr.together_run_id, tr.target_title, tr.target_amount, " +
             "DATEDIFF(tr.target_date, CURRENT_DATE), " +
             "CASE WHEN tr.status = 0 THEN false ELSE true END " +
             "FROM together_run tr " +
