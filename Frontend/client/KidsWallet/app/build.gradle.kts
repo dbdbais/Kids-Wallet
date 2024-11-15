@@ -10,10 +10,18 @@ android {
     compileSdk = 34
 
     signingConfigs {
+        //create("release") {
+        //    storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
+        //    storePassword = "kidswallet"
+        //    keyAlias = "my-key-alias"
+        //    keyPassword = "kidswallet"
+        //}
+
+        // 배포서버
         create("release") {
-            storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
+            storeFile = file("/root/kidswallet-release-key.jks")
             storePassword = "kidswallet"
-            keyAlias = "my-key-alias"
+            keyAlias = "kidswallet-key-alias"
             keyPassword = "kidswallet"
         }
     }
