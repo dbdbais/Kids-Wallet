@@ -427,7 +427,9 @@ fun CardApplicationBox(navController: NavController, storedUserData: UserDataMod
         modifier = Modifier
             .size(160.dp)
             .clickable {
-                if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
+                if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false && storedUserData.representAccountId == null) {
+                    navController.navigate("makeAccount")
+                } else if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
                     navController.navigate("card")
                 } else {
                     navController.navigate("myWallet")
@@ -442,7 +444,9 @@ fun CardApplicationBox(navController: NavController, storedUserData: UserDataMod
         )
 
         Text(
-            text = if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
+            text = if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false && storedUserData.representAccountId == null) {
+                "통장 신청"
+            } else if (storedUserData?.userRole == "CHILD" && storedUserData.hasCard == false) {
                 "카드 신청"
             } else {
                 "내 지갑"

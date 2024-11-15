@@ -48,6 +48,7 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.YellowButton
 import com.ssafy.kidswallet.ui.components.DateUtils
+import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 
@@ -207,11 +208,15 @@ fun CurrentMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
     ) {
         if (ongoingMission.isEmpty()) {
             Image(
-                painter = painterResource(id = R.drawable.empty), // 이미지 리소스
-                contentDescription = "Empty Icon",
-                modifier = Modifier
-                    .size(150.dp)
-                    .graphicsLayer(alpha = 0.8f) // 투명도 조절
+                painter = painterResource(id = R.drawable.icon_no_transaction),
+                contentDescription = "조르기 내역 없음",
+                modifier = Modifier.size(100.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "진행 미션이 없어요",
+                style = FontSizes.h20,
+                fontWeight = FontWeight.Bold
             )
         } else {
             LazyColumn(
@@ -324,6 +329,9 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
     val waitingMission = missionList.filter {
         (it.begDto.begAccept == true && it.mission?.missionStatus == null) || (it.begDto.begAccept == null && it.mission?.missionStatus == null)
     }
+    val submitMission = missionList.filter {
+        (it.mission?.missionStatus == "submit")
+    }
 
     val lazyListState = rememberLazyListState()
 
@@ -345,15 +353,108 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (waitingMission.isEmpty()) {
+        if (waitingMission.isEmpty() && submitMission.isEmpty()) {
             Image(
-                painter = painterResource(id = R.drawable.empty), // 이미지 리소스
-                contentDescription = "Empty Icon",
-                modifier = Modifier
-                    .size(150.dp)
-                    .graphicsLayer(alpha = 0.8f) // 투명도 조절
+                painter = painterResource(id = R.drawable.icon_no_transaction),
+                contentDescription = "조르기 내역 없음",
+                modifier = Modifier.size(100.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "대기 내역이 없어요",
+                style = FontSizes.h20,
+                fontWeight = FontWeight.Bold
             )
         } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
+                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+            ) {
+                items(submitMission) {mission ->
+                    val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
+                    Column (
+                        modifier = Modifier
+                            .width(400.dp)
+                            .height(140.dp)
+                            .padding(bottom = 16.dp)
+                            .border(
+                                6.dp,
+                                Color(0xFF99DDF8).copy(alpha = 0.1f),
+                                RoundedCornerShape(24.dp)
+                            )
+                            .border(
+                                4.dp,
+                                Color(0xFF99DDF8).copy(alpha = 0.3f),
+                                RoundedCornerShape(24.dp)
+                            )
+                            .border(2.dp, Color(0xFF99DDF8), RoundedCornerShape(24.dp)),
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Center
+                    ){
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = formattedDate,
+                                fontWeight = FontWeight.Bold,
+                                style = FontSizes.h16,
+                                color = Color.Gray
+                            )
+                            GrayButton(onClick = { /*TODO*/ }, text = "미션 대기", height = 40)
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        color = if (kotlin.random.Random.nextBoolean()) Color(0xFFE9F8FE) else Color(0xFFFFEDEF),
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(
+                                        id = if (kotlin.random.Random.nextBoolean()) R.drawable.character_old_man else R.drawable.character_old_girl
+                                    ),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(32.dp) // 이미지 크기 조정
+                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Row (
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                Text(
+                                    text = mission.name,
+                                    fontWeight = FontWeight.Bold,
+                                    style = FontSizes.h16,
+                                    color = Color(0xFF6DCEF5)
+
+                                )
+                                Text(
+                                    text = "에게 미션을 보냈어요!",
+                                    fontWeight = FontWeight.Bold,
+                                    style = FontSizes.h16,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()

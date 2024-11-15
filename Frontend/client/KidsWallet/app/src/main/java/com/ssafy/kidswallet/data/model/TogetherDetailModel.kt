@@ -7,7 +7,7 @@ data class TogetherDetailModel(
     val expiredAt: List<Int>, // 연, 월, 일 순서로 포함된 리스트
     val childAmount: Int?,
     val parentAmount: Int?,
-    val dday: Int
+    val dDay: Int
 )
 
 data class TogetherDetailResponse(

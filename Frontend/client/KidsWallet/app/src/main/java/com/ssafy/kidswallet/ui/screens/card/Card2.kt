@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -121,7 +122,11 @@ fun Card2Screen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
-                        .clickable { selectedCardIndex.value = index } // 클릭 시 해당 카드 선택
+                        .clickable(
+                            onClick = { selectedCardIndex.value = index },
+                            indication = null, // 클릭 애니메이션 제거
+                            interactionSource = remember { MutableInteractionSource() } // 기본 상호작용 제거
+                        ) // 클릭 시 해당 카드 선택
                 ) {
                     // 카드 이미지
                     Image(
