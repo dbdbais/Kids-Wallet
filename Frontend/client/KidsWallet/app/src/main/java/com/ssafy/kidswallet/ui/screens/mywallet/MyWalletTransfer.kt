@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +37,7 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import org.json.JSONObject
+import androidx.compose.ui.text.input.TextFieldValue
 
 
 @Composable
@@ -221,15 +223,8 @@ fun HeaderSection() {
     }
 }
 
-// 계좌번호 형식에 맞춰 자동으로 하이픈을 추가하는 함수
-fun formatAccountNumber(input: String): String {
-    return when {
-        input.length <= 6 -> input
-        input.length <= 8 -> "${input.substring(0, 6)}-${input.substring(6)}"
-        input.length <= 14 -> "${input.substring(0, 6)}-${input.substring(6, 8)}-${input.substring(8)}"
-        else -> "${input.substring(0, 6)}-${input.substring(6, 8)}-${input.substring(8, 14)}"
-    }
-}
+
+
 
 @Composable
 fun FormSection(
@@ -242,6 +237,8 @@ fun FormSection(
     onMessageChange: (String) -> Unit,
     onTransferClick: () -> Unit
 ) {
+    var accountNumberState by remember { mutableStateOf(TextFieldValue(accountNumber)) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -249,17 +246,22 @@ fun FormSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            value = accountNumber,
-            onValueChange = {
-                val sanitizedInput = it.filter { char -> char.isDigit() } // 숫자만 남기기
+            value = accountNumberState,
+            onValueChange = { newValue ->
+                val sanitizedInput = newValue.text.filter { it.isDigit() }
                 val formattedInput = formatAccountNumber(sanitizedInput)
+                val newCursorPos = calculateCursorPosition(newValue.text, formattedInput, newValue.selection.start)
+                accountNumberState = TextFieldValue(formattedInput, TextRange(newCursorPos))
                 onAccountNumberChange(formattedInput)
             },
             label = { Text("계좌번호") },
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
-                if (accountNumber.isNotEmpty()) {
-                    IconButton(onClick = { onAccountNumberChange("") }) {
+                if (accountNumberState.text.isNotEmpty()) {
+                    IconButton(onClick = {
+                        accountNumberState = TextFieldValue("")
+                        onAccountNumberChange("")
+                    }) {
                         Image(
                             painter = painterResource(id = R.drawable.icon_cancel),
                             contentDescription = "Clear Account Number",
@@ -281,7 +283,7 @@ fun FormSection(
         OutlinedTextField(
             value = amount,
             onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() } && newValue.length <= 8) {  // 숫자만 입력되도록 필터링 및 8자리 제한
+                if (newValue.all { it.isDigit() } && newValue.length <= 8) {  // 8자리 제한
                     onAmountChange(newValue)
                 }
             },
@@ -346,7 +348,7 @@ fun FormSection(
 
         BlueButton(
             onClick = {
-                println("보내기 버튼 클릭됨") // 디버깅 출력 추가
+                println("보내기 버튼 클릭됨")
                 onTransferClick()
             },
             text = "보내기",
@@ -356,3 +358,23 @@ fun FormSection(
         )
     }
 }
+
+// 계좌번호 형식에 맞춰 하이픈을 추가하는 함수
+fun formatAccountNumber(input: String): String {
+    return when {
+        input.length <= 6 -> input
+        input.length <= 8 -> "${input.substring(0, 6)}-${input.substring(6)}"
+        input.length <= 14 -> "${input.substring(0, 6)}-${input.substring(6, 8)}-${input.substring(8)}"
+        else -> "${input.substring(0, 6)}-${input.substring(6, 8)}-${input.substring(8, 14)}"
+    }
+}
+
+// 기존 커서 위치를 기반으로 새 커서 위치를 계산하는 함수
+fun calculateCursorPosition(oldText: String, newText: String, oldCursorPos: Int): Int {
+    var cursorPos = oldCursorPos
+    val hyphenCountOld = oldText.take(oldCursorPos).count { it == '-' }
+    val hyphenCountNew = newText.take(cursorPos).count { it == '-' }
+    cursorPos += hyphenCountNew - hyphenCountOld
+    return cursorPos.coerceIn(0, newText.length)
+}
+
