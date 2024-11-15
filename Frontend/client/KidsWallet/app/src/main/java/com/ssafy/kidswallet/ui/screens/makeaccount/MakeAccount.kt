@@ -60,7 +60,6 @@ fun MakeAccountScreen(navController: NavController, loginViewModel: LoginViewMod
     LaunchedEffect(updatedUserData) {
         if (updatedUserData != null) {
             // updatedUserData가 업데이트된 후 처리
-            Log.d("Hello", updatedUserData.toString())
             loginViewModel.saveUserData(updatedUserData!!)
             navController.navigate("mainPage") {
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }

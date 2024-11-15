@@ -5,6 +5,8 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,11 +29,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +61,7 @@ fun BeggingRequestReasonScreen(
     beggingRequestViewModel: BeggingRequestViewModel = viewModel()
 ) {
     val textState = viewModel.textModel.collectAsState()
+    val focusManager = LocalFocusManager.current
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
 
     val relation = storedUserData?.relations
@@ -67,6 +72,13 @@ fun BeggingRequestReasonScreen(
 
     Column(
         modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                indication = null, // 터치 피드백을 제거
+                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+            ) {
+                focusManager.clearFocus() // 화면을 터치하면 포커스를 해제하여 키보드를 닫음
+            }
     ) {
         Column(
             modifier = Modifier
@@ -215,12 +227,8 @@ fun BeggingRequestReasonScreen(
                                 // 성공 시 처리
                                 navController.navigate("beggingRequestComplete?name=$name&amount=$amount&reason=${textState.value.text}")
                             },
-                            onError = { error ->
-                                Toast.makeText(
-                                    context,
-                                    "Error occurred: ${error.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            onError = {
+
                             }
                         )
                     }

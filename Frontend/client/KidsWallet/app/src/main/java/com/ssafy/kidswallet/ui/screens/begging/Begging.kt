@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
@@ -81,6 +82,15 @@ fun BeggingMoney(navController: NavController, boxHeight: androidx.compose.ui.un
             .background(Color(0xFFE9F8FE), shape = RoundedCornerShape(16.dp)) // 파란색 배경과 둥근 모서리 적용
             .clickable { navController.navigate("beggingMoney") } // 클릭 시 화면 이동
     ) {
+        // 오른쪽 하단 이미지
+        Image(
+            painter = painterResource(id = R.drawable.character_young_man),
+            contentDescription = "Character",
+            modifier = Modifier
+                .size(150.dp) // 이미지 크기 조절
+                .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
+                .alpha(0.8f)
+        )
         // 가운데 텍스트
         Text(
             text = "용돈 조르기",
@@ -90,14 +100,6 @@ fun BeggingMoney(navController: NavController, boxHeight: androidx.compose.ui.un
             modifier = Modifier.align(Alignment.Center) // 가운데 정렬
         )
 
-        // 오른쪽 하단 이미지
-        Image(
-            painter = painterResource(id = R.drawable.character_young_man),
-            contentDescription = "Character",
-            modifier = Modifier
-                .size(150.dp) // 이미지 크기 조절
-                .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
-        )
     }
 }
 
@@ -115,15 +117,6 @@ fun BeggingMission(navController: NavController, boxHeight: androidx.compose.ui.
             .background(Color(0xFFFFEDEF), shape = RoundedCornerShape(16.dp)) // 파란색 배경과 둥근 모서리 적용
             .clickable { navController.navigate("beggingMissionCheck") } // 클릭 시 화면 이동
     ) {
-        // 가운데 텍스트
-        Text(
-            text = "미션 관리",
-            fontSize = 40.sp,
-            fontWeight = FontWeight.W900,
-            color = Color.Black,
-            modifier = Modifier.align(Alignment.Center) // 가운데 정렬
-        )
-
         // 오른쪽 하단 이미지
         Image(
             painter = painterResource(id = R.drawable.character_young_girl),
@@ -131,6 +124,15 @@ fun BeggingMission(navController: NavController, boxHeight: androidx.compose.ui.
             modifier = Modifier
                 .size(150.dp) // 이미지 크기 조절
                 .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
+                .alpha(0.8f)
+        )
+        // 가운데 텍스트
+        Text(
+            text = "미션 관리",
+            fontSize = 40.sp,
+            fontWeight = FontWeight.W900,
+            color = Color.Black,
+            modifier = Modifier.align(Alignment.Center) // 가운데 정렬
         )
     }
 }
