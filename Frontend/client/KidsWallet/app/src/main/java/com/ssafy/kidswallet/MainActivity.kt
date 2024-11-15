@@ -52,7 +52,9 @@ import com.ssafy.kidswallet.ui.screens.card.Card3Screen
 import com.ssafy.kidswallet.ui.screens.card.CardScreen
 import com.ssafy.kidswallet.ui.screens.login.Login
 import com.ssafy.kidswallet.ui.screens.main.MainPageScreen
+import com.ssafy.kidswallet.ui.screens.makeaccount.ConnectAccountScreen
 import com.ssafy.kidswallet.ui.screens.makeaccount.MakeAccountScreen
+import com.ssafy.kidswallet.ui.screens.makeaccount.MyDataScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletDepositScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletManageScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletScreen
@@ -313,6 +315,10 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("alertList") { AlertListScreen(navController) }
 
             composable("regularList") { RegularListScreen(navController) }
+
+            composable("myData") { MyDataScreen(navController) }
+
+            composable("connectAccount") { ConnectAccountScreen(navController) }
         }
     }
 }
