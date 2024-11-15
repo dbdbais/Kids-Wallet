@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
@@ -21,9 +22,14 @@ import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
+import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 
 @Composable
-fun RunParentsRegisterScreen(navController: NavController, viewModel: StateRunViewModel) {
+fun RunParentsRegisterScreen(
+    navController: NavController,
+    viewModel: StateRunViewModel,
+    stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +73,7 @@ fun RunParentsRegisterScreen(navController: NavController, viewModel: StateRunVi
                     )
 
                     Text(
-                        text = "${NumberUtils.formatNumberWithCommas(25000)}원 달리기",
+                        text = "${NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.togetherGoalMoney)}원 달리기",
                         color = Color(0xFF6DCEF5),
                         style = FontSizes.h24,
                         fontWeight = FontWeight.Bold,
@@ -100,7 +106,7 @@ fun RunParentsRegisterScreen(navController: NavController, viewModel: StateRunVi
         Column(modifier = Modifier.fillMaxWidth()) {
             ParticipantInfo(
                 name = "나",
-                amount = NumberUtils.formatNumberWithCommas(12500) + "원",
+                amount = "목표 " + NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.childGoalMoney) + "원",
                 imageResId = R.drawable.character_me // Replace with your image resource
             )
 
@@ -108,7 +114,7 @@ fun RunParentsRegisterScreen(navController: NavController, viewModel: StateRunVi
 
             ParticipantInfo(
                 name = "응애재훈",
-                amount = NumberUtils.formatNumberWithCommas(12500) + "원",
+                amount = "목표 " + NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.parentGoalMoney) + "원",
                 imageResId = R.drawable.character_run_member // Replace with your image resource
             )
         }
@@ -118,6 +124,10 @@ fun RunParentsRegisterScreen(navController: NavController, viewModel: StateRunVi
         // 신청 버튼
         BlueButton(
             onClick = {
+                // 상태 초기화 호출
+                stateRunMoneyViewModel.resetGoals()
+
+                // 네비게이션 이동
                 navController.navigate("run") {
                     popUpTo(0) { inclusive = true }
                 }

@@ -71,6 +71,7 @@ import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
 import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
+import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -79,6 +80,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
     class MainActivity : ComponentActivity() {
         private val stateRunViewModel: StateRunViewModel by viewModels()
         private val stateBeggingMissionViewModel: StateBeggingMissionViewModel by viewModels()
+        private val stateRunMoneyViewModel: StateRunMoneyViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +123,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    MainScreen(navController, stateRunViewModel, stateBeggingMissionViewModel)
+                    MainScreen(navController, stateRunViewModel, stateBeggingMissionViewModel, stateRunMoneyViewModel = stateRunMoneyViewModel)
                 }
             }
         }
@@ -129,7 +131,12 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
 
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun MainScreen(navController: NavHostController, stateRunViewModel: StateRunViewModel, stateBeggingMissionViewModel: StateBeggingMissionViewModel) {
+    fun MainScreen(
+        navController: NavHostController,
+        stateRunViewModel: StateRunViewModel,
+        stateBeggingMissionViewModel: StateBeggingMissionViewModel,
+        stateRunMoneyViewModel: StateRunMoneyViewModel
+    ) {
         NavHost(navController = navController, startDestination = "splash") {
             composable("main") {
                 Column(
@@ -161,11 +168,13 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("runParents") {
                 RunParentsScreen(navController = navController, viewModel = stateRunViewModel)
             }
-            composable("runParentsMoney") { RunParentsMoneyScreen(navController) }
+            composable("runParentsMoney") {
+                RunParentsMoneyScreen(navController = navController, stateRunMoneyViewModel = stateRunMoneyViewModel)
+            }
             composable("runParentsDetail") { RunParentsDetailScreen(navController) }
             composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
             composable("runParentsRegister") {
-                RunParentsRegisterScreen(navController = navController, viewModel = stateRunViewModel)
+                RunParentsRegisterScreen(navController = navController, viewModel = stateRunViewModel, stateRunMoneyViewModel = stateRunMoneyViewModel)
             }
 
             // wallet

@@ -53,6 +53,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
+import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -61,12 +62,18 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 @Composable
-fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmountViewModel = viewModel()) {
-    val amount by viewModel.amount.collectAsState()
+fun RunParentsMoneyScreen(
+    navController: NavController,
+    amountViewModel: RunParentsAmountViewModel = viewModel(),
+    stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel()
+) {
+    val childGoalMoney = stateRunMoneyViewModel.childGoalMoney
+    val parentGoalMoney = stateRunMoneyViewModel.parentGoalMoney
+    val togetherGoalMoney = stateRunMoneyViewModel.togetherGoalMoney
 
     // 각각의 금액 행에 대한 편집 상태 관리
-    var isEditingFirstAmount by remember { mutableStateOf(false) }
-    var isEditingSecondAmount by remember { mutableStateOf(false) }
+    var isEditingChildAmount by remember { mutableStateOf(false) }
+    var isEditingParentAmount by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -75,8 +82,8 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     // 외부 클릭 시 모든 편집 종료
-                    isEditingFirstAmount = false
-                    isEditingSecondAmount = false
+                    isEditingChildAmount = false
+                    isEditingParentAmount = false
                 })
             },
         horizontalAlignment = Alignment.CenterHorizontally
@@ -93,25 +100,20 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // RCircularSlider 추가
         RCircularSlider(
-            amount = amount,
-            onAmountChange = { newAmount -> viewModel.setAmount(newAmount) }
+            amount = togetherGoalMoney,
+            onAmountChange = { newAmount ->
+                stateRunMoneyViewModel.setGoalAndDate(
+                    togetherGoal = newAmount,
+                    childGoal = childGoalMoney,
+                    parentGoal = parentGoalMoney
+                )
+            }
         )
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // 같이 달리기 멤버
-        Text(
-            text = " ",
-            style = FontSizes.h20,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Start)
-                .padding(start = 16.dp)
-        )
-
+        // 자녀 목표 금액
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -126,8 +128,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
                 Image(
                     painter = painterResource(id = R.drawable.character_me),
                     contentDescription = "나",
-                    modifier = Modifier
-                        .size(60.dp)
+                    modifier = Modifier.size(60.dp)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -140,13 +141,20 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = "12500",
-                onAmountChange = { newAmount -> },
-                isEditing = isEditingFirstAmount,
-                onEditingChange = { isEditingFirstAmount = it }
+                initialAmount = childGoalMoney,
+                onAmountChange = { newAmount ->
+                    stateRunMoneyViewModel.setGoalAndDate(
+                        togetherGoal = togetherGoalMoney,
+                        childGoal = newAmount,
+                        parentGoal = parentGoalMoney
+                    )
+                },
+                isEditing = isEditingChildAmount,
+                onEditingChange = { isEditingChildAmount = it }
             )
         }
 
+        // 부모 목표 금액
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -161,8 +169,7 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
                 Image(
                     painter = painterResource(id = R.drawable.character_run_member),
                     contentDescription = "응애재훈",
-                    modifier = Modifier
-                        .size(55.dp)
+                    modifier = Modifier.size(55.dp)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -175,16 +182,21 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             }
 
             EditableAmountRow(
-                initialAmount = "12500",
-                onAmountChange = { newAmount -> },
-                isEditing = isEditingSecondAmount,
-                onEditingChange = { isEditingSecondAmount = it }
+                initialAmount = parentGoalMoney,
+                onAmountChange = { newAmount ->
+                    stateRunMoneyViewModel.setGoalAndDate(
+                        togetherGoal = togetherGoalMoney,
+                        childGoal = childGoalMoney,
+                        parentGoal = newAmount
+                    )
+                },
+                isEditing = isEditingParentAmount,
+                onEditingChange = { isEditingParentAmount = it }
             )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 멤버 선택 버튼
         LightBlueButton(
             onClick = { navController.navigate("runParentsMemberList") },
             text = "멤버 선택",
@@ -195,7 +207,6 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
             elevation = 0
         )
 
-        // 다음 버튼
         BlueButton(
             onClick = { navController.navigate("runParentsRegister") },
             text = "다음",
@@ -208,23 +219,23 @@ fun RunParentsMoneyScreen(navController: NavController, viewModel: RunParentsAmo
 
 @Composable
 fun EditableAmountRow(
-    initialAmount: String,
-    onAmountChange: (String) -> Unit,
+    initialAmount: Int,
+    onAmountChange: (Int) -> Unit,
     isEditing: Boolean,
     onEditingChange: (Boolean) -> Unit
 ) {
-    val textState = remember { mutableStateOf(initialAmount) }
+    var textState by remember { mutableStateOf(initialAmount.toString()) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (isEditing) {
             OutlinedTextField(
-                value = textState.value,
+                value = textState,
                 onValueChange = { newText ->
                     if (newText.all { it.isDigit() }) {
-                        textState.value = newText
-                        onAmountChange(newText)
+                        textState = newText
+                        onAmountChange(newText.toIntOrNull() ?: 0)
                     }
                 },
                 singleLine = true,
@@ -235,7 +246,7 @@ fun EditableAmountRow(
             )
         } else {
             Text(
-                text = "${textState.value}원",
+                text = "${textState}원",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -254,6 +265,7 @@ fun EditableAmountRow(
         )
     }
 }
+
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
