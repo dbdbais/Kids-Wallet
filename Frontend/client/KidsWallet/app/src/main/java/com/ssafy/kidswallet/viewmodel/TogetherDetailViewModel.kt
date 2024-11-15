@@ -13,10 +13,10 @@ class TogetherDetailViewModel : ViewModel() {
     private val _togetherDetail = MutableStateFlow<TogetherDetailModel?>(null)
     val togetherDetail: StateFlow<TogetherDetailModel?> = _togetherDetail
 
-    fun fetchTogetherDetail(savingContractId: Int) {
+    fun fetchTogetherDetail(togetherRunId: Int) {
         viewModelScope.launch {
             try {
-                val response = apiService.togetherDetail(savingContractId)
+                val response = apiService.togetherDetail(togetherRunId)
                 if (response.isSuccessful) {
                     _togetherDetail.value = response.body()?.data
                     Log.d("TogetherDetailViewModel", "Fetched detail: ${_togetherDetail.value}")

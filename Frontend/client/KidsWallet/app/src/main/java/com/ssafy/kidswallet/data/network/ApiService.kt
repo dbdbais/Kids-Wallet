@@ -77,8 +77,8 @@ interface ApiService {
     @GET("togetherrun/{userId}/list")
     suspend fun togetherList(@Path("userId") userId: Int): Response<TogetherListResponse>
 
-    @GET("togetherrun/{savingContractId}/detail")
-    suspend fun togetherDetail(@Path("savingContractId") savingContractId: Int): Response<TogetherDetailResponse>
+    @GET("togetherrun/{togetherRunId}/detail")
+    suspend fun togetherDetail(@Path("togetherRunId") togetherRunId: Int): Response<TogetherDetailResponse>
 
     @PUT("mission/beg")
     suspend fun handleMission(@Body handleMissionModel: HandleMissionModel): Response<Unit>

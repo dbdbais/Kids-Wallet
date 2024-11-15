@@ -276,8 +276,8 @@ fun RunParentsDetailScreenPreview() {
 //    val togetherDetail = togetherDetailViewModel.togetherDetail.collectAsState().value
 //
 //    // API 호출을 통해 데이터 로드
-//    storedUserData?.userId?.let { savingContractId ->
-//        togetherDetailViewModel.fetchTogetherDetail(savingContractId)
+//    storedUserData?.userId?.let { togetherRunId ->
+//        togetherDetailViewModel.fetchTogetherDetail(togetherRunId)
 //    }
 //
 //    Column(

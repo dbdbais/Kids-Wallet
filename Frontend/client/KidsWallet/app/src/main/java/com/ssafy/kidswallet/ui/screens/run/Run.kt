@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -25,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
@@ -47,6 +51,9 @@ fun RunScreen(
         togetherListViewModel.fetchTogetherList(userId)
     }
 
+    // Dialog 상태 관리
+    val showAlertDialog = remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -65,16 +72,15 @@ fun RunScreen(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // 같이 달리기와 함께 달리기를 하나의 Row로 묶음
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp) // 버튼 사이 간격 조정
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
                         onClick = { /* 같이 달리기 클릭 시 동작 */ },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9D9D9)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                        modifier = Modifier.height(32.dp) // 버튼 높이 조정
+                        modifier = Modifier.height(32.dp)
                     ) {
                         Text(
                             text = "같이 달리기",
@@ -89,7 +95,7 @@ fun RunScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF7F7F7)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                        modifier = Modifier.height(32.dp) // 버튼 높이 조정
+                        modifier = Modifier.height(32.dp)
                     ) {
                         Text(
                             text = "함께 달리기",
@@ -100,7 +106,6 @@ fun RunScreen(
                     }
                 }
 
-                // 지난 달리기 텍스트
                 Text(
                     text = "지난 달리기",
                     fontWeight = FontWeight.Bold,
@@ -112,7 +117,6 @@ fun RunScreen(
                 )
             }
 
-            // 그리드 레이아웃으로 카드 배치
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -127,12 +131,11 @@ fun RunScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 첫 번째 고정 카드
                 item {
                     Box(
                         modifier = Modifier
                             .width(150.dp)
-                            .height(GoldenRatioUtils.goldenHeight(150f).dp) // Golden Ratio 적용
+                            .height(GoldenRatioUtils.goldenHeight(150f).dp)
                             .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
                             .background(Color.White)
                             .border(1.dp, Color.White, RoundedCornerShape(8.dp))
@@ -162,19 +165,22 @@ fun RunScreen(
                     }
                 }
 
-                // TogetherList API에서 받아온 데이터 카드
                 items(togetherList.size) { index ->
                     val item = togetherList[index]
                     Box(
                         modifier = Modifier
                             .width(150.dp)
-                            .height(GoldenRatioUtils.goldenHeight(150f).dp) // Golden Ratio 적용
+                            .height(GoldenRatioUtils.goldenHeight(150f).dp)
                             .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
                             .background(Color(0xFF6DCEF5))
                             .border(1.dp, Color(0xFF6DCEF5), RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
-                                navController.navigate("runParentsDetail")
+                                if (item.isAccept) {
+                                    navController.navigate("runParentsDetail")
+                                } else {
+                                    showAlertDialog.value = true
+                                }
                             },
                         contentAlignment = Alignment.TopStart
                     ) {
@@ -182,12 +188,8 @@ fun RunScreen(
                             horizontalAlignment = Alignment.Start,
                             verticalArrangement = Arrangement.Top
                         ) {
-                            // D-day 배지
                             DdayBadge(remainingDays = item.dDay)
-
                             Spacer(modifier = Modifier.height(8.dp))
-
-                            // 카드 텍스트
                             Text(
                                 text = item.targetTitle,
                                 style = FontSizes.h16,
@@ -195,12 +197,9 @@ fun RunScreen(
                                 textAlign = TextAlign.Start,
                                 color = Color.White
                             )
-
                             Spacer(modifier = Modifier.height(8.dp))
-
-                            // 지금까지 모은 금액
                             Text(
-                                text = "${NumberUtils.formatNumberWithCommas(item.currentAmount)}원",
+                                text = "${NumberUtils.formatNumberWithCommas(item.targetAmount)}원",
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Start,
@@ -208,7 +207,6 @@ fun RunScreen(
                             )
                         }
 
-                        // 이미지 (우측 하단에 고정)
                         Image(
                             painter = painterResource(id = R.drawable.icon_bundle),
                             contentDescription = "Run Item Image",
@@ -223,9 +221,38 @@ fun RunScreen(
             }
         }
 
-        // Bottom navigation
         BottomNavigationBar(
             modifier = Modifier.align(Alignment.BottomCenter), navController
         )
     }
+
+    if (showAlertDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showAlertDialog.value = false },
+            title = {
+                Text(
+                    text = "알림",
+                    color = Color(0xFFFBC02D),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "승인 대기 중입니다.",
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF8C8595)
+                )
+            },
+            confirmButton = {
+                BlueButton(
+                    onClick = { showAlertDialog.value = false },
+                    text = "확인",
+                    modifier = Modifier.width(260.dp),
+                    height = 40,
+                    elevation = 0
+                )
+            }
+        )
+    }
 }
+
