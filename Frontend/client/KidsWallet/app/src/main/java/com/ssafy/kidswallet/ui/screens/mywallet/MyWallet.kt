@@ -33,6 +33,7 @@ import com.ssafy.kidswallet.data.model.TransactionModel
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.ui.components.TopToMain
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 
@@ -68,7 +69,7 @@ fun MyWalletScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Top(title = "내 지갑", navController = navController)
+        TopToMain(title = "내 지갑", navController = navController)
 
         Spacer(modifier = Modifier.height(50.dp))
 
