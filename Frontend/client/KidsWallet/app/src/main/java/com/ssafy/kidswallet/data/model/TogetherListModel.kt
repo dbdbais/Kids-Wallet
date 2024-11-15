@@ -4,7 +4,7 @@ data class TogetherListModel(
     val savingContractId: Int,
     val targetTitle: String,
     val currentAmount: Int,
-    val dday: Int
+    val dDay: Int
 )
 
 data class TogetherListResponse(

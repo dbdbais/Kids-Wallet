@@ -183,7 +183,7 @@ fun RunScreen(
                             verticalArrangement = Arrangement.Top
                         ) {
                             // D-day 배지
-                            DdayBadge(remainingDays = item.dday)
+                            DdayBadge(remainingDays = item.dDay)
 
                             Spacer(modifier = Modifier.height(8.dp))
 
