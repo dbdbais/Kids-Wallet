@@ -18,6 +18,7 @@ import com.ssafy.kidswallet.data.model.TestMissionModel
 import com.ssafy.kidswallet.data.model.TogetherDetailResponse
 import com.ssafy.kidswallet.data.model.TogetherListModel
 import com.ssafy.kidswallet.data.model.TogetherListResponse
+import com.ssafy.kidswallet.data.model.TogetherrunReisterModel
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.fcm.dto.FcmDto
 import retrofit2.Call
@@ -63,13 +64,13 @@ interface ApiService {
     fun sendTokenToServer(@Body requestDto: FcmDto): Call<FcmDto> // Call<FcmDto>로 반환 타입 수정
 
     @PATCH("account/transfer")
-    suspend fun accountTransfer(@Body accountTransferModel: AccountTransferModel): Response<Any>
+    suspend fun accountTransfer(@Body accountTransferModel: AccountTransferModel): Response<Unit>
 
     @PATCH("account/deposit")
-    suspend fun accountDeposit(@Body accountDepositModel: AccountDepositModel): Response<Any>
+    suspend fun accountDeposit(@Body accountDepositModel: AccountDepositModel): Response<Unit>
 
     @PATCH("account/withdraw")
-    suspend fun accountWithdraw(@Body accountWithdrawModel: AccountWithdrawModel): Response<Any>
+    suspend fun accountWithdraw(@Body accountWithdrawModel: AccountWithdrawModel): Response<Unit>
 
     @GET("account/weekly")
     suspend fun getAccountWeekly(@Query("accountId") accountId: String): Response<AccountWeeklyResponse>
@@ -94,4 +95,8 @@ interface ApiService {
 
     @GET("user/status/{userId}")
     suspend fun updateUser(@Path("userId") userId: Int): Response<ApiResponse>
+
+    @POST("togetherrun/register")
+    suspend fun registerTogetherrun(@Body requestModel: TogetherrunReisterModel): Response<Unit>
+
 }
