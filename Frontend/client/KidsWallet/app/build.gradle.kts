@@ -78,6 +78,7 @@ dependencies {
 
     implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha10")
     implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     val nav_version = "2.7.4"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")

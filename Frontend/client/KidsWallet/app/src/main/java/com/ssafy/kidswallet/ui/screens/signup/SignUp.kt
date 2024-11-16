@@ -138,9 +138,11 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             OutlinedTextField(
                 value = password,
                 onValueChange = {
-                    password = it
-                    passwordError = it.isEmpty() // 비밀번호가 비었는지 체크
-                    passwordMismatchError = passwordChecked.isNotEmpty() && it != passwordChecked
+                    if (it.length <= 40) {
+                        password = it
+                        passwordError = it.isEmpty() // 비밀번호가 비었는지 체크
+                        passwordMismatchError = passwordChecked.isNotEmpty() && it != passwordChecked
+                    }
                 },
                 label = { Text("비밀번호", color = if (passwordError) Color.Red else Color(0xFF8C8595)) },
                 visualTransformation = PasswordVisualTransformation(),
@@ -157,8 +159,10 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             OutlinedTextField(
                 value = passwordChecked,
                 onValueChange = {
-                    passwordChecked = it
-                    passwordMismatchError = password != it
+                    if (it.length <= 40) {
+                        passwordChecked = it
+                        passwordMismatchError = password != it
+                    }
                 },
                 label = { Text("비밀번호 확인", color = if (passwordMismatchError) Color.Red else Color(0xFF8C8595)) },
                 visualTransformation = PasswordVisualTransformation(),
