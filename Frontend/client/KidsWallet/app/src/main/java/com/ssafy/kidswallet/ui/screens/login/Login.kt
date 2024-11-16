@@ -126,7 +126,11 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
 
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    if (it.length <= 40) {
+                        password = it
+                    }
+                },
                 label = { Text("비밀번호") },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier

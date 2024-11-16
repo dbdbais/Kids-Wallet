@@ -1,6 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.main
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -63,11 +64,50 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val userId = storedUserData?.userId
     var showDialog by remember { mutableStateOf(false) }
+    var backShowDialog by remember { mutableStateOf(false) }
     var input by remember { mutableStateOf("") }
     val updatedUserData by updateUserViewModel.updatedUserData.collectAsState()
     val accountState by accountTransactionViewModel.accountState.collectAsState()
 
     var isRelationRegistered by remember { mutableStateOf(false) }
+
+    BackHandler {
+        backShowDialog = true
+    }
+
+    if (backShowDialog) {
+        AlertDialog(
+            onDismissRequest = { backShowDialog = false },
+            text = {
+                Text(
+                    text = "키즈월렛 앱을 종료하시겠습니까?",
+                    fontWeight = FontWeight.Bold,
+                    style = FontSizes.h16,
+                    color = Color.Black,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )},
+            containerColor = Color.White,
+            confirmButton = {
+                BlueButton(
+                    onClick = {
+                        backShowDialog = false
+                        navController.context.let { context ->
+                            (context as? android.app.Activity)?.finish()
+                        }
+                    },
+                    modifier = Modifier.width(110.dp),
+                    text = "예"
+                )
+            },
+            dismissButton = {
+                GrayButton(
+                    onClick = { backShowDialog = false },
+                    modifier = Modifier.width(150.dp),
+                    text = "취소"
+                )
+            }
+        )
+    }
 
     LaunchedEffect(Unit) {
         storedUserData?.representAccountId?.let { accountId ->
