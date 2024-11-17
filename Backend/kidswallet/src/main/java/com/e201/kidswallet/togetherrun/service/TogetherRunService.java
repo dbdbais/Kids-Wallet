@@ -199,13 +199,13 @@ public class TogetherRunService {
 
                 SavingPayment childPayment = SavingPayment.builder()
                         .user(child)
-                        .depositAmount(togetherRun.getChildContribute())
+                        .depositAmount(savingContract.getChildDepositAmount())
                         .depositDate(LocalDateTime.now())
                         .savingContract(savingContract)
                         .build();
                 SavingPayment parentsPayment = SavingPayment.builder()
                         .user(parents)
-                        .depositAmount(togetherRun.getParentsContribute())
+                        .depositAmount(savingContract.getParentsDepositAmount())
                         .depositDate(LocalDateTime.now())
                         .savingContract(savingContract)
                         .build();
@@ -348,6 +348,21 @@ public class TogetherRunService {
 
             return togetherRunCancelResponseDto;
         }
+    }
+
+    public List<RegularDepositResponseDto> regularDeposit(Long userId) {
+        List<Object[]> result = togetherRunRepository.findRegularDepositInfoByUserId(userId);
+        List<RegularDepositResponseDto> regularDepositResponseDtoList = new ArrayList<>();
+        for (Object[] obj : result) {
+            RegularDepositResponseDto regularDepositResponseDto = RegularDepositResponseDto.builder()
+                    .amount((BigDecimal) obj[0])
+                    .depositDay((Short) obj[1])
+                    .startDate(((java.sql.Date) obj[2]).toLocalDate())
+                    .endDate(((java.sql.Date) obj[3]).toLocalDate())
+                    .build();
+            regularDepositResponseDtoList.add(regularDepositResponseDto);
+        }
+        return regularDepositResponseDtoList;
     }
 
     public void togetherRunComplete(Long savingContractId) {

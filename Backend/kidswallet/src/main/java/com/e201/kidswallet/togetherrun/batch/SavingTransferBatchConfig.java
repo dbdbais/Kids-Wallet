@@ -98,11 +98,11 @@ public class SavingTransferBatchConfig {
                 TransferMoneyDTO parentsTransferMoneyDTO = null;
                 if (contract.getPaymentCheck() == SavingContractPaymentCheck.PAYMENT)
                 {
-                    childTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getChildAccount(), contract.getSavingAccount(), togetherRun.getChildContribute().intValue());
-                    parentsTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getParentsAccount(), contract.getSavingAccount(), togetherRun.getParentsContribute().intValue());
+                    childTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getChildAccount(), contract.getSavingAccount(), contract.getChildDepositAmount().intValue());
+                    parentsTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getParentsAccount(), contract.getSavingAccount(), contract.getParentsDepositAmount().intValue());
                 } else {
-                    childTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getChildAccount(), contract.getSavingAccount(), togetherRun.getChildContribute().intValue() * 2);
-                    parentsTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getParentsAccount(), contract.getSavingAccount(), togetherRun.getParentsContribute().intValue() * 2);
+                    childTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getChildAccount(), contract.getSavingAccount(), contract.getChildDepositAmount().intValue() * 2);
+                    parentsTransferMoneyDTO = togetherRunService.makeTransferMoneyDTO(togetherRun.getParentsAccount(), contract.getSavingAccount(), contract.getParentsDepositAmount().intValue() * 2);
                 }
 
                 StatusCode childTransferResult = null;
@@ -123,13 +123,13 @@ public class SavingTransferBatchConfig {
                 Relation relation = togetherRun.getRelation();
                 SavingPayment childPayment = SavingPayment.builder()
                         .user(relation.getChild())
-                        .depositAmount(togetherRun.getChildContribute())
+                        .depositAmount(contract.getChildDepositAmount())
                         .depositDate(LocalDateTime.now())
                         .savingContract(contract)
                         .build();
                 SavingPayment parentsPayment = SavingPayment.builder()
                         .user(relation.getParent())
-                        .depositAmount(togetherRun.getParentsContribute())
+                        .depositAmount(contract.getParentsDepositAmount())
                         .depositDate(LocalDateTime.now())
                         .savingContract(contract)
                         .build();
