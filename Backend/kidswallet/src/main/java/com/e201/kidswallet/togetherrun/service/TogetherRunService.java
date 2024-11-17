@@ -350,6 +350,21 @@ public class TogetherRunService {
         }
     }
 
+    public List<RegularDepositResponseDto> regularDeposit(Long userId) {
+        List<Object[]> result = togetherRunRepository.findRegularDepositInfoByUserId(userId);
+        List<RegularDepositResponseDto> regularDepositResponseDtoList = new ArrayList<>();
+        for (Object[] obj : result) {
+            RegularDepositResponseDto regularDepositResponseDto = RegularDepositResponseDto.builder()
+                    .amount((BigDecimal) obj[0])
+                    .depositDay((Short) obj[1])
+                    .startDate(((java.sql.Date) obj[2]).toLocalDate())
+                    .endDate(((java.sql.Date) obj[3]).toLocalDate())
+                    .build();
+            regularDepositResponseDtoList.add(regularDepositResponseDto);
+        }
+        return regularDepositResponseDtoList;
+    }
+
     public void togetherRunComplete(Long savingContractId) {
         SavingContract savingContract = savingContractRepository.findById(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));
         TogetherRun togetherRun = togetherRunRepository.findBySavingContractId(savingContractId).orElseThrow(() -> new IllegalArgumentException("Invalid SavingContractId"));

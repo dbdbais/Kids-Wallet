@@ -93,4 +93,13 @@ public class TogetherController {
         }
         return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunCancel(savingContractId));
     }
+
+    @GetMapping("{userId}/regulardeposit")
+    public ResponseEntity<ResponseDto> getRegularDeposit(@PathVariable("userId") long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseDto.response(StatusCode.NO_USER);
+        }
+        return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.regularDeposit(userId));
+    }
 }
