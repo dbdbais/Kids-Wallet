@@ -134,6 +134,10 @@ public class MissionController {
                                                             "미션 완료!");
         }
         else{
+            StatusCode result = service.missionCompleteCheck(requestDto);
+            if(result != StatusCode.SUCCESS){
+                return ResponseDto.response(result);
+            }
             sendMessageResult = fcmService.sendMessage(fcmService.getToken(childId),
                                                                 "미션 실패!",
                                                                 "미션 실패!");
