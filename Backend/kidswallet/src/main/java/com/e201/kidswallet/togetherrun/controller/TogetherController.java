@@ -6,6 +6,7 @@ import com.e201.kidswallet.togetherrun.dto.TogetherRunAnswerRequestDto;
 import com.e201.kidswallet.togetherrun.dto.TogetherRunRegisterRequestDto;
 import com.e201.kidswallet.togetherrun.entity.SavingContract;
 import com.e201.kidswallet.togetherrun.entity.TogetherRun;
+import com.e201.kidswallet.togetherrun.entity.enums.SavingContractStatus;
 import com.e201.kidswallet.togetherrun.entity.enums.TogetherRunStatus;
 import com.e201.kidswallet.togetherrun.repository.SavingContractRepository;
 import com.e201.kidswallet.togetherrun.repository.TogetherRunRepository;
@@ -57,13 +58,22 @@ public class TogetherController {
         return ResponseDto.response(returnCode);
     }
 
-    @GetMapping("{userId}/list")
-    public ResponseEntity<ResponseDto> getTogetherRunList(@PathVariable("userId") long userId) {
+    @GetMapping("{userId}/proceedlist")
+    public ResponseEntity<ResponseDto> getTogetherRunProceedList(@PathVariable("userId") long userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             return ResponseDto.response(StatusCode.NO_USER);
         }
-        return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunList(userId));
+        return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunList(userId, SavingContractStatus.PROCEED));
+    }
+
+    @GetMapping("{userId}/completelist")
+    public ResponseEntity<ResponseDto> getTogetherRunCompleteList(@PathVariable("userId") long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseDto.response(StatusCode.NO_USER);
+        }
+        return ResponseDto.response(StatusCode.SUCCESS, togetherRunService.togetherRunList(userId, SavingContractStatus.COMPLETED));
     }
 
     @GetMapping("{togetherRunId}/detail")

@@ -25,7 +25,8 @@ public enum StatusCode {
     INVALID_SAVING(HttpStatus.BAD_REQUEST,"유효하지 않은 적금입니다."),
     TOKEN_IS_NULL(HttpStatus.BAD_REQUEST,"토큰 값이 NULL입니다."),
     INVALID_TOGETHERRUN(HttpStatus.BAD_REQUEST,"유효하지 않은 같이 달리기입니다."),
-    INVALID_SAVING_CONTRACT(HttpStatus.BAD_REQUEST,"유효하지 않은 적금 계약입니다.");
+    INVALID_SAVING_CONTRACT(HttpStatus.BAD_REQUEST,"유효하지 않은 적금 계약입니다."),
+    FAILD_TRANSFER(HttpStatus.BAD_REQUEST,"이체에 실패하였습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

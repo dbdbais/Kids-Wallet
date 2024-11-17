@@ -41,6 +41,12 @@ public class SavingContract {
     @Column(name = "deposit_day")
     private short depositDay;
 
+    @Column(name = "child_deposit_amount")
+    private BigDecimal childDepositAmount;
+
+    @Column(name = "parents_deposit_amount")
+    private BigDecimal parentsDepositAmount;
+
     @Builder.Default()
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "payment_check")
