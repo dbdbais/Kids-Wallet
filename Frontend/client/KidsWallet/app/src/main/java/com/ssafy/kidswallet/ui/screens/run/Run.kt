@@ -34,6 +34,7 @@ import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.GoldenRatioUtils
+import com.ssafy.kidswallet.ui.components.TopToMain
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherListViewModel
 
@@ -64,7 +65,7 @@ fun RunScreen(
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Top(title = "행복 달리기", navController = navController)
+                TopToMain(title = "내 지갑", navController = navController)
             }
 
             // Tabs

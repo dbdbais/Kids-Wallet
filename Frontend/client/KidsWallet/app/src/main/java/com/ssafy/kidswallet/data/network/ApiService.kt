@@ -24,6 +24,7 @@ import com.ssafy.kidswallet.fcm.dto.FcmDto
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -98,5 +99,8 @@ interface ApiService {
 
     @POST("togetherrun/register")
     suspend fun registerTogetherrun(@Body requestModel: TogetherrunReisterModel): Response<Unit>
+
+    @DELETE("togetherrun/savings/{savingContractId}")
+    suspend fun deleteTogetherRunSavings(@Path("savingContractId") savingContractId: Int): Response<Unit>
 
 }
