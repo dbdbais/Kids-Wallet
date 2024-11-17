@@ -245,7 +245,7 @@ public class TogetherRunService {
                     togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
                             .togetherRunId((Long) obj[0])
                             .targetTitle((String) obj[1])
-                            .targetAmount((int) obj[2])
+                            .targetAmount(((BigDecimal) obj[2]).intValue())
                             .dDay((Long) obj[3])
                             .isAccept(togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal())
                             .build();
@@ -255,7 +255,7 @@ public class TogetherRunService {
                     togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
                             .togetherRunId((Long) obj[0])
                             .targetTitle((String) obj[1])
-                            .targetAmount((int) obj[2])
+                            .targetAmount(((BigDecimal) obj[2]).intValue())
                             .dDay((Long) obj[3])
                             .isAccept(togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal())
                             .build();
@@ -357,7 +357,7 @@ public class TogetherRunService {
         List<RegularDepositResponseDto> regularDepositResponseDtoList = new ArrayList<>();
         for (Object[] obj : result) {
             RegularDepositResponseDto regularDepositResponseDto = RegularDepositResponseDto.builder()
-                    .amount((int) obj[0])
+                    .amount(((BigDecimal) obj[0]).intValue())
                     .depositDay((Short) obj[1])
                     .startDate(((java.sql.Date) obj[2]).toLocalDate())
                     .endDate(((java.sql.Date) obj[3]).toLocalDate())
