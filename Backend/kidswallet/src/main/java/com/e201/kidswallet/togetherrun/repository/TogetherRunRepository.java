@@ -12,12 +12,15 @@ public interface TogetherRunRepository extends JpaRepository<TogetherRun, Long> 
 
     @Query(value = "SELECT tr.together_run_id, tr.target_title, tr.target_amount, " +
             "DATEDIFF(tr.target_date, CURRENT_DATE), " +
-            "CASE WHEN tr.status = 0 THEN false ELSE true END " +
+            "tr.status, " +
+            "sc.status " +
             "FROM together_run tr " +
+            "LEFT JOIN saving_contract sc ON tr.saving_contract_id = sc.saving_contract_id " +
             "JOIN relation r ON tr.relation_id = r.relation_id " +
             "JOIN user child_user ON r.children_id = child_user.user_id " +
             "JOIN user parent_user ON r.parent_id = parent_user.user_id " +
-            "WHERE child_user.user_id = :userId OR parent_user.user_id = :userId",
+            "WHERE (child_user.user_id = :userId OR parent_user.user_id = :userId) " +
+            "AND tr.status IN (0, 1)",
             nativeQuery = true)
     List<Object[]> findTogetherRunInfoByUserId(@Param("userId") Long userId);
 

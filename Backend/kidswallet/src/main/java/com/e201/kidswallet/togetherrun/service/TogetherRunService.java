@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -134,6 +135,7 @@ public class TogetherRunService {
         }
     }
 
+    @Transactional
     public StatusCode togetherRunAnswer(Long togetherRunId, TogetherRunStatus isAccept, TogetherRunAnswerRequestDto togetherRunAnswerRequestDto) {
         TogetherRun togetherRun = togetherRunRepository.findById(togetherRunId).orElse(null);
         if (togetherRun == null) {
@@ -148,12 +150,6 @@ public class TogetherRunService {
         }
 
         togetherRun.setStatus(isAccept);
-        try {
-            togetherRunRepository.save(togetherRun);
-        } catch (Exception e) {
-            System.out.println("togetherRunRepository Error");
-            return StatusCode.BAD_REQUEST;
-        }
 
         if (parents.getRepresentAccountId() == null) {
             return StatusCode.NO_REPRESENTATIVE_ACCOUNT;
@@ -176,12 +172,15 @@ public class TogetherRunService {
                         .accountId(accountId)
                         .build();
                 accountRepository.save(newAccount);
+                int weeks = contractWeeks(LocalDate.now(), togetherRun.getTargetDate(), LocalDate.now().getDayOfWeek().getValue());
                 savingContract = SavingContract.builder()
                         .user(userRepository.findById(togetherRun.getRelation().getParent().getUserId())
                                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId")))
                         .saving(saving)
                         .savingAccount(accountId)
                         .depositDay((short)togetherRun.getCreatedAt().toLocalDate().getDayOfWeek().getValue())
+                        .childDepositAmount(togetherRun.getChildContribute().divide(BigDecimal.valueOf(weeks), RoundingMode.HALF_UP))
+                        .parentsDepositAmount(togetherRun.getParentsContribute().divide(BigDecimal.valueOf(weeks), RoundingMode.HALF_UP))
                         .expiredAt(togetherRun.getTargetDate())
                         .build();
                 savingContractRepository.save(savingContract);
@@ -195,7 +194,7 @@ public class TogetherRunService {
                 parentsTransferResult = accountService.transferMoney(parentsTransferMoneyDTO);
                 if (childTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus() || parentsTransferResult.getHttpStatus() == StatusCode.BAD_REQUEST.getHttpStatus()) {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    return StatusCode.BAD_REQUEST;
+                    return StatusCode.FAILD_TRANSFER;
                 }
 
                 SavingPayment childPayment = SavingPayment.builder()
@@ -215,7 +214,7 @@ public class TogetherRunService {
                 savingPaymentRepository.save(parentsPayment);
 
             } catch (Exception e) {
-                System.out.println("savingContractRepository Error");
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return StatusCode.BAD_REQUEST;
             }
         }
@@ -224,23 +223,45 @@ public class TogetherRunService {
             togetherRun.setSavingContract(savingContract);
             togetherRunRepository.save(togetherRun);
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return StatusCode.BAD_REQUEST;
         }
         return StatusCode.SUCCESS;
     }
 
-    public List<TogetherRunDataResponseDto> togetherRunList(Long userId) {
+    public List<TogetherRunDataResponseDto> togetherRunList(Long userId, SavingContractStatus status) {
         List<Object[]> result = togetherRunRepository.findTogetherRunInfoByUserId(userId);
         List<TogetherRunDataResponseDto> togetherRunDataResponseDtoList = new ArrayList<>();
         for (Object[] obj : result) {
-            TogetherRunDataResponseDto togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
-                    .togetherRunId((Long) obj[0])
-                    .targetTitle((String) obj[1])
-                    .targetAmount((BigDecimal) obj[2])
-                    .dDay((Long) obj[3])
-                    .isAccept(((Long) obj[4]) == 1L)
-                    .build();
-            togetherRunDataResponseDtoList.add(togetherRunDataResponseDto);
+            TogetherRunDataResponseDto togetherRunDataResponseDto = null;
+            // 모든 같이 달리기
+            Byte togetherRunStatus = (Byte) obj[4];
+            Byte savingContractStatus = (Byte) obj[5];
+
+            if (status == SavingContractStatus.PROCEED) {
+                if (togetherRunStatus == TogetherRunStatus.PENDING.ordinal() || (togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal() && savingContractStatus == SavingContractStatus.PROCEED.ordinal())) {
+                    togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
+                            .togetherRunId((Long) obj[0])
+                            .targetTitle((String) obj[1])
+                            .targetAmount((BigDecimal) obj[2])
+                            .dDay((Long) obj[3])
+                            .isAccept(togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal())
+                            .build();
+                }
+            } else if (status == SavingContractStatus.COMPLETED) {
+                if (togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal() && savingContractStatus == SavingContractStatus.COMPLETED.ordinal()) {
+                    togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
+                            .togetherRunId((Long) obj[0])
+                            .targetTitle((String) obj[1])
+                            .targetAmount((BigDecimal) obj[2])
+                            .dDay((Long) obj[3])
+                            .isAccept(togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal())
+                            .build();
+                }
+            }
+            if (togetherRunDataResponseDto != null) {
+                togetherRunDataResponseDtoList.add(togetherRunDataResponseDto);
+            }
         }
         return togetherRunDataResponseDtoList;
     }
@@ -402,5 +423,16 @@ public class TogetherRunService {
                 .amount(amount)
                 .build();
         return transferMoneyDTO;
+    }
+
+    public int contractWeeks(LocalDate startDate, LocalDate endDate, int depositDay) {
+        int weeks = 0;
+        while (startDate.isBefore(endDate)) {
+            if (startDate.getDayOfWeek().getValue() == depositDay) {
+                weeks++;
+            }
+            startDate = startDate.plusWeeks(1);
+        }
+        return weeks;
     }
 }
