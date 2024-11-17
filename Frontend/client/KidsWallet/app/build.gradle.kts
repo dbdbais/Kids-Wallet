@@ -1,9 +1,23 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     //TODO: 1. append fcm plugin(app)
     id("com.google.gms.google-services")
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
+val baseUrl = localProperties.getProperty("BASE_URL") ?: "default-url"
+val storePassword = localProperties.getProperty("STORE_PASSWORD") ?: "default-password"
+val keyAlias = localProperties.getProperty("KEY_ALIAS") ?: "default-alias"
+val keyPassword = localProperties.getProperty("KEY_PASSWORD") ?: "default-password"
 
 android {
     namespace = "com.ssafy.kidswallet"
@@ -20,9 +34,9 @@ android {
         // 배포서버
         create("release") {
             storeFile = file("/kidswallet-release-key.jks")
-            storePassword = "kidswallet"
-            keyAlias = "kidswallet-key-alias"
-            keyPassword = "kidswallet"
+            storePassword = storePassword
+            keyAlias = keyAlias
+            keyPassword = keyPassword
         }
     }
 
@@ -41,7 +55,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
         }
         release {
             isMinifyEnabled = false
@@ -49,7 +63,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             signingConfig = signingConfigs.getByName("release")
         }
     }
