@@ -178,7 +178,15 @@ fun RunScreen(
                             .padding(16.dp)
                             .clickable {
                                 if (item.isAccept) {
-                                    navController.navigate("runParentsDetail/${item.togetherRunId}")
+                                    val route = if (storedUserData?.userRole == "CHILD") {
+                                        "runParentsDetail/${item.togetherRunId}"
+                                    } else if (storedUserData?.userRole == "PARENT") {
+                                        "parentsDetail/${item.togetherRunId}"
+                                    } else {
+                                        null // 혹시 다른 경우를 대비한 처리
+                                    }
+
+                                    route?.let { navController.navigate(it) }
                                 } else {
                                     showAlertDialog.value = true
                                 }
@@ -219,6 +227,7 @@ fun RunScreen(
                         )
                     }
                 }
+
             }
         }
 
