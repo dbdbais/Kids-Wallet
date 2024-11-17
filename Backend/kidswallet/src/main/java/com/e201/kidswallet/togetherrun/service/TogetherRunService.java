@@ -199,13 +199,13 @@ public class TogetherRunService {
 
                 SavingPayment childPayment = SavingPayment.builder()
                         .user(child)
-                        .depositAmount(togetherRun.getChildContribute())
+                        .depositAmount(savingContract.getChildDepositAmount())
                         .depositDate(LocalDateTime.now())
                         .savingContract(savingContract)
                         .build();
                 SavingPayment parentsPayment = SavingPayment.builder()
                         .user(parents)
-                        .depositAmount(togetherRun.getParentsContribute())
+                        .depositAmount(savingContract.getParentsDepositAmount())
                         .depositDate(LocalDateTime.now())
                         .savingContract(savingContract)
                         .build();
