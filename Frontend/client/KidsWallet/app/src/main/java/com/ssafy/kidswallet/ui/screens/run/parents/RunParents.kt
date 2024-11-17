@@ -171,7 +171,7 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date(selectedDate)),
+                    text = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(selectedDate)),
                     style = FontSizes.h16,
                     color = Color(0xFFFFFFFF),
                     fontWeight = FontWeight.Bold
@@ -232,11 +232,11 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
         // 목표와 날짜를 ViewModel에 저장하고 runParentsMoney로 이동
         BlueButton(
             onClick = {
-                val selectedDateText = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date(selectedDate))
+                val selectedDateText = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(selectedDate))
                 val base64String = imageUri?.let { uri ->
                     getBase64FromUri(context, uri)
                 } ?: getBase64FromDrawable(context, R.drawable.logo_full)
-                viewModel.setGoalAndDateAndBase64Text(text, "${selectedDateText}까지\n멤버와 함께 목표를 달성 하세요", base64String ?: "")
+                viewModel.setGoalAndDateAndBase64Text(text, selectedDateText, base64String ?: "")
                 navController.navigate("runParentsMoney")
             },
             text = "다음",

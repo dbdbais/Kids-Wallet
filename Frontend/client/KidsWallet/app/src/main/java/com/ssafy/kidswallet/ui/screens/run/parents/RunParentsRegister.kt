@@ -5,8 +5,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,19 +25,36 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.data.model.TogetherrunReisterModel
+import com.ssafy.kidswallet.data.network.RetrofitClient
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.ImageUtils.base64ToBitmap
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
+import com.ssafy.kidswallet.ui.viewmodel.TogetherrunReisterViewModel
+import com.ssafy.kidswallet.ui.viewmodel.TogetherrunReisterViewModelFactory
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 
 @Composable
 fun RunParentsRegisterScreen(
     navController: NavController,
     viewModel: StateRunViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel(),
     stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel()
 ) {
+    val apiService = RetrofitClient.apiService
+    val factory = TogetherrunReisterViewModelFactory(apiService)
+    val togetherrunReisterViewModel: TogetherrunReisterViewModel = viewModel(factory = factory)
+
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+
+    // AlertDialog 상태 관리
+    val showDialog = remember { mutableStateOf(false) }
+    val dialogMessage = remember { mutableStateOf("") }
+    val isSuccess = remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,7 +100,7 @@ fun RunParentsRegisterScreen(
                         )
                     } else {
                         Image(
-                            painter = painterResource(id = R.drawable.icon_bundle),
+                            painter = painterResource(id = R.drawable.logo_full),
                             contentDescription = "달리기 이미지",
                             modifier = Modifier.size(120.dp)
                         )
@@ -103,7 +124,7 @@ fun RunParentsRegisterScreen(
 
                     // 날짜 텍스트
                     Text(
-                        text = viewModel.selectedDateText,
+                        text = viewModel.selectedDateText + "까지 \n" + "멤버와 함께 목표를 달성하세요",
                         style = FontSizes.h16,
                         color = Color(0xFF8C8595),
                         textAlign = TextAlign.Center,
@@ -120,7 +141,7 @@ fun RunParentsRegisterScreen(
             ParticipantInfo(
                 name = "나",
                 amount = "목표 " + NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.childGoalMoney) + "원",
-                imageResId = R.drawable.character_me // Replace with your image resource
+                imageResId = R.drawable.character_me
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -128,7 +149,7 @@ fun RunParentsRegisterScreen(
             ParticipantInfo(
                 name = "응애재훈",
                 amount = "목표 " + NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.parentGoalMoney) + "원",
-                imageResId = R.drawable.character_run_member // Replace with your image resource
+                imageResId = R.drawable.character_run_member
             )
         }
 
@@ -137,13 +158,41 @@ fun RunParentsRegisterScreen(
         // 신청 버튼
         BlueButton(
             onClick = {
-                // 상태 초기화 호출
-                stateRunMoneyViewModel.resetGoals()
-                viewModel.resetRunImageText()
+                println("신청 버튼 클릭 후 로직 실행 시작") // 디버깅 로그
 
-                // 네비게이션 이동
-                navController.navigate("run") {
-                    popUpTo(0) { inclusive = true }
+                // 필요한 데이터 추출
+                val targetTitle = viewModel.goalText
+                val targetImage = viewModel.runImageText
+                val targetAmount = stateRunMoneyViewModel.togetherGoalMoney
+                val targetDate = viewModel.selectedDateText
+                val parentsContribute = stateRunMoneyViewModel.parentGoalMoney
+                val childContribute = stateRunMoneyViewModel.childGoalMoney
+
+                val parentsId = storedUserData?.relations?.getOrNull(0)?.userId ?: 0
+                val childId = storedUserData?.userId ?: 0
+
+                val requestModel = TogetherrunReisterModel(
+                    parentsId = parentsId,
+                    childId = childId,
+                    targetTitle = targetTitle,
+                    targetAmount = targetAmount,
+                    targetDate = targetDate,
+                    parentsContribute = parentsContribute,
+                    childContribute = childContribute,
+                    targetImage = targetImage,
+                )
+
+                println("Request Model: $requestModel") // 생성된 요청 데이터 디버깅
+
+                togetherrunReisterViewModel.registerTogetherrun(requestModel) { success ->
+                    if (success) {
+                        dialogMessage.value = "등록이 성공적으로 완료되었습니다!"
+                        isSuccess.value = true
+                    } else {
+                        dialogMessage.value = "등록 중 오류가 발생했습니다. 다시 시도해주세요."
+                        isSuccess.value = false
+                    }
+                    showDialog.value = true
                 }
             },
             text = "신청하기",
@@ -152,7 +201,53 @@ fun RunParentsRegisterScreen(
                 .padding(bottom = 20.dp)
         )
     }
+
+    // 성공 및 실패 메시지를 위한 AlertDialog
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                showDialog.value = false
+                if (isSuccess.value) {
+                    navController.navigate("run") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            },
+            title = {
+                Text(
+                    text = if (isSuccess.value) "성공" else "오류",
+                    color = if (isSuccess.value) Color(0xFF77DD77) else Color.Red,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = dialogMessage.value,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF8C8595)
+                )
+            },
+            containerColor = Color.White,
+            confirmButton = {
+                BlueButton(
+                    onClick = {
+                        showDialog.value = false
+                        if (isSuccess.value) {
+                            navController.navigate("run") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    },
+                    height = 40,
+                    modifier = Modifier.width(260.dp),
+                    elevation = 0,
+                    text = "확인"
+                )
+            }
+        )
+    }
 }
+
 
 @Composable
 fun ParticipantInfo(name: String, amount: String, imageResId: Int) {

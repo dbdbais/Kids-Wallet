@@ -73,6 +73,7 @@ import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
+import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 import kotlinx.coroutines.flow.first
@@ -84,7 +85,8 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
         private val stateRunViewModel: StateRunViewModel by viewModels()
         private val stateBeggingMissionViewModel: StateBeggingMissionViewModel by viewModels()
         private val stateRunMoneyViewModel: StateRunMoneyViewModel by viewModels()
-    @RequiresApi(Build.VERSION_CODES.R)
+        private val togetherDetailViewModel: TogetherDetailViewModel by viewModels()
+        @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
@@ -174,7 +176,20 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("runParentsMoney") {
                 RunParentsMoneyScreen(navController = navController, stateRunMoneyViewModel = stateRunMoneyViewModel)
             }
-            composable("runParentsDetail") { RunParentsDetailScreen(navController) }
+            composable(
+                route = "runParentsDetail/{togetherRunId}",
+                arguments = listOf(navArgument("togetherRunId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val togetherRunId = backStackEntry.arguments?.getInt("togetherRunId")
+                RunParentsDetailScreen(
+                    navController = navController,
+                    togetherRunId = togetherRunId,
+                    togetherDetailViewModel = togetherDetailViewModel // viewModel 전달
+                )
+            }
+
+
+
             composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
             composable("runParentsRegister") {
                 RunParentsRegisterScreen(navController = navController, viewModel = stateRunViewModel, stateRunMoneyViewModel = stateRunMoneyViewModel)

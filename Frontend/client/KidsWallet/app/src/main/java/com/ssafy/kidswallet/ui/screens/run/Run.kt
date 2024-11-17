@@ -177,7 +177,7 @@ fun RunScreen(
                             .padding(16.dp)
                             .clickable {
                                 if (item.isAccept) {
-                                    navController.navigate("runParentsDetail")
+                                    navController.navigate("runParentsDetail/${item.togetherRunId}")
                                 } else {
                                     showAlertDialog.value = true
                                 }
