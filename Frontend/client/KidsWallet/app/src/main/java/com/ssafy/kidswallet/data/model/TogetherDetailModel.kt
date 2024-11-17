@@ -1,17 +1,23 @@
 package com.ssafy.kidswallet.data.model
 
+data class TogetherDetailResponse(
+    val data: TogetherDetailModel?,
+    val message: String?,
+    val timestamp: String
+)
+
 data class TogetherDetailModel(
+    val savingContractId: Int,
     val targetTitle: String,
     val targetImage: String,
     val targetAmount: Int,
-    val expiredAt: List<Int>, // 연, 월, 일 순서로 포함된 리스트
-    val childAmount: Int?,
-    val parentAmount: Int?,
-    val dDay: Int
-)
-
-data class TogetherDetailResponse(
-    val data: TogetherDetailModel,
-    val message: String?,
-    val timestamp: String
+    val expiredAt: List<Int>,
+    val childAmount: Int,
+    val childGoalAmount: Int,
+    val childName: String,
+    val parentAmount: Int,
+    val parentGoalAmount: Int,
+    val parentName: String,
+    val dDay: Int,
+    val isAccept: Boolean
 )

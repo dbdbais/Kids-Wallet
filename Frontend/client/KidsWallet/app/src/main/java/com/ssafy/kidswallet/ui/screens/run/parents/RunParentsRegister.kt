@@ -124,7 +124,7 @@ fun RunParentsRegisterScreen(
 
                     // 날짜 텍스트
                     Text(
-                        text = viewModel.selectedDateText,
+                        text = viewModel.selectedDateText + "까지 \n" + "멤버와 함께 목표를 달성하세요",
                         style = FontSizes.h16,
                         color = Color(0xFF8C8595),
                         textAlign = TextAlign.Center,
