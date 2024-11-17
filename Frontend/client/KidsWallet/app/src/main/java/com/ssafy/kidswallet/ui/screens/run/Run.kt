@@ -34,6 +34,7 @@ import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.GoldenRatioUtils
+import com.ssafy.kidswallet.ui.components.TopToMain
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherListViewModel
 
@@ -64,7 +65,7 @@ fun RunScreen(
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Top(title = "행복 달리기", navController = navController)
+                TopToMain(title = "같이 달리기", navController = navController)
             }
 
             // Tabs
@@ -91,7 +92,7 @@ fun RunScreen(
                     }
 
                     Button(
-                        onClick = { /* 함께 달리기 클릭 시 동작 */ },
+                        onClick = { navController.navigate("runOthers") },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF7F7F7)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),

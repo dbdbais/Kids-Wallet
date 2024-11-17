@@ -63,6 +63,7 @@ import com.ssafy.kidswallet.ui.screens.regularlist.RegularListScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletTransferScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletWithdrawScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
+import com.ssafy.kidswallet.ui.screens.run.others.RunOthersScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishScreen
@@ -168,6 +169,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("card3") { Card3Screen(navController) }
             // run
             composable("run") { RunScreen(navController) }
+            composable("runOthers") { RunOthersScreen(navController) }
             composable("runParentsFinish") { RunParentsFinishScreen(navController) }
             composable("runParentsFinishDetail") { RunParentsFinishDetailScreen(navController) }
             composable("runParents") {

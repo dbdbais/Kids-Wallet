@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+// TogetherDetailViewModel.kt
+
 class TogetherDetailViewModel : ViewModel() {
     private val _togetherDetail = MutableStateFlow<TogetherDetailModel?>(null)
     val togetherDetail: StateFlow<TogetherDetailModel?> = _togetherDetail
@@ -19,7 +21,6 @@ class TogetherDetailViewModel : ViewModel() {
                 val response = apiService.togetherDetail(togetherRunId)
                 if (response.isSuccessful) {
                     _togetherDetail.value = response.body()?.data
-                    Log.d("TogetherDetailViewModel", "Fetched detail: ${_togetherDetail.value}")
                 } else {
                     Log.e("TogetherDetailViewModel", "Error: ${response.code()} - ${response.message()}")
                 }
@@ -28,4 +29,20 @@ class TogetherDetailViewModel : ViewModel() {
             }
         }
     }
+
+    fun deleteTogetherRun(savingContractId: Int, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.deleteTogetherRunSavings(savingContractId)
+                if (response.isSuccessful) {
+                    onSuccess()
+                } else {
+                    onFailure("삭제 실패: ${response.code()} - ${response.message()}")
+                }
+            } catch (e: Exception) {
+                onFailure("삭제 중 네트워크 오류: ${e.message}")
+            }
+        }
+    }
 }
+

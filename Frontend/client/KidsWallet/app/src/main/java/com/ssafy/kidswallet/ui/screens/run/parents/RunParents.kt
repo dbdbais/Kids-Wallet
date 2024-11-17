@@ -43,7 +43,7 @@ import java.util.Locale // `java.util.Locale`만 남김
 @Composable
 fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel) {
     var text by remember { mutableStateOf("") }
-    val maxChar = 30
+    val maxChar = 20
 
     // 사진 선택 및 날짜 설정 (기존 코드 유지)
     var imageUri by remember { mutableStateOf<Uri?>(null) }

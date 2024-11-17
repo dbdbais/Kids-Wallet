@@ -15,6 +15,7 @@ import com.ssafy.kidswallet.data.model.PlayMissionModel
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
 import com.ssafy.kidswallet.data.model.TestMissionModel
+import com.ssafy.kidswallet.data.model.TogetherCompleteListResponse
 import com.ssafy.kidswallet.data.model.TogetherDetailResponse
 import com.ssafy.kidswallet.data.model.TogetherListModel
 import com.ssafy.kidswallet.data.model.TogetherListResponse
@@ -24,6 +25,7 @@ import com.ssafy.kidswallet.fcm.dto.FcmDto
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -75,8 +77,11 @@ interface ApiService {
     @GET("account/weekly")
     suspend fun getAccountWeekly(@Query("accountId") accountId: String): Response<AccountWeeklyResponse>
 
-    @GET("togetherrun/{userId}/list")
+    @GET("togetherrun/{userId}/proceedlist")
     suspend fun togetherList(@Path("userId") userId: Int): Response<TogetherListResponse>
+
+    @GET("togetherrun/{userId}/completelist")
+    suspend fun togetherCompleteList(@Path("userId") userId: Int): Response<TogetherCompleteListResponse>
 
     @GET("togetherrun/{togetherRunId}/detail")
     suspend fun togetherDetail(@Path("togetherRunId") togetherRunId: Int): Response<TogetherDetailResponse>
@@ -98,5 +103,8 @@ interface ApiService {
 
     @POST("togetherrun/register")
     suspend fun registerTogetherrun(@Body requestModel: TogetherrunReisterModel): Response<Unit>
+
+    @DELETE("togetherrun/savings/{savingContractId}")
+    suspend fun deleteTogetherRunSavings(@Path("savingContractId") savingContractId: Int): Response<Unit>
 
 }
