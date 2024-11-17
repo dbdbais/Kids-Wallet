@@ -92,7 +92,7 @@ fun RunScreen(
                     }
 
                     Button(
-                        onClick = { /* 함께 달리기 클릭 시 동작 */ },
+                        onClick = { navController.navigate("runOthers") },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF7F7F7)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
