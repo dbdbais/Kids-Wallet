@@ -55,13 +55,16 @@ import com.ssafy.kidswallet.viewmodel.RelationViewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.zIndex
 import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel(), accountTransactionViewModel: AccountTransactionViewModel = viewModel()) {

@@ -119,7 +119,6 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
             Log.d(ContentValues.TAG, msg)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         }) //FCM end
 
         setContent {

@@ -121,7 +121,7 @@ fun BeggingMoneyScreen(navController: NavController, loginViewModel: LoginViewMo
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "최근 조르기 내역",
+                    text = "최근 조르기 성공 내역",
                     fontWeight = FontWeight.Black,
                     style = FontSizes.h32
                 )
