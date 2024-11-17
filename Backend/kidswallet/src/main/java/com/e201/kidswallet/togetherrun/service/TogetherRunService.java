@@ -36,6 +36,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -277,7 +279,7 @@ public class TogetherRunService {
                         .targetTitle(togetherRun.getTargetTitle())
                         .targetAmount(togetherRun.getTargetAmount())
                         .expiredAt(togetherRun.getTargetDate())
-                        .dDay(LocalDate.now().compareTo(togetherRun.getCreatedAt().toLocalDate()))
+                        .dDay((int)ChronoUnit.DAYS.between(LocalDate.now(), togetherRun.getTargetDate()))
                         .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
                         .childGoalAmount(togetherRun.getChildContribute())
                         .childName(togetherRun.getRelation().getChild().getUserRealName())
@@ -296,7 +298,7 @@ public class TogetherRunService {
                         .targetTitle(togetherRun.getTargetTitle())
                         .targetAmount(togetherRun.getTargetAmount())
                         .expiredAt(savingContract.getExpiredAt())
-                        .dDay(LocalDate.now().compareTo(savingContract.getExpiredAt()))
+                        .dDay((int)ChronoUnit.DAYS.between(LocalDate.now(), togetherRun.getTargetDate()))
                         .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
                         .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getChild().getUserId()))
                         .childGoalAmount(togetherRun.getChildContribute())
