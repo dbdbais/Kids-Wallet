@@ -148,7 +148,8 @@ fun RunParentsDetailScreen(
                     horizontalArrangement = Arrangement.Start,
                 ) {
                     Text(
-                        text = "1. 키즈월렛에서 자동이체 된다는 안내\n2. 미납 시 다음날까지 계좌에 해당하는 금액이 있어야함. 다음 납입날까지 미납시 계약 해제됨.",
+                        text = "1. 키즈월렛에서 매주 자동 이체됩니다.\n" +
+                                "2. 미납 시 다음 납입일까지 해당 금액이 계좌에 있어야 하며, 다음 납입일에 2주분이 함께 출금됩니다. 만일, 다음 납입일에도 미납 시 계약이 해제됩니다.",
                         style = FontSizes.h16,
                         fontWeight = FontWeight.Bold,
                         color = Color.White

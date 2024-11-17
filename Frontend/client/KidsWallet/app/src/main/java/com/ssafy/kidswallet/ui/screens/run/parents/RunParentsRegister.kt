@@ -100,7 +100,7 @@ fun RunParentsRegisterScreen(
                         )
                     } else {
                         Image(
-                            painter = painterResource(id = R.drawable.logo_full),
+                            painter = painterResource(id = R.drawable.app_logo),
                             contentDescription = "달리기 이미지",
                             modifier = Modifier.size(120.dp)
                         )

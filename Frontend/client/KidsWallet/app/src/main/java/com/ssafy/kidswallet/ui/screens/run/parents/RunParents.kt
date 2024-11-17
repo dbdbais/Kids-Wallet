@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,6 +45,9 @@ import java.util.Locale // `java.util.Locale`만 남김
 fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel) {
     var text by remember { mutableStateOf("") }
     val maxChar = 20
+
+    // AlertDialog state management for missing goal input
+    val showAlertDialog = remember { mutableStateOf(false) }
 
     // 사진 선택 및 날짜 설정 (기존 코드 유지)
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -119,7 +123,7 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
                         },
                         placeholder = {
                             Text(
-                                text = "목표를 세워봐요",
+                                text = "목표를 세워 봐요",
                                 style = FontSizes.h16,
                                 color = Color(0x808C8595),
                                 fontWeight = FontWeight.Bold
@@ -229,18 +233,55 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 목표와 날짜를 ViewModel에 저장하고 runParentsMoney로 이동
+        // 목표와 날짜를 ViewModel에 저장 하고 runParentsMoney로 이동
         BlueButton(
             onClick = {
-                val selectedDateText = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(selectedDate))
-                val base64String = imageUri?.let { uri ->
-                    getBase64FromUri(context, uri)
-                } ?: getBase64FromDrawable(context, R.drawable.logo_full)
-                viewModel.setGoalAndDateAndBase64Text(text, selectedDateText, base64String ?: "")
-                navController.navigate("runParentsMoney")
+                if (text.isBlank()) {
+                    showAlertDialog.value = true // Show alert if no goal is entered
+                } else {
+                    val selectedDateText = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(selectedDate))
+                    val base64String = imageUri?.let { uri ->
+                        getBase64FromUri(context, uri)
+                    } ?: getBase64FromDrawable(context, R.drawable.app_logo)
+                    viewModel.setGoalAndDateAndBase64Text(text, selectedDateText, base64String ?: "")
+                    navController.navigate("runParentsMoney")
+                }
             },
             text = "다음",
-            modifier = Modifier.width(400.dp).padding(bottom = 20.dp)
+            modifier = Modifier
+                .width(400.dp)
+                .padding(bottom = 20.dp)
+        )
+    }
+
+    // AlertDialog for missing goal input
+    if (showAlertDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showAlertDialog.value = false },
+            title = {
+                Text(
+                    text = "알림",
+                    color = Color(0xFFFBC02D),
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "목표를 입력해 주세요.",
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF8C8595)
+                )
+            },
+            confirmButton = {
+                BlueButton(
+                    onClick = { showAlertDialog.value = false },
+                    text = "확인",
+                    modifier = Modifier.width(260.dp),
+                    height = 40,
+                    elevation = 0
+                )
+            }
         )
     }
 }
+
