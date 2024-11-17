@@ -14,6 +14,7 @@ import com.ssafy.kidswallet.data.model.MessageModel
 import com.ssafy.kidswallet.data.model.MissionResponse
 import com.ssafy.kidswallet.data.model.NoticeResponse
 import com.ssafy.kidswallet.data.model.PlayMissionModel
+import com.ssafy.kidswallet.data.model.RegularListApiResponse
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
 import com.ssafy.kidswallet.data.model.TestMissionModel
@@ -117,4 +118,9 @@ interface ApiService {
         @Path("userId") userId: String,
         @Path("noticeNum") noticeNum: String
     ): Response<Unit>
+
+    @GET("togetherrun/{userId}/regulardeposit")
+    suspend fun getRegularDepositList(
+        @Path("userId") userId: String
+    ): Response<RegularListApiResponse>
 }

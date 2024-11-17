@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.regularlist
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
+import com.ssafy.kidswallet.data.model.RegularListModel
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
@@ -45,13 +48,27 @@ import com.ssafy.kidswallet.ui.components.YellowButton
 import com.ssafy.kidswallet.ui.screens.begging.mission.CurrentMissionList
 import com.ssafy.kidswallet.ui.screens.begging.mission.WaitingMissionList
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.RegularListViewModel
 import kotlin.random.Random
 
 @Composable
-fun RegularListScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel()) {
+fun RegularListScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), regularListViewModel: RegularListViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val userId = storedUserData?.userId
+    val userRealName = storedUserData?.userRealName
     val userName = storedUserData?.userName
     val userGender = storedUserData?.userGender
+
+    val togetherList = regularListViewModel.regularList.collectAsState().value
+    val totalAmount = togetherList.sumOf { it.amount }
+    val formattedNumber = NumberUtils.formatNumberWithCommas(totalAmount)
+
+    if (userId != null) {
+        LaunchedEffect(userId) {
+            regularListViewModel.fetchRegularList(userId.toString())
+        }
+    }
+
     Box(
         modifier = Modifier
     ) {
@@ -116,7 +133,7 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
-                            text = "장유성",
+                            text = userRealName?: "알 수 없음",
                             style = FontSizes.h24,
                             color = Color(0xFF6DCEF5),
                             fontWeight = FontWeight.Bold
@@ -143,7 +160,7 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "4400",
+                            text = formattedNumber,
                             style = FontSizes.h24,
                             color = Color(0xFF3290FF),
                             fontWeight = FontWeight.Bold
@@ -190,7 +207,7 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    Together1List()
+                    Together1List(togetherList = togetherList)
                 }
             }
         }
@@ -201,55 +218,7 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
 }
 
 @Composable
-fun Together1List() {
-    val togetherList = listOf(
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-        mapOf(
-            "date" to "2024.08.10~2024.10.24",
-            "day" to "월요일",
-            "amount" to 10000,
-        ),
-    )
-
+fun Together1List(togetherList: List<RegularListModel>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -285,8 +254,20 @@ fun Together1List() {
                  horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
             ) {
                 items(togetherList) {together ->
-                    // val formattedDate = "${together[""]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
-                    // val formattedNumber = NumberUtils.formatNumberWithCommas(number)
+                    val startDate = "${together.startDate[0]}.${together.startDate[1]}.${together.startDate[2]}"
+                    val endDate = "${together.endDate[0]}.${together.endDate[1]}.${together.endDate[2]}"
+                    val formattedNumber = NumberUtils.formatNumberWithCommas(together.amount)
+                    val dayOfWeek = when (together.depositDay) {
+                        1 -> "월요일"
+                        2 -> "화요일"
+                        3 -> "수요일"
+                        4 -> "목요일"
+                        5 -> "금요일"
+                        6 -> "토요일"
+                        7 -> "일요일"
+                        else -> "알 수 없음" // 예외 처리
+                    }
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -300,14 +281,14 @@ fun Together1List() {
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = together["date"] as? String ?: "N/A",
+                                text = "$startDate ~ $endDate",
                                 color = Color(0xFF8C8595),
                                 style = FontSizes.h12,
                                 fontWeight = FontWeight.Bold
                             )
                             Row {
                                 Text(
-                                    text = together["day"] as? String ?: "N/A",
+                                    text = dayOfWeek,
                                     color = Color(0xFF3290FF),
                                     style = FontSizes.h16,
                                     fontWeight = FontWeight.Bold
@@ -321,7 +302,7 @@ fun Together1List() {
                             }
                         }
                         Text(
-                            text = (together["amount"] as? Int)?.toString() ?: "N/A",
+                            text = "$formattedNumber 원",
                             color = Color(0xFF3290FF),
                             style = FontSizes.h16,
                             fontWeight = FontWeight.Bold
