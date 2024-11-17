@@ -4,10 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,7 +66,7 @@ fun RunOtherHeaderSection() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.logo_full),
-            contentDescription = "송금 아이콘",
+            contentDescription = "로고 아이콘",
             modifier = Modifier.size(200.dp)
         )
     }
@@ -75,7 +77,7 @@ fun RunOtherContentSection() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 20.dp)
     ) {
         Text(
             text = "키즈월렛과 함께 달리며\n행복을 나누세요!!",
@@ -103,14 +105,76 @@ fun RunOtherContentSection() {
 
 @Composable
 fun RunOtherImage() {
-    Image(
-        painter = painterResource(id = R.drawable.logo_runothers),
-        contentDescription = "후원",
+    Box(
         modifier = Modifier
-            .fillMaxSize() // 전체 크기를 채우도록 설정
+            .fillMaxSize()
             .padding(horizontal = 16.dp)
-    )
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.logo_runothers),
+            contentDescription = "후원",
+            modifier = Modifier
+                .fillMaxSize()
+                .alpha(0.5f) // 이미지에 투명도 적용
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.LightGray.copy(alpha = 0.7f)) // 회색 반투명 오버레이
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.Center) // Column을 중앙에 정렬
+                .padding(bottom = 70.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.icon_prepare),
+                contentDescription = "준비 중"
+            )
+            Text(
+                text = "COMMING SOON",
+                style = FontSizes.h32,
+                color = Color(0xFF686CDF),
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Divider(
+                color = Color.Black,
+                thickness = 1.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "현재 서비스 준비중입니다.\n이용에 불편을 드려 대단히 죄송합니다.\n빠른 시일 내에 준비하여 찾아뵙겠습니다.",
+                style = FontSizes.h16,
+                color = Color.Black,
+//                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center // 텍스트 중앙 정렬
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Divider(
+                color = Color.Black,
+                thickness = 1.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
+        }
+    }
 }
+
+
+
+
 
 @Preview(
     showBackground = true,

@@ -65,7 +65,7 @@ fun RunScreen(
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                TopToMain(title = "내 지갑", navController = navController)
+                TopToMain(title = "같이 달리기", navController = navController)
             }
 
             // Tabs
