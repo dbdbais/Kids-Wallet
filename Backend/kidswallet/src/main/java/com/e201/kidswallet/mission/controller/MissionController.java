@@ -48,7 +48,7 @@ public class MissionController {
 
         StringBuilder message =new StringBuilder();
         message.append("아이가 부모님께 용돈을 요청(").append(noticeService.getUserName(requestDto.getUserId())).append("님이 용돈을 요청했어요!)");
-        noticeService.pushNotice(requestDto.getToUserId(),new NoticeDto("아이가 부모님께 용돈을 요청(~~님이 용돈을 요청했어요!)"));
+        noticeService.pushNotice(requestDto.getToUserId(),new NoticeDto(message.toString()));
         return ResponseDto.response(StatusCode.SUCCESS);
     }
 
