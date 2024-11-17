@@ -253,12 +253,15 @@ fun EditableAmountRow(
     var showDialog by remember { mutableStateOf(false) }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            showDialog = true // 클릭했을 때 다이얼로그를 보여줌
+        }
     ) {
         Text(
-            text = "${initialAmount}원",
+            text = "${NumberUtils.formatNumberWithCommas(initialAmount)}원",
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -268,9 +271,6 @@ fun EditableAmountRow(
             contentDescription = "수정",
             modifier = Modifier
                 .size(25.dp)
-                .clickable {
-                    showDialog = true
-                }
         )
     }
 
@@ -287,6 +287,7 @@ fun EditableAmountRow(
         )
     }
 }
+
 
 @Composable
 fun AmountInputDialog(
@@ -430,7 +431,7 @@ fun RCircularSlider(
 
         // 텍스트 표시 (현재 금액)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "${amount}원", style = FontSizes.h24, fontWeight = FontWeight.Bold)
+            Text(text = "${NumberUtils.formatNumberWithCommas(amount)}원", style = FontSizes.h24, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             LightBlueButton(
                 onClick = { showDialog = true },
@@ -448,7 +449,12 @@ fun RCircularSlider(
                     Column {
                         OutlinedTextField(
                             value = inputAmount,
-                            onValueChange = { inputAmount = it },
+                            onValueChange = { newValue ->
+                                // 숫자만 허용하고 최대 8자리까지 입력 가능
+                                if (newValue.text.all { it.isDigit() } && newValue.text.length <= 8) {
+                                    inputAmount = newValue
+                                }
+                            },
                             label = { Text("금액") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
