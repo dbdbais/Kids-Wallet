@@ -4,19 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -32,19 +21,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.GoldenRatioUtils
 import com.ssafy.kidswallet.ui.components.SuccessBadge
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.TogetherCompleteListViewModel
 
 @Composable
-fun RunParentsFinishScreen(navController: NavController) {
+fun RunParentsFinishScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
+    togetherCompleteListViewModel: TogetherCompleteListViewModel = viewModel()
+) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val togetherCompleteList = togetherCompleteListViewModel.togetherCompleteList.collectAsState().value
+
+    // API 호출을 통해 데이터 로드
+    storedUserData?.userId?.let { userId ->
+        togetherCompleteListViewModel.fetchTogetherCompleteList(userId)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -68,16 +70,15 @@ fun RunParentsFinishScreen(navController: NavController) {
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // 같이 달리기와 함께 달리기를 하나의 Row로 묶음
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp) // 버튼 사이 간격 조정
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
                         onClick = { /* 같이 달리기 클릭 시 동작 */ },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9D9D9)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                        modifier = Modifier.height(32.dp) // 버튼 높이 조정
+                        modifier = Modifier.height(32.dp)
                     ) {
                         Text(
                             text = "같이 달리기",
@@ -92,7 +93,7 @@ fun RunParentsFinishScreen(navController: NavController) {
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF7F7F7)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                        modifier = Modifier.height(32.dp) // 버튼 높이 조정
+                        modifier = Modifier.height(32.dp)
                     ) {
                         Text(
                             text = "함께 달리기",
@@ -103,7 +104,6 @@ fun RunParentsFinishScreen(navController: NavController) {
                     }
                 }
 
-                // 지난 달리기 텍스트
                 Text(
                     text = "진행중인 달리기",
                     fontWeight = FontWeight.Bold,
@@ -115,7 +115,6 @@ fun RunParentsFinishScreen(navController: NavController) {
                 )
             }
 
-            // 그리드 레이아웃으로 카드 배치
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
@@ -130,8 +129,8 @@ fun RunParentsFinishScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 반복되는 카드들
-                items(4) { index ->
+                items(togetherCompleteList.size) { index ->
+                    val item = togetherCompleteList[index]
                     Box(
                         modifier = Modifier
                             .width(150.dp)
@@ -144,48 +143,48 @@ fun RunParentsFinishScreen(navController: NavController) {
                             .border(1.dp, Color(0xFF6DCEF5), RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
-                                navController.navigate("runParentsFinishDetail")
+                                navController.navigate("runParentsFinishDetail/${item.togetherRunId}")
                             },
-                        contentAlignment = Alignment.TopStart // 텍스트는 상단 좌측에 정렬
+                        contentAlignment = Alignment.TopStart
                     ) {
                         Column(
                             horizontalAlignment = Alignment.Start,
                             verticalArrangement = Arrangement.Top
                         ) {
-                            // 상단 D-7 배지
-                            SuccessBadge(successOrFail = "성공")
+                            // 성공 여부 배지
+                            SuccessBadge(successOrFail = if (item.isAccept) "성공" else "실패")
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            // 카드 텍스트
+                            // 목표 제목
                             Text(
-                                text = "코딩 공부를 위한\n삼성 노트북 ${index + 1}",
+                                text = item.targetTitle,
                                 style = FontSizes.h16,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Start,
-                                color = Color(0xFFFFFFFF)
+                                color = Color.White
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
 
-                            // 지금까지 모은 금액 (포맷팅 적용)
+                            // 목표 금액
                             Text(
-                                text = "${NumberUtils.formatNumberWithCommas(500000)}원",
+                                text = "${NumberUtils.formatNumberWithCommas(item.targetAmount)}원",
                                 style = FontSizes.h20,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Start,
-                                color = Color(0xFFFFFFFF)
+                                color = Color.White
                             )
                         }
 
-                        // 이미지 (우측 하단에 고정)
+                        // 이미지
                         Image(
                             painter = painterResource(id = R.drawable.icon_bundle),
-                            contentDescription = "삼성 노트북 이미지 $index",
+                            contentDescription = "목표 이미지 $index",
                             modifier = Modifier
                                 .size(100.dp)
-                                .align(Alignment.BottomEnd) // 박스의 우측 하단에 배치
-                                .offset(x = (16).dp, y = (12).dp)
+                                .align(Alignment.BottomEnd)
+                                .offset(x = 16.dp, y = 12.dp)
                                 .rotate(20f)
                         )
                     }
@@ -198,14 +197,4 @@ fun RunParentsFinishScreen(navController: NavController) {
             modifier = Modifier.align(Alignment.BottomCenter), navController
         )
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560",
-    showSystemUi = true
-)
-@Composable
-fun RunParentsFinishScreenPreview() {
-    RunParentsFinishScreen(navController = rememberNavController())
 }

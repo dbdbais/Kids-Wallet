@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +40,7 @@ import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.DdayBadge
 import com.ssafy.kidswallet.ui.components.FontSizes
+import com.ssafy.kidswallet.ui.components.ImageUtils.base64ToBitmap
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
@@ -110,12 +112,23 @@ fun RunParentsDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // 목표 이미지와 금액 정보
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_labtop),
-                            contentDescription = "목표 이미지",
-                            modifier = Modifier.size(250.dp)
-                        )
+                        // Base64 이미지 변환 및 표시
+                        togetherDetail?.targetImage?.let { base64Image ->
+                            val bitmap = base64ToBitmap(base64Image)
+                            if (bitmap != null) {
+                                Image(
+                                    bitmap = bitmap.asImageBitmap(),
+                                    contentDescription = "목표 이미지",
+                                    modifier = Modifier.size(250.dp)
+                                )
+                            } else {
+                                Image(
+                                    painter = painterResource(id = R.drawable.icon_labtop),
+                                    contentDescription = "기본 이미지",
+                                    modifier = Modifier.size(250.dp)
+                                )
+                            }
+                        }
 
                         Text(
                             text = "$formattedDate 까지 " + "${NumberUtils.formatNumberWithCommas(togetherDetail?.targetAmount ?: 0)}원을 모아야 해요!",

@@ -15,6 +15,7 @@ import com.ssafy.kidswallet.data.model.PlayMissionModel
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
 import com.ssafy.kidswallet.data.model.TestMissionModel
+import com.ssafy.kidswallet.data.model.TogetherCompleteListResponse
 import com.ssafy.kidswallet.data.model.TogetherDetailResponse
 import com.ssafy.kidswallet.data.model.TogetherListModel
 import com.ssafy.kidswallet.data.model.TogetherListResponse
@@ -76,8 +77,11 @@ interface ApiService {
     @GET("account/weekly")
     suspend fun getAccountWeekly(@Query("accountId") accountId: String): Response<AccountWeeklyResponse>
 
-    @GET("togetherrun/{userId}/list")
+    @GET("togetherrun/{userId}/proceedlist")
     suspend fun togetherList(@Path("userId") userId: Int): Response<TogetherListResponse>
+
+    @GET("togetherrun/{userId}/completelist")
+    suspend fun togetherCompleteList(@Path("userId") userId: Int): Response<TogetherCompleteListResponse>
 
     @GET("togetherrun/{togetherRunId}/detail")
     suspend fun togetherDetail(@Path("togetherRunId") togetherRunId: Int): Response<TogetherDetailResponse>
