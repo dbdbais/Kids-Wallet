@@ -1,6 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.begging.mission
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -341,6 +342,8 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
         (it.mission?.missionStatus == "submit")
     }
 
+    val combinedMissions = waitingMission + submitMission
+
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(lazyListState) {
@@ -387,7 +390,7 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                 verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
                 horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
             ) {
-                items(submitMission) {mission ->
+                items(combinedMissions) {mission ->
                     val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
                     Column (
                         modifier = Modifier
@@ -421,7 +424,11 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                 style = FontSizes.h16,
                                 color = Color.Gray
                             )
-                            GrayButton(onClick = { /*TODO*/ }, text = "미션 대기", height = 40)
+                            if (mission.mission?.missionStatus == "submit") {
+                                GrayButton(onClick = { /*TODO*/ }, text = "미션 대기", height = 40)
+                            } else {
+                                YellowButton(onClick = { /*TODO*/ }, text = "대기", height = 40)
+                            }
                         }
                         Row(
                             modifier = Modifier
@@ -459,10 +466,13 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                     fontWeight = FontWeight.Bold,
                                     style = FontSizes.h16,
                                     color = Color(0xFF6DCEF5)
-
                                 )
                                 Text(
-                                    text = "에게 미션을 보냈어요!",
+                                    text = if (mission.mission?.missionStatus == "submit") {
+                                        "에게 미션을 보냈어요!"
+                                    } else {
+                                        "에게 용돈을 요청했어요!"
+                                    },
                                     fontWeight = FontWeight.Bold,
                                     style = FontSizes.h16,
                                 )
@@ -471,97 +481,97 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                     }
                 }
             }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
-            ) {
-                items(waitingMission) {mission ->
-                    val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
-                    Column (
-                        modifier = Modifier
-                            .width(400.dp)
-                            .height(140.dp)
-                            .padding(bottom = 16.dp)
-                            .border(
-                                6.dp,
-                                Color(0xFF99DDF8).copy(alpha = 0.1f),
-                                RoundedCornerShape(24.dp)
-                            )
-                            .border(
-                                4.dp,
-                                Color(0xFF99DDF8).copy(alpha = 0.3f),
-                                RoundedCornerShape(24.dp)
-                            )
-                            .border(2.dp, Color(0xFF99DDF8), RoundedCornerShape(24.dp)),
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.Center
-                    ){
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = formattedDate,
-                                fontWeight = FontWeight.Bold,
-                                style = FontSizes.h16,
-                                color = Color.Gray
-                            )
-                            YellowButton(onClick = { /*TODO*/ }, text = "대기", height = 40)
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        color = if (kotlin.random.Random.nextBoolean()) Color(
-                                            0xFFE9F8FE
-                                        ) else Color(0xFFFFEDEF),
-                                        shape = CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(
-                                        id = if (kotlin.random.Random.nextBoolean()) R.drawable.character_old_man else R.drawable.character_old_girl
-                                    ),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(32.dp) // 이미지 크기 조정
-                                        .clip(CircleShape) // 이미지도 동그랗게 클립
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Row (
-                                verticalAlignment = Alignment.CenterVertically
-                            ){
-                                Text(
-                                    text = mission.name,
-                                    fontWeight = FontWeight.Bold,
-                                    style = FontSizes.h16,
-                                    color = Color(0xFF6DCEF5)
-
-                                )
-                                Text(
-                                    text = "에게 용돈을 요청했어요!",
-                                    fontWeight = FontWeight.Bold,
-                                    style = FontSizes.h16,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+//            LazyColumn(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .fillMaxHeight(),
+//                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
+//                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+//            ) {
+//                items(waitingMission) {mission ->
+//                    val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
+//                    Column (
+//                        modifier = Modifier
+//                            .width(400.dp)
+//                            .height(140.dp)
+//                            .padding(bottom = 16.dp)
+//                            .border(
+//                                6.dp,
+//                                Color(0xFF99DDF8).copy(alpha = 0.1f),
+//                                RoundedCornerShape(24.dp)
+//                            )
+//                            .border(
+//                                4.dp,
+//                                Color(0xFF99DDF8).copy(alpha = 0.3f),
+//                                RoundedCornerShape(24.dp)
+//                            )
+//                            .border(2.dp, Color(0xFF99DDF8), RoundedCornerShape(24.dp)),
+//                        horizontalAlignment = Alignment.Start,
+//                        verticalArrangement = Arrangement.Center
+//                    ){
+//                        Row(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
+//                            horizontalArrangement = Arrangement.SpaceBetween,
+//                            verticalAlignment = Alignment.CenterVertically
+//                        ) {
+//                            Text(
+//                                text = formattedDate,
+//                                fontWeight = FontWeight.Bold,
+//                                style = FontSizes.h16,
+//                                color = Color.Gray
+//                            )
+//                            YellowButton(onClick = { /*TODO*/ }, text = "대기", height = 40)
+//                        }
+//                        Row(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(start = 16.dp, bottom = 8.dp, end = 16.dp),
+//                            verticalAlignment = Alignment.CenterVertically
+//                        ){
+//                            Box(
+//                                modifier = Modifier
+//                                    .size(40.dp)
+//                                    .background(
+//                                        color = if (kotlin.random.Random.nextBoolean()) Color(
+//                                            0xFFE9F8FE
+//                                        ) else Color(0xFFFFEDEF),
+//                                        shape = CircleShape
+//                                    ),
+//                                contentAlignment = Alignment.Center
+//                            ) {
+//                                Image(
+//                                    painter = painterResource(
+//                                        id = if (kotlin.random.Random.nextBoolean()) R.drawable.character_old_man else R.drawable.character_old_girl
+//                                    ),
+//                                    contentDescription = null,
+//                                    modifier = Modifier
+//                                        .size(32.dp) // 이미지 크기 조정
+//                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+//                                )
+//                            }
+//                            Spacer(modifier = Modifier.width(8.dp))
+//                            Row (
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ){
+//                                Text(
+//                                    text = mission.name,
+//                                    fontWeight = FontWeight.Bold,
+//                                    style = FontSizes.h16,
+//                                    color = Color(0xFF6DCEF5)
+//
+//                                )
+//                                Text(
+//                                    text = "에게 용돈을 요청했어요!",
+//                                    fontWeight = FontWeight.Bold,
+//                                    style = FontSizes.h16,
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }
