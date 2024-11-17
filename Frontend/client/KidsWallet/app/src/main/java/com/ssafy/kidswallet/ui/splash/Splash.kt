@@ -1,5 +1,11 @@
 package com.ssafy.kidswallet.ui.splash
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,8 +25,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +47,27 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
+    var startTextAnimation by remember { mutableStateOf(false) }
+    var startImageAnimation by remember { mutableStateOf(false) }
+
+    // 텍스트 애니메이션
+    val textAlpha by animateFloatAsState(
+        targetValue = if (startTextAnimation) 1f else 0f,
+        animationSpec = tween(durationMillis = 1100)
+    )
+
+    // 이미지 애니메이션
+    val imageAlpha by animateFloatAsState(
+        targetValue = if (startImageAnimation) 1f else 0f,
+        animationSpec = tween(durationMillis = 1100)
+    )
+
+    LaunchedEffect(Unit) {
+        startTextAnimation = true
+        delay(700)
+        startImageAnimation = true
+    }
+
     // 로고나 이미지 표시
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -50,50 +82,56 @@ fun SplashScreen(navController: NavController) {
             verticalArrangement = Arrangement.Top
         ) {
             Spacer(modifier = Modifier.height(100.dp))
+            Column (
+                modifier = Modifier.alpha(textAlpha),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "같이",
+                        style = FontSizes.h40,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF6DCEF5)
+                    )
+                    Text(
+                        text = "의",
+                        style = FontSizes.h32,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                    )
+                    Spacer(modifier = Modifier.width(8.dp)) // 간격 추가
+                    Text(
+                        text = "가치",
+                        style = FontSizes.h40,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF6DCEF5)
+                    )
+                    Text(
+                        text = "를",
+                        style = FontSizes.h32,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                    )
+                }
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
+                Spacer(modifier = Modifier.height(30.dp))
                 Text(
-                    text = "같이",
-                    style = FontSizes.h40,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6DCEF5)
-                )
-                Text(
-                    text = "의",
+                    text = "실현하다!",
                     style = FontSizes.h32,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
-                )
-                Spacer(modifier = Modifier.width(8.dp)) // 간격 추가
-                Text(
-                    text = "가치",
-                    style = FontSizes.h40,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6DCEF5)
-                )
-                Text(
-                    text = "를",
-                    style = FontSizes.h32,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                    fontWeight = FontWeight.Bold
                 )
             }
-
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "실현하다!",
-                style = FontSizes.h32,
-                fontWeight = FontWeight.Bold
-            )
 
             Spacer(modifier = Modifier.height(30.dp))
             Image(
                 painter = painterResource(id = R.drawable.logo_full),
                 contentDescription = "App Logo",
-                modifier = Modifier.size(300.dp)
+                modifier = Modifier
+                    .size(300.dp)
+                    .alpha(imageAlpha)
             )
         }
 
@@ -141,8 +179,6 @@ fun SplashScreen(navController: NavController) {
         }
     }
 }
-
-
 
 @Preview(
     showBackground = true,

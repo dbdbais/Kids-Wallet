@@ -1,6 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.main
 
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.navigation.NavController
 import com.ssafy.kidswallet.ui.components.Top
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -55,6 +57,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.zIndex
 import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
@@ -62,12 +66,16 @@ import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
 @Composable
 fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel = viewModel(), relationViewModel: RelationViewModel = viewModel(), updateUserViewModel: UpdateUserViewModel = viewModel(), accountTransactionViewModel: AccountTransactionViewModel = viewModel()) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val relationList = storedUserData?.relations
+    val userNameList = relationList?.map { it.userName } ?: emptyList()
     val userId = storedUserData?.userId
     var showDialog by remember { mutableStateOf(false) }
     var backShowDialog by remember { mutableStateOf(false) }
     var input by remember { mutableStateOf("") }
     val updatedUserData by updateUserViewModel.updatedUserData.collectAsState()
     val accountState by accountTransactionViewModel.accountState.collectAsState()
+    val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     var isRelationRegistered by remember { mutableStateOf(false) }
 
@@ -138,7 +146,9 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
     // 직접 입력을 위한 다이얼로그
     if (showDialog) {
         AlertDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = {
+                focusManager.clearFocus()
+            },
             title = { Text(text = "추가하기") },
             text = {
                 Column {
@@ -161,19 +171,25 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             confirmButton = {
                 BlueButton(
                     onClick = {
-                        val relationModel = storedUserData?.userName?.let { parentName ->
-                            RelationModel(
-                                childName = input,
-                                parentName = parentName
-                            )
-                        }
-                        if (relationModel != null) {
-                            relationViewModel.addRelation(relationModel) {
-                                isRelationRegistered = true
+                        if (userNameList.contains(input)) {
+                            Toast.makeText(context, "이미 존재하는 이름입니다.", Toast.LENGTH_SHORT).show()
+                            showDialog = false
+                        } else {
+                            val relationModel = storedUserData?.userName?.let { parentName ->
+                                RelationModel(
+                                    childName = input,
+                                    parentName = parentName
+                                )
                             }
-                            Log.d("relationModel", "Current input value: $relationModel")
+                            if (relationModel != null) {
+                                relationViewModel.addRelation(relationModel) {
+                                    isRelationRegistered = true
+                                }
+                                Log.d("relationModel", "Current input value: $relationModel")
+                            }
+                            input = ""
+                            showDialog = false
                         }
-                        showDialog = false
                     },
                     height = 40,
                     modifier = Modifier.width(130.dp), // 원하는 너비 설정
@@ -183,7 +199,10 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             },
             dismissButton = {
                 GrayButton(
-                    onClick = { showDialog = false },
+                    onClick = {
+                        input = ""
+                        showDialog = false
+                        },
                     height = 40,
                     modifier = Modifier.width(130.dp), // 원하는 너비 설정
                     elevation = 0,
