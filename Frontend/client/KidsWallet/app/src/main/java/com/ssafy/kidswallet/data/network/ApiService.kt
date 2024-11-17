@@ -10,7 +10,9 @@ import com.ssafy.kidswallet.data.model.BeggingRequestModel
 import com.ssafy.kidswallet.data.model.GiveMissionModel
 import com.ssafy.kidswallet.data.model.HandleMissionModel
 import com.ssafy.kidswallet.data.model.LoginModel
+import com.ssafy.kidswallet.data.model.MessageModel
 import com.ssafy.kidswallet.data.model.MissionResponse
+import com.ssafy.kidswallet.data.model.NoticeResponse
 import com.ssafy.kidswallet.data.model.PlayMissionModel
 import com.ssafy.kidswallet.data.model.RelationModel
 import com.ssafy.kidswallet.data.model.SignUpModel
@@ -107,4 +109,12 @@ interface ApiService {
     @DELETE("togetherrun/savings/{savingContractId}")
     suspend fun deleteTogetherRunSavings(@Path("savingContractId") savingContractId: Int): Response<Unit>
 
+    @GET("notice/list/{userId}")
+    suspend fun noticeList(@Path("userId") userId: String): Response<List<MessageModel>>
+
+    @DELETE("notice/list/{userId}/{noticeNum}")
+    suspend fun deleteNotice(
+        @Path("userId") userId: String,
+        @Path("noticeNum") noticeNum: String
+    ): Response<Unit>
 }
