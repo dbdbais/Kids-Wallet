@@ -89,7 +89,7 @@ fun RunParentsFinishScreen(
                     }
 
                     Button(
-                        onClick = { /* 함께 달리기 클릭 시 동작 */ },
+                        onClick = { navController.navigate("runOthers") },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF7F7F7)),
                         shape = RoundedCornerShape(8.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
@@ -115,78 +115,100 @@ fun RunParentsFinishScreen(
                 )
             }
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 56.dp),
-                contentPadding = PaddingValues(
-                    start = 8.dp,
-                    top = 8.dp,
-                    end = 8.dp,
-                    bottom = 16.dp
-                ),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(togetherCompleteList.size) { index ->
-                    val item = togetherCompleteList[index]
-                    Box(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(GoldenRatioUtils.goldenHeight(150f).dp)
-                            .shadow(
-                                elevation = 2.dp,
-                                shape = RoundedCornerShape(16.dp),
-                            )
-                            .background(Color(0xFF6DCEF5))
-                            .border(1.dp, Color(0xFF6DCEF5), RoundedCornerShape(16.dp))
-                            .padding(16.dp)
-                            .clickable {
-                                navController.navigate("runParentsFinishDetail/${item.togetherRunId}")
-                            },
-                        contentAlignment = Alignment.TopStart
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.Top
+            // Check if the list is empty and display an image if true
+            if (togetherCompleteList.isEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.icon_no_transaction), // Replace with your desired image resource
+                        contentDescription = "No Data",
+                        modifier = Modifier.size(150.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "지난 달리기 기록이 없습니다.",
+                        style = FontSizes.h20,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 56.dp),
+                    contentPadding = PaddingValues(
+                        start = 8.dp,
+                        top = 8.dp,
+                        end = 8.dp,
+                        bottom = 16.dp
+                    ),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(togetherCompleteList.size) { index ->
+                        val item = togetherCompleteList[index]
+                        Box(
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(GoldenRatioUtils.goldenHeight(150f).dp)
+                                .shadow(
+                                    elevation = 2.dp,
+                                    shape = RoundedCornerShape(16.dp),
+                                )
+                                .background(Color(0xFF6DCEF5))
+                                .border(1.dp, Color(0xFF6DCEF5), RoundedCornerShape(16.dp))
+                                .padding(16.dp)
+                                .clickable {
+                                    navController.navigate("runParentsFinishDetail/${item.togetherRunId}")
+                                },
+                            contentAlignment = Alignment.TopStart
                         ) {
-                            // 성공 여부 배지
-                            SuccessBadge(successOrFail = if (item.isAccept) "성공" else "실패")
+                            Column(
+                                horizontalAlignment = Alignment.Start,
+                                verticalArrangement = Arrangement.Top
+                            ) {
+                                // 성공 여부 배지
+                                SuccessBadge(successOrFail = if (item.isAccept) "성공" else "실패")
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
 
-                            // 목표 제목
-                            Text(
-                                text = item.targetTitle,
-                                style = FontSizes.h16,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Start,
-                                color = Color.White
-                            )
+                                // 목표 제목
+                                Text(
+                                    text = item.targetTitle,
+                                    style = FontSizes.h16,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Start,
+                                    color = Color.White
+                                )
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.height(8.dp))
 
-                            // 목표 금액
-                            Text(
-                                text = "${NumberUtils.formatNumberWithCommas(item.targetAmount)}원",
-                                style = FontSizes.h20,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Start,
-                                color = Color.White
+                                // 목표 금액
+                                Text(
+                                    text = "${NumberUtils.formatNumberWithCommas(item.targetAmount)}원",
+                                    style = FontSizes.h20,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Start,
+                                    color = Color.White
+                                )
+                            }
+
+                            // 이미지
+                            Image(
+                                painter = painterResource(id = R.drawable.icon_bundle),
+                                contentDescription = "목표 이미지 $index",
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .align(Alignment.BottomEnd)
+                                    .offset(x = 16.dp, y = 12.dp)
+                                    .rotate(20f)
                             )
                         }
-
-                        // 이미지
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_bundle),
-                            contentDescription = "목표 이미지 $index",
-                            modifier = Modifier
-                                .size(100.dp)
-                                .align(Alignment.BottomEnd)
-                                .offset(x = 16.dp, y = 12.dp)
-                                .rotate(20f)
-                        )
                     }
                 }
             }
@@ -198,3 +220,4 @@ fun RunParentsFinishScreen(
         )
     }
 }
+

@@ -71,21 +71,12 @@ fun RunParentsMoneyScreen(
     val parentGoalMoney = stateRunMoneyViewModel.parentGoalMoney
     val togetherGoalMoney = stateRunMoneyViewModel.togetherGoalMoney
 
-    // 각각의 금액 행에 대한 편집 상태 관리
-    var isEditingChildAmount by remember { mutableStateOf(false) }
-    var isEditingParentAmount by remember { mutableStateOf(false) }
+    var showAlertDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .pointerInput(Unit) {
-                detectTapGestures(onTap = {
-                    // 외부 클릭 시 모든 편집 종료
-                    isEditingChildAmount = false
-                    isEditingParentAmount = false
-                })
-            },
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Top(title = "같이 달리기", navController = navController)
@@ -143,14 +134,13 @@ fun RunParentsMoneyScreen(
             EditableAmountRow(
                 initialAmount = childGoalMoney,
                 onAmountChange = { newAmount ->
+                    val remainingAmount = (togetherGoalMoney - newAmount).coerceAtLeast(0)
                     stateRunMoneyViewModel.setGoalAndDate(
                         togetherGoal = togetherGoalMoney,
                         childGoal = newAmount,
-                        parentGoal = parentGoalMoney
+                        parentGoal = remainingAmount
                     )
-                },
-                isEditing = isEditingChildAmount,
-                onEditingChange = { isEditingChildAmount = it }
+                }
             )
         }
 
@@ -168,14 +158,15 @@ fun RunParentsMoneyScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.character_run_member),
-                    contentDescription = "응애재훈",
+                    contentDescription = "부모",
                     modifier = Modifier.size(55.dp)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
+                // Display the selected member's name
                 Text(
-                    text = "응애재훈",
+                    text = "N/A",
                     style = FontSizes.h16,
                     fontWeight = FontWeight.Bold
                 )
@@ -184,14 +175,13 @@ fun RunParentsMoneyScreen(
             EditableAmountRow(
                 initialAmount = parentGoalMoney,
                 onAmountChange = { newAmount ->
+                    val remainingAmount = (togetherGoalMoney - newAmount).coerceAtLeast(0)
                     stateRunMoneyViewModel.setGoalAndDate(
                         togetherGoal = togetherGoalMoney,
-                        childGoal = childGoalMoney,
+                        childGoal = remainingAmount,
                         parentGoal = newAmount
                     )
-                },
-                isEditing = isEditingParentAmount,
-                onEditingChange = { isEditingParentAmount = it }
+                }
             )
         }
 
@@ -208,49 +198,69 @@ fun RunParentsMoneyScreen(
         )
 
         BlueButton(
-            onClick = { navController.navigate("runParentsRegister") },
+            onClick = {
+                if (togetherGoalMoney == childGoalMoney + parentGoalMoney) {
+                    navController.navigate("runParentsRegister")
+                } else {
+                    showAlertDialog = true
+                }
+            },
             text = "다음",
             modifier = Modifier
                 .width(400.dp)
                 .padding(bottom = 20.dp)
         )
+
+        if (showAlertDialog) {
+            AlertDialog(
+                onDismissRequest = { showAlertDialog = false },
+                title = {
+                    Text(
+                        text = "알림",
+                        color = Color(0xFFFBC02D),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    Text(
+                        text = "자녀와 부모의 목표금액을 확인해 주세요.",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF8C8595)
+                    )
+                },
+                confirmButton = {
+                    BlueButton(
+                        onClick = { showAlertDialog = false },
+                        text = "확인",
+                        modifier = Modifier.width(260.dp),
+                        height = 40,
+                        elevation = 0
+                    )
+                }
+            )
+        }
     }
 }
+
 
 @Composable
 fun EditableAmountRow(
     initialAmount: Int,
-    onAmountChange: (Int) -> Unit,
-    isEditing: Boolean,
-    onEditingChange: (Boolean) -> Unit
+    onAmountChange: (Int) -> Unit
 ) {
-    var textState by remember { mutableStateOf(initialAmount.toString()) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (isEditing) {
-            OutlinedTextField(
-                value = textState,
-                onValueChange = { newText ->
-                    if (newText.all { it.isDigit() }) {
-                        textState = newText
-                        onAmountChange(newText.toIntOrNull() ?: 0)
-                    }
-                },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                modifier = Modifier
-                    .width(80.dp)
-                    .padding(vertical = 4.dp)
-            )
-        } else {
-            Text(
-                text = "${textState}원",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
-            )
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickable {
+            showDialog = true // 클릭했을 때 다이얼로그를 보여줌
         }
+    ) {
+        Text(
+            text = "${NumberUtils.formatNumberWithCommas(initialAmount)}원",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+        )
 
         Spacer(modifier = Modifier.width(8.dp))
 
@@ -259,13 +269,76 @@ fun EditableAmountRow(
             contentDescription = "수정",
             modifier = Modifier
                 .size(25.dp)
-                .clickable {
-                    onEditingChange(true)
-                }
+        )
+    }
+
+    if (showDialog) {
+        AmountInputDialog(
+            initialAmount = initialAmount,
+            onConfirm = { newAmount ->
+                onAmountChange(newAmount) // 새로운 금액 설정
+                showDialog = false // 다이얼로그 닫기
+            },
+            onDismiss = {
+                showDialog = false // 다이얼로그 닫기
+            }
         )
     }
 }
 
+
+@Composable
+fun AmountInputDialog(
+    initialAmount: Int,
+    onConfirm: (Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var inputAmount by remember { mutableStateOf(TextFieldValue(initialAmount.toString())) }
+
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = "금액 입력") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = inputAmount,
+                    onValueChange = { newValue ->
+                        if (newValue.text.all { it.isDigit() } && newValue.text.length <= 8) {
+                            inputAmount = newValue
+                        }
+                    },
+                    label = { Text("금액") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        },
+        containerColor = Color.White,
+        confirmButton = {
+            BlueButton(
+                onClick = {
+                    inputAmount.text.toIntOrNull()?.let {
+                        onConfirm(it)
+                    }
+                    onDismiss()
+                },
+                height = 40,
+                modifier = Modifier.width(130.dp),
+                elevation = 0,
+                text = "확인"
+            )
+        },
+        dismissButton = {
+            GrayButton(
+                onClick = { onDismiss() },
+                height = 40,
+                modifier = Modifier.width(130.dp),
+                elevation = 0,
+                text = "취소"
+            )
+        }
+    )
+}
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -356,7 +429,7 @@ fun RCircularSlider(
 
         // 텍스트 표시 (현재 금액)
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "${amount}원", style = FontSizes.h24, fontWeight = FontWeight.Bold)
+            Text(text = "${NumberUtils.formatNumberWithCommas(amount)}원", style = FontSizes.h24, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             LightBlueButton(
                 onClick = { showDialog = true },
@@ -374,7 +447,12 @@ fun RCircularSlider(
                     Column {
                         OutlinedTextField(
                             value = inputAmount,
-                            onValueChange = { inputAmount = it },
+                            onValueChange = { newValue ->
+                                // 숫자만 허용하고 최대 8자리까지 입력 가능
+                                if (newValue.text.all { it.isDigit() } && newValue.text.length <= 8) {
+                                    inputAmount = newValue
+                                }
+                            },
                             label = { Text("금액") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                         )
@@ -408,14 +486,4 @@ fun RCircularSlider(
             )
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560",
-    showSystemUi = true
-)
-@Composable
-fun RunParentsMoneyScreenPreview() {
-    RunParentsMoneyScreen(navController = rememberNavController())
 }

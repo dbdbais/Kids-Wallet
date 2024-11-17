@@ -148,7 +148,8 @@ fun RunParentsDetailScreen(
                     horizontalArrangement = Arrangement.Start,
                 ) {
                     Text(
-                        text = "1. 키즈월렛에서 자동이체 된다는 안내\n2. 미납 시 다음날까지 계좌에 해당하는 금액이 있어야함. 다음 납입날까지 미납시 계약 해제됨.",
+                        text = "1. 키즈월렛에서 매주 자동 이체됩니다.\n" +
+                                "2. 미납 시 다음 납입일까지 해당 금액이 계좌에 있어야 하며, 다음 납입일에 2주분이 함께 출금됩니다. 만일, 다음 납입일에도 미납 시 계약이 해제됩니다.",
                         style = FontSizes.h16,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -191,7 +192,7 @@ fun RunParentsDetailScreen(
             onClick = {
                 showConfirmationDialog.value = true
             },
-            text = "그만하기",
+            text = "그만 달리기",
             modifier = Modifier
                 .width(400.dp)
                 .padding(start = 16.dp, end = 16.dp)
@@ -203,8 +204,8 @@ fun RunParentsDetailScreen(
     if (showConfirmationDialog.value) {
         AlertDialog(
             onDismissRequest = { showConfirmationDialog.value = false },
-            title = { Text("그만하기 확인", fontWeight = FontWeight.Bold, color = Color.Red) },
-            text = { Text("같이 달리기를 정말로 그만 하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
+            title = { Text("그만 달리기 확인", fontWeight = FontWeight.Bold, color = Color.Red) },
+            text = { Text("같이 달리기를 정말로 그만하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
             confirmButton = {
                 BlueButton(
                     onClick = {
@@ -213,7 +214,7 @@ fun RunParentsDetailScreen(
                             togetherDetailViewModel.deleteTogetherRun(
                                 id,
                                 onSuccess = {
-                                    resultMessage.value = "삭제가 성공적으로 완료되었습니다!"
+                                    resultMessage.value = "실패는 성공의 어머니! 또 다른 도전을 응원합니다!"
                                     isSuccess.value = true
                                     showResultDialog.value = true
                                 },
@@ -251,7 +252,7 @@ fun RunParentsDetailScreen(
             },
             title = {
                 Text(
-                    text = if (isSuccess.value) "성공" else "오류",
+                    text = if (isSuccess.value) "그만 달리기" else "오류",
                     color = if (isSuccess.value) Color(0xFF77DD77) else Color.Red,
                     fontWeight = FontWeight.Bold
                 )
