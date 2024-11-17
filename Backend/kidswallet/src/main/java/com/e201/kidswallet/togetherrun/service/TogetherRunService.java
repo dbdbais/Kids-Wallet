@@ -185,8 +185,8 @@ public class TogetherRunService {
                         .build();
                 savingContractRepository.save(savingContract);
 
-                TransferMoneyDTO childTransferMoneyDTO = makeTransferMoneyDTO(togetherRun.getRelation().getChild().getRepresentAccountId(), accountId, togetherRun.getChildContribute().intValue());
-                TransferMoneyDTO parentsTransferMoneyDTO = makeTransferMoneyDTO(parents.getRepresentAccountId(), accountId, togetherRun.getParentsContribute().intValue());
+                TransferMoneyDTO childTransferMoneyDTO = makeTransferMoneyDTO(togetherRun.getRelation().getChild().getRepresentAccountId(), accountId, savingContract.getChildDepositAmount().intValue());
+                TransferMoneyDTO parentsTransferMoneyDTO = makeTransferMoneyDTO(parents.getRepresentAccountId(), accountId, savingContract.getParentsDepositAmount().intValue());
 
                 StatusCode childTransferResult = null;
                 StatusCode parentsTransferResult = null;
