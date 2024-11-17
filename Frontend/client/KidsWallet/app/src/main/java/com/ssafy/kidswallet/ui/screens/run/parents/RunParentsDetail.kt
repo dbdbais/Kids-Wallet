@@ -47,6 +47,7 @@ fun RunParentsDetailScreen(
 ) {
     println("Received togetherRunId: $togetherRunId")
     val togetherDetail = togetherDetailViewModel.togetherDetail.collectAsState().value
+    val formattedDate = togetherDetail?.expiredAt?.joinToString(separator = ".") ?: "N/A"
 
     // API 호출을 통해 데이터 로드
     togetherRunId?.let { id ->
@@ -110,8 +111,8 @@ fun RunParentsDetailScreen(
                         )
 
                         Text(
-                            text = "${togetherDetail?.targetAmount}0원을 모아야 해요!",
-                            style = FontSizes.h20,
+                            text = "$formattedDate 까지 " + "${NumberUtils.formatNumberWithCommas(togetherDetail?.targetAmount ?: 0)}원을 모아야 해요!",
+                            style = FontSizes.h16,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -124,22 +125,14 @@ fun RunParentsDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.Start,
                 ) {
                     Text(
-                        text = "${togetherDetail?.expiredAt} 까지",
+                        text = "1. 키즈월렛에서 자동이체 된다는 안내\n2. 미납 시 다음날까지 계좌에 해당하는 금액이 있어야함. 다음 납입날까지 미납시 계약 해제됨.",
                         style = FontSizes.h16,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "${togetherDetail?.targetAmount} 원",
-                        style = FontSizes.h16,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-
                 }
             }
         }
@@ -176,9 +169,7 @@ fun RunParentsDetailScreen(
         // 그만하기 버튼
         LightGrayButton(
             onClick = {
-                navController.navigate("run") {
-                    popUpTo(0) { inclusive = true } // 모든 스택 제거
-                }
+                navController.navigate("run")
             },
             text = "그만하기",
             modifier = Modifier
@@ -221,7 +212,7 @@ fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResI
         Column(horizontalAlignment = Alignment.End) {
             // current amount
             Text(
-                text = "${NumberUtils.formatNumberWithCommas(currentAmount)}원",
+                text = "현재 ${NumberUtils.formatNumberWithCommas(currentAmount)}원",
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF6DCEF5)
