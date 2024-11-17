@@ -36,7 +36,7 @@ public class TogetherRun {
     private String targetTitle;
 
     @Lob
-    @Column(name = "target_image")
+    @Column(name="target_image", columnDefinition = "LONGBLOB")
     private byte[] targetImage;
 
     @Column(name = "parents_account")
