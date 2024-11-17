@@ -192,7 +192,7 @@ fun RunParentsDetailScreen(
             onClick = {
                 showConfirmationDialog.value = true
             },
-            text = "그만하기",
+            text = "그만 달리기",
             modifier = Modifier
                 .width(400.dp)
                 .padding(start = 16.dp, end = 16.dp)
@@ -204,8 +204,8 @@ fun RunParentsDetailScreen(
     if (showConfirmationDialog.value) {
         AlertDialog(
             onDismissRequest = { showConfirmationDialog.value = false },
-            title = { Text("그만하기 확인", fontWeight = FontWeight.Bold, color = Color.Red) },
-            text = { Text("같이 달리기를 정말로 그만 하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
+            title = { Text("그만 달리기 확인", fontWeight = FontWeight.Bold, color = Color.Red) },
+            text = { Text("같이 달리기를 정말로 그만하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
             confirmButton = {
                 BlueButton(
                     onClick = {
@@ -214,7 +214,7 @@ fun RunParentsDetailScreen(
                             togetherDetailViewModel.deleteTogetherRun(
                                 id,
                                 onSuccess = {
-                                    resultMessage.value = "삭제가 성공적으로 완료되었습니다!"
+                                    resultMessage.value = "실패는 성공의 어머니! 또 다른 도전을 응원합니다!"
                                     isSuccess.value = true
                                     showResultDialog.value = true
                                 },
@@ -252,7 +252,7 @@ fun RunParentsDetailScreen(
             },
             title = {
                 Text(
-                    text = if (isSuccess.value) "성공" else "오류",
+                    text = if (isSuccess.value) "그만 달리기" else "오류",
                     color = if (isSuccess.value) Color(0xFF77DD77) else Color.Red,
                     fontWeight = FontWeight.Bold
                 )

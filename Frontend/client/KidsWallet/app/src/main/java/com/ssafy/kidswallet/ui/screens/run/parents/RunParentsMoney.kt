@@ -71,7 +71,6 @@ fun RunParentsMoneyScreen(
     val parentGoalMoney = stateRunMoneyViewModel.parentGoalMoney
     val togetherGoalMoney = stateRunMoneyViewModel.togetherGoalMoney
 
-    // AlertDialog 상태 관리
     var showAlertDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -135,7 +134,6 @@ fun RunParentsMoneyScreen(
             EditableAmountRow(
                 initialAmount = childGoalMoney,
                 onAmountChange = { newAmount ->
-                    // 자녀 목표금액이 변경되면 부모 목표금액을 자동 조정
                     val remainingAmount = (togetherGoalMoney - newAmount).coerceAtLeast(0)
                     stateRunMoneyViewModel.setGoalAndDate(
                         togetherGoal = togetherGoalMoney,
@@ -160,14 +158,15 @@ fun RunParentsMoneyScreen(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.character_run_member),
-                    contentDescription = "응애재훈",
+                    contentDescription = "부모",
                     modifier = Modifier.size(55.dp)
                 )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
+                // Display the selected member's name
                 Text(
-                    text = "응애재훈",
+                    text = "N/A",
                     style = FontSizes.h16,
                     fontWeight = FontWeight.Bold
                 )
@@ -176,7 +175,6 @@ fun RunParentsMoneyScreen(
             EditableAmountRow(
                 initialAmount = parentGoalMoney,
                 onAmountChange = { newAmount ->
-                    // 부모 목표금액이 변경되면 자녀 목표금액을 자동 조정
                     val remainingAmount = (togetherGoalMoney - newAmount).coerceAtLeast(0)
                     stateRunMoneyViewModel.setGoalAndDate(
                         togetherGoal = togetherGoalMoney,
@@ -213,7 +211,6 @@ fun RunParentsMoneyScreen(
                 .padding(bottom = 20.dp)
         )
 
-        // AlertDialog
         if (showAlertDialog) {
             AlertDialog(
                 onDismissRequest = { showAlertDialog = false },
@@ -244,6 +241,7 @@ fun RunParentsMoneyScreen(
         }
     }
 }
+
 
 @Composable
 fun EditableAmountRow(

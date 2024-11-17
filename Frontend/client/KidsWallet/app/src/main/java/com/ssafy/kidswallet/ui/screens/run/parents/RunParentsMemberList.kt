@@ -1,13 +1,14 @@
 package com.ssafy.kidswallet.ui.screens.run.parents
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,14 +25,18 @@ import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.Top
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.Composable
 import com.ssafy.kidswallet.viewmodel.RunMemberViewModel
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.*
 
 @Composable
-fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMemberViewModel = viewModel()) {
+fun RunParentsMemberListScreen(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
+    viewModel: RunMemberViewModel = viewModel()
+) {
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     var searchText by remember { mutableStateOf("") }
 
     Column(
@@ -58,10 +63,10 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 검색 텍스트에 따라 멤버 필터링
-        val filteredMembers = viewModel.members.filter {
-            it.first.contains(searchText, ignoreCase = true) || it.second.contains(searchText, ignoreCase = true)
-        }
+        // storedUserData.relations 기반으로 필터링
+        val filteredMembers = storedUserData?.relations?.filter {
+            (it.userName?.contains(searchText, ignoreCase = true) ?: false)
+        } ?: emptyList()
 
         // LazyColumn을 사용하여 필터링된 멤버 리스트 표시
         LazyColumn(
@@ -75,25 +80,25 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
-                        .clickable { viewModel.toggleMemberSelection(member.first) },
+                        .clickable { member.userName?.let { viewModel.toggleMemberSelection(it) } },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // 캐릭터 이미지 (그대로 유지)
+                    // 캐릭터 이미지
                     Image(
                         painter = painterResource(id = R.drawable.character_run_member),
-                        contentDescription = member.first,
+                        contentDescription = "멤버",
                         modifier = Modifier
                             .size(55.dp)
                             .padding(end = 8.dp)
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = member.first,
+                            text = member.userName ?: "",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = member.second,
+                            text = member.userGender ?: "",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         )
@@ -101,7 +106,7 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
                     // 체크 아이콘 (상태에 따라 다르게 표시)
                     Image(
                         painter = painterResource(
-                            id = if (viewModel.selectedMember == member.first) {
+                            id = if (viewModel.selectedMember == member.userName) {
                                 R.drawable.icon_check_active // 선택된 상태
                             } else {
                                 R.drawable.icon_check // 선택되지 않은 상태
@@ -110,7 +115,6 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
                         contentDescription = "선택 상태",
                         modifier = Modifier.size(24.dp)
                     )
-
                 }
             }
         }
@@ -119,7 +123,10 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
 
         BlueButton(
             onClick = {
-                navController.popBackStack(route = "runParentsMoney", inclusive = true)
+                val selectedUserName = viewModel.selectedMember ?: "응애재훈"
+//                navController.popBackStack(route = "runParentsMoney", inclusive = true)
+//                Log.d("NavigationDebug", "Navigating to runParentsMoney/$selectedUserName")
+//                navController.navigate("runParentsMoney/$selectedUserName")
                 navController.navigate("runParentsMoney")
             },
             text = "선택 완료",
@@ -127,6 +134,7 @@ fun RunParentsMemberListScreen(navController: NavController, viewModel: RunMembe
                 .width(400.dp)
                 .padding(bottom = 20.dp)
         )
+
     }
 }
 
@@ -146,11 +154,9 @@ fun SearchTextField(
             onValueChange(newText)
         },
         placeholder = {
-            // 텍스트만 플레이스홀더에 포함
             Text(text = placeholderText, color = Color(0x808C8595))
         },
         leadingIcon = {
-            // 항상 표시되는 검색 이미지
             Image(
                 painter = painterResource(id = R.drawable.icon_search2),
                 contentDescription = "검색",
@@ -165,15 +171,4 @@ fun SearchTextField(
             .fillMaxWidth()
             .background(Color(0xFFF7F7F7), shape = CircleShape)
     )
-}
-
-
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560"
-)
-@Composable
-fun RunParentsMemberListScreenPreview() {
-    RunParentsMemberListScreen(navController = rememberNavController())
 }
