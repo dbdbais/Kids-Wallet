@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class RegularDepositResponseDto {
-    private BigDecimal amount;
+    private int amount;
     private short depositDay;
     private LocalDate startDate;
     private LocalDate endDate;

@@ -245,7 +245,7 @@ public class TogetherRunService {
                     togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
                             .togetherRunId((Long) obj[0])
                             .targetTitle((String) obj[1])
-                            .targetAmount((BigDecimal) obj[2])
+                            .targetAmount((int) obj[2])
                             .dDay((Long) obj[3])
                             .isAccept(togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal())
                             .build();
@@ -255,7 +255,7 @@ public class TogetherRunService {
                     togetherRunDataResponseDto = TogetherRunDataResponseDto.builder()
                             .togetherRunId((Long) obj[0])
                             .targetTitle((String) obj[1])
-                            .targetAmount((BigDecimal) obj[2])
+                            .targetAmount((int) obj[2])
                             .dDay((Long) obj[3])
                             .isAccept(togetherRunStatus == TogetherRunStatus.ACCEPTED.ordinal())
                             .build();
@@ -277,13 +277,13 @@ public class TogetherRunService {
             try {
                 togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
                         .targetTitle(togetherRun.getTargetTitle())
-                        .targetAmount(togetherRun.getTargetAmount())
+                        .targetAmount(togetherRun.getTargetAmount().intValue())
                         .expiredAt(togetherRun.getTargetDate())
                         .dDay((int)ChronoUnit.DAYS.between(LocalDate.now(), togetherRun.getTargetDate()))
                         .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
-                        .childGoalAmount(togetherRun.getChildContribute())
+                        .childGoalAmount(togetherRun.getChildContribute().intValue())
                         .childName(togetherRun.getRelation().getChild().getUserRealName())
-                        .parentGoalAmount(togetherRun.getParentsContribute())
+                        .parentGoalAmount(togetherRun.getParentsContribute().intValue())
                         .parentName(togetherRun.getRelation().getParent().getUserRealName())
                         .build();
             } catch (Exception e) {
@@ -296,15 +296,15 @@ public class TogetherRunService {
                 togetherRunDetailResponseDto = TogetherRunDetailResponseDto.builder()
                         .savingContractId(savingContract.getSavingContractId())
                         .targetTitle(togetherRun.getTargetTitle())
-                        .targetAmount(togetherRun.getTargetAmount())
+                        .targetAmount(togetherRun.getTargetAmount().intValue())
                         .expiredAt(savingContract.getExpiredAt())
                         .dDay((int)ChronoUnit.DAYS.between(LocalDate.now(), togetherRun.getTargetDate()))
                         .isAccept(togetherRun.getStatus() != TogetherRunStatus.PENDING)
-                        .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getChild().getUserId()))
-                        .childGoalAmount(togetherRun.getChildContribute())
+                        .childAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getChild().getUserId()).intValue())
+                        .childGoalAmount(togetherRun.getChildContribute().intValue())
                         .childName(togetherRun.getRelation().getChild().getUserRealName())
-                        .parentAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getParent().getUserId()))
-                        .parentGoalAmount(togetherRun.getParentsContribute())
+                        .parentAmount(savingPaymentRepository.findTotalDepositAmountBySavingContractIdAndUserId(savingContract.getSavingContractId(), togetherRun.getRelation().getParent().getUserId()).intValue())
+                        .parentGoalAmount(togetherRun.getParentsContribute().intValue())
                         .parentName(togetherRun.getRelation().getParent().getUserRealName())
                         .build();
             } catch (Exception e) {
@@ -343,7 +343,7 @@ public class TogetherRunService {
         try {
             savingContractRepository.save(savingContract);
             togetherRunCancelResponseDto = TogetherRunCancelResponseDto.builder()
-                    .cancelAmount(savingContract.getCurrentInterestAmount())
+                    .cancelAmount(savingContract.getCurrentInterestAmount().intValue())
                     .build();
             return togetherRunCancelResponseDto;
         } catch (Exception e) {
@@ -357,7 +357,7 @@ public class TogetherRunService {
         List<RegularDepositResponseDto> regularDepositResponseDtoList = new ArrayList<>();
         for (Object[] obj : result) {
             RegularDepositResponseDto regularDepositResponseDto = RegularDepositResponseDto.builder()
-                    .amount((BigDecimal) obj[0])
+                    .amount((int) obj[0])
                     .depositDay((Short) obj[1])
                     .startDate(((java.sql.Date) obj[2]).toLocalDate())
                     .endDate(((java.sql.Date) obj[3]).toLocalDate())

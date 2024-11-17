@@ -13,16 +13,16 @@ public class TogetherRunDetailResponseDto {
     private Long savingContractId;
     private String targetTitle;
     private String targetImage;
-    private BigDecimal targetAmount;
+    private int targetAmount;
     private LocalDate expiredAt;
     @JsonProperty("dDay")
     private int dDay;
     @JsonProperty("isAccept")
     private Boolean isAccept;
-    private BigDecimal childAmount;
-    private BigDecimal childGoalAmount;
+    private int childAmount;
+    private int childGoalAmount;
     private String childName;
-    private BigDecimal parentAmount;
-    private BigDecimal parentGoalAmount;
+    private int parentAmount;
+    private int parentGoalAmount;
     private String parentName;
 }

@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class TogetherRunDataResponseDto {
     private Long togetherRunId;
     private String targetTitle;
-    private BigDecimal targetAmount;
+    private int targetAmount;
     @JsonProperty("dDay")
     private Long dDay;
     @JsonProperty("isAccept")

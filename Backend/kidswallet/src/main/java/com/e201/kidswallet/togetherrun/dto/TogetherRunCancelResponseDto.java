@@ -8,5 +8,5 @@ import java.math.BigDecimal;
 @Builder
 @Data
 public class TogetherRunCancelResponseDto {
-    private BigDecimal cancelAmount;
+    private int cancelAmount;
 }
