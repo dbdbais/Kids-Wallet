@@ -458,7 +458,7 @@ fun QuizScreen(navController: NavController) {
                         .padding(32.dp)
                 ) {
                     Text(
-                        text = "키즈 쑥쑥 퀴즈",
+                        text = "오늘의 키즈 쑥쑥 퀴즈",
                         color = Color(0xFF6DCEF5),
                         fontWeight = FontWeight.Bold,
                         style = FontSizes.h16
@@ -491,7 +491,7 @@ fun QuizScreen(navController: NavController) {
                                             .weight(1f)
                                             .padding(4.dp)
                                             .background(
-                                                color = Color(0xFFC1EDFF),
+                                                color = if (selectedOptionIndex.value == globalIndex) Color(0xFFAEDFF7) else Color(0xFFC1EDFF),
                                                 shape = RoundedCornerShape(50)
                                             )
                                             .height(70.dp)

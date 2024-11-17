@@ -220,7 +220,7 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
                     // 이미지가 있는 경우와 없는 경우를 처리
                     val base64String = imageUri?.let { uri ->
                         getBase64FromUri(context, uri)
-                    } ?: getBase64FromDrawable(context, R.drawable.logo_full) // 기본 이미지를 처리할 경우
+                    } ?: getBase64FromDrawable(context, R.drawable.app_logo) // 기본 이미지를 처리할 경우
 
                     val missionId = id
                     playMissionViewModel.sendMission(missionId, base64String ?: "")
