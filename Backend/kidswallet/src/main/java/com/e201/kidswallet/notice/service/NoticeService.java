@@ -1,15 +1,20 @@
 package com.e201.kidswallet.notice.service;
+
 import com.e201.kidswallet.common.exception.StatusCode;
 import com.e201.kidswallet.notice.dto.NoticeDto;
 import com.e201.kidswallet.user.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class NoticeService {
 
@@ -18,6 +23,9 @@ public class NoticeService {
 
     @Autowired
     public NoticeService(RedisTemplate<String, Object> noticeRedisTemplate, UserRepository userRepository) {
+        // RedisTemplate 설정: Jackson2JsonRedisSerializer로 직렬화
+        Jackson2JsonRedisSerializer<NoticeDto> serializer = new Jackson2JsonRedisSerializer<>(NoticeDto.class);
+        noticeRedisTemplate.setValueSerializer(serializer);
         this.noticeRedisTemplate = noticeRedisTemplate;
         this.userRepository = userRepository;
     }
@@ -27,7 +35,6 @@ public class NoticeService {
     }
 
     public List<NoticeDto> noticeDtoList(long userId) {
-        // Redis에서 가져오는 로직
         String key = "notice:" + userId;
         List<Object> notices = noticeRedisTemplate.opsForList().range(key, 0, -1);
 
@@ -35,9 +42,16 @@ public class NoticeService {
             return new ArrayList<>();
         } else {
             List<NoticeDto> result = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper();  // ObjectMapper 객체 생성
+
             for (Object obj : notices) {
-                // Object -> NoticeDto로 타입 변환
-                result.add((NoticeDto) obj);
+                // Object -> NoticeDto로 변환
+                try {
+                    NoticeDto noticeDto = objectMapper.convertValue(obj, NoticeDto.class);
+                    result.add(noticeDto);
+                } catch (Exception e) {
+                    log.error("Error converting object to NoticeDto", e);
+                }
             }
             return result;
         }

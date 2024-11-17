@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoticeDto {
+public class NoticeDto implements Serializable {
     //아이가 부모님께 용돈을 요청(~~님이 용돈을 요청했어요!)
     //아이가 미션을 수행(~~님이 미션을 수행했어요!)
     //아이가 같이달리기를 요청(~~님이 같이달리기를 요청했어요!)
