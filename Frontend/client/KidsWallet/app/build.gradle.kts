@@ -24,20 +24,20 @@ android {
     compileSdk = 34
 
     signingConfigs {
-        //create("release") {
-        //    storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
-        //    storePassword = "kidswallet"
-        //    keyAlias = "my-key-alias"
-        //    keyPassword = "kidswallet"
-        //}
-
-        // 배포서버
         create("release") {
-            storeFile = file("/kidswallet-release-key.jks")
-            storePassword = storePassword
-            keyAlias = keyAlias
-            keyPassword = keyPassword
+            storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
+            storePassword = "kidswallet"
+            keyAlias = "my-key-alias"
+            keyPassword = "kidswallet"
         }
+
+//        // 배포서버
+//        create("release") {
+//            storeFile = file("/kidswallet-release-key.jks")
+//            storePassword = storePassword
+//            keyAlias = keyAlias
+//            keyPassword = keyPassword
+//        }
     }
 
     defaultConfig {
@@ -55,7 +55,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
         }
         release {
             isMinifyEnabled = false
@@ -63,7 +63,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
             signingConfig = signingConfigs.getByName("release")
         }
     }
