@@ -64,6 +64,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.zIndex
 import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
 import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -81,6 +82,10 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
     val focusManager = LocalFocusManager.current
 
     var isRelationRegistered by remember { mutableStateOf(false) }
+
+    var refreshCount1 by remember { mutableStateOf(0) }
+    var refreshCount2 by remember { mutableStateOf(0) }
+    val maxRefreshCount = 12
 
     BackHandler {
         backShowDialog = true
@@ -130,6 +135,26 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
     LaunchedEffect(isRelationRegistered) {
         if (isRelationRegistered && userId != null) {
             updateUserViewModel.updateUser(userId)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        while (refreshCount1 < maxRefreshCount) {
+            storedUserData?.representAccountId?.let { accountId ->
+                accountTransactionViewModel.getTransactionData(accountId)
+            }
+            refreshCount1++ // 실행 횟수 증가
+            delay(5000) // 5초 대기
+        }
+    }
+
+    LaunchedEffect(isRelationRegistered) {
+        while (refreshCount2 < maxRefreshCount) {
+            if (isRelationRegistered && userId != null) {
+                updateUserViewModel.updateUser(userId)
+            }
+            refreshCount2++ // 실행 횟수 증가
+            delay(5000) // 5초 대기
         }
     }
 
