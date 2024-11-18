@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.ssafy.kidswallet.R
@@ -44,15 +45,20 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.ImageUtils.base64ToBitmap
 import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
+import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailViewModel
 
 @Composable
 fun ParentsDetailScreen(
     navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
     togetherRunId: Int?,
-    togetherDetailViewModel: TogetherDetailViewModel
+    togetherDetailViewModel: TogetherDetailViewModel,
+    togetherParentsDetailViewModel: TogetherParentsDetailViewModel
 ) {
     println("Received togetherRunId: $togetherRunId")
+    val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val togetherDetail = togetherDetailViewModel.togetherDetail.collectAsState().value
     val formattedDate = togetherDetail?.expiredAt?.joinToString(separator = ".") ?: "N/A"
 
@@ -205,7 +211,7 @@ fun ParentsDetailScreen(
 //                        handleMissionViewModel.rejectMission(begId = id)
                         navController.navigate("run")
                     },
-                    text = "수락하기",
+                    text = "거절하기",
                     modifier = Modifier
                         .width(130.dp), // 원하는 너비 설정
                     height = 50,
@@ -213,14 +219,38 @@ fun ParentsDetailScreen(
                 )
                 BlueButton(
                     onClick = {
-                        navController.navigate("run")
+                        togetherRunId?.let { id ->
+                            // `userId`는 필요에 따라 가져와야 합니다 (예: ViewModel에서 가져오는 등)
+                            val userId = storedUserData?.userId ?: 0 // 기본값 0을 제공하여 nullable 문제를 해결
+                            // 예시로 임의의 userId를 사용. 실제로는 로그인 데이터 등에서 가져와야 합니다.
+                            togetherParentsDetailViewModel.acceptTogetherRun(
+                                togetherRunId = id,
+                                userId = userId,
+                                onSuccess = {
+                                    resultMessage.value = "수락이 완료되었습니다."
+                                    isSuccess.value = true
+                                    showResultDialog.value = true
+                                },
+                                onFailure = { errorMessage ->
+                                    resultMessage.value = "수락 중 오류가 발생했습니다. 다시 시도해주세요."
+                                    isSuccess.value = false
+                                    showResultDialog.value = true
+                                    Log.e("ParentsDetailScreen", errorMessage)
+                                }
+                            )
+                        } ?: run {
+                            resultMessage.value = "유효하지 않은 ID입니다."
+                            isSuccess.value = false
+                            showResultDialog.value = true
+                        }
                     },
-                    text = "미션주기",
+                    text = "수락하기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
+                        .width(230.dp),
                     height = 50,
                     elevation = 4
                 )
+
             }
         }
     }

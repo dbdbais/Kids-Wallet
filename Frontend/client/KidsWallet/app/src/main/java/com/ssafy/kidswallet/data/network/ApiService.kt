@@ -22,6 +22,7 @@ import com.ssafy.kidswallet.data.model.TogetherCompleteListResponse
 import com.ssafy.kidswallet.data.model.TogetherDetailResponse
 import com.ssafy.kidswallet.data.model.TogetherListModel
 import com.ssafy.kidswallet.data.model.TogetherListResponse
+import com.ssafy.kidswallet.data.model.TogetherParentsDetailModel
 import com.ssafy.kidswallet.data.model.TogetherrunReisterModel
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.fcm.dto.FcmDto
@@ -88,6 +89,12 @@ interface ApiService {
 
     @GET("togetherrun/{togetherRunId}/detail")
     suspend fun togetherDetail(@Path("togetherRunId") togetherRunId: Int): Response<TogetherDetailResponse>
+
+    @POST("togetherrun/{togetherRunId}/accept")
+    suspend fun togetherParentsDetail(
+        @Path("togetherRunId") togetherRunId: Int,
+        @Body requestModel: TogetherParentsDetailModel
+    ): Response<TogetherDetailResponse>
 
     @PUT("mission/beg")
     suspend fun handleMission(@Body handleMissionModel: HandleMissionModel): Response<Unit>

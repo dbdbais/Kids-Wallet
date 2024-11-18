@@ -22,5 +22,6 @@ data class UserDataModel(
 data class Relation(
     val userGender: String?,
     val userName: String?,
+    val userRealName: String?,
     val userId: Int
 )
