@@ -93,18 +93,21 @@ fun RunParentsRegisterScreen(
                 ) {
                     val bitmap = base64ToBitmap(viewModel.runImageText)
                     if (bitmap != null) {
+                        println("Bitmap 생성 성공")
                         Image(
                             bitmap = bitmap.asImageBitmap(),
                             contentDescription = "달리기 이미지",
                             modifier = Modifier.size(120.dp)
                         )
                     } else {
+                        println("Bitmap 생성 실패 - Base64 문자열: ${viewModel.runImageText}")
                         Image(
                             painter = painterResource(id = R.drawable.app_logo),
                             contentDescription = "달리기 이미지",
                             modifier = Modifier.size(120.dp)
                         )
                     }
+
 
                     Text(
                         text = "${NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.togetherGoalMoney)}원 달리기",
@@ -181,6 +184,15 @@ fun RunParentsRegisterScreen(
                     childContribute = childContribute,
                     targetImage = targetImage,
                 )
+
+                // Log each extracted value
+                println("Extracted Values:")
+                println("targetTitle: $targetTitle")
+                println("targetImage: $targetImage") // Important for base64 string
+                println("targetAmount: $targetAmount")
+                println("targetDate: $targetDate")
+                println("parentsContribute: $parentsContribute")
+                println("childContribute: $childContribute")
 
                 println("Request Model: $requestModel") // 생성된 요청 데이터 디버깅
 
