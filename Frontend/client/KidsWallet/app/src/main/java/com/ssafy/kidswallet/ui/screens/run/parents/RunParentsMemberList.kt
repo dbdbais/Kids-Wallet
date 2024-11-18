@@ -98,7 +98,13 @@ fun RunParentsMemberListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
-                        .clickable { member.userName?.let { viewModel.toggleMemberSelection(it) } },
+                        .clickable {
+                            member.userName?.let {
+                                // 선택된 member의 userRealName과 userName을 ViewModel에 설정
+                                viewModel.toggleMemberSelection(it, member.userRealName ?: "N/A")
+                                Log.d("RunParentsMemberListScreen", "Selected member: ${viewModel.selectedMember}, RealName: ${viewModel.selectedUserRealName}")
+                            }
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // 캐릭터 이미지

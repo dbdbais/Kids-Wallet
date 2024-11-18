@@ -75,6 +75,7 @@ import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsScreen
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
+import com.ssafy.kidswallet.viewmodel.RunMemberViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailRejectViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailViewModel
@@ -92,6 +93,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
         private val togetherDetailViewModel: TogetherDetailViewModel by viewModels()
         private val togetherParentsDetailViewModel: TogetherParentsDetailViewModel by viewModels()
         private val togetherParentsDetailRejectViewModel: TogetherParentsDetailRejectViewModel by viewModels()
+        private val runMemberViewModel: RunMemberViewModel by viewModels()
 
         @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -191,10 +193,17 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("runParentsFinish") { RunParentsFinishScreen(navController) }
             composable("runParentsFinishDetail") { RunParentsFinishDetailScreen(navController) }
             composable("runParents") {
-                RunParentsScreen(navController = navController, viewModel = stateRunViewModel)
+                RunParentsScreen(
+                    navController = navController,
+                    viewModel = stateRunViewModel
+                )
             }
             composable("runParentsMoney") {
-                RunParentsMoneyScreen(navController = navController, stateRunMoneyViewModel = stateRunMoneyViewModel)
+                RunParentsMoneyScreen(
+                    navController = navController,
+                    stateRunMoneyViewModel = stateRunMoneyViewModel,
+                    runMemberViewModel = runMemberViewModel
+                )
             }
             composable(
                 route = "runParentsDetail/{togetherRunId}",
@@ -207,12 +216,19 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                     togetherDetailViewModel = togetherDetailViewModel // viewModel 전달
                 )
             }
-
-
-
-            composable("runParentsMemberList") { RunParentsMemberListScreen(navController) }
+            composable("runParentsMemberList") {
+                RunParentsMemberListScreen(
+                    navController = navController,
+                    viewModel = runMemberViewModel
+                )
+            }
             composable("runParentsRegister") {
-                RunParentsRegisterScreen(navController = navController, viewModel = stateRunViewModel, stateRunMoneyViewModel = stateRunMoneyViewModel)
+                RunParentsRegisterScreen(
+                    navController = navController,
+                    viewModel = stateRunViewModel,
+                    stateRunMoneyViewModel = stateRunMoneyViewModel,
+                    runMemberViewModel = runMemberViewModel
+                )
             }
 
             // wallet
