@@ -23,6 +23,7 @@ import com.ssafy.kidswallet.data.model.TogetherDetailResponse
 import com.ssafy.kidswallet.data.model.TogetherListModel
 import com.ssafy.kidswallet.data.model.TogetherListResponse
 import com.ssafy.kidswallet.data.model.TogetherParentsDetailModel
+import com.ssafy.kidswallet.data.model.TogetherParentsDetailRejectModel
 import com.ssafy.kidswallet.data.model.TogetherrunReisterModel
 import com.ssafy.kidswallet.data.model.UserDataModel
 import com.ssafy.kidswallet.fcm.dto.FcmDto
@@ -36,6 +37,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+
 
 interface ApiService {
     @POST("user/register")
@@ -94,6 +96,12 @@ interface ApiService {
     suspend fun togetherParentsDetail(
         @Path("togetherRunId") togetherRunId: Int,
         @Body requestModel: TogetherParentsDetailModel
+    ): Response<TogetherDetailResponse>
+
+    @POST("togetherrun/{togetherRunId}/reject")
+    suspend fun togetherParentsDetailReject(
+        @Path("togetherRunId") togetherRunId: Int,
+        @Body requestModel: TogetherParentsDetailRejectModel
     ): Response<TogetherDetailResponse>
 
     @PUT("mission/beg")

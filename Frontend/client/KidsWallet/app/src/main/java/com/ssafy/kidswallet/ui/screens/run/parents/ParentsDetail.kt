@@ -47,6 +47,7 @@ import com.ssafy.kidswallet.ui.components.LightGrayButton
 import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
+import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailRejectViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailViewModel
 
 @Composable
@@ -55,7 +56,8 @@ fun ParentsDetailScreen(
     loginViewModel: LoginViewModel = viewModel(),
     togetherRunId: Int?,
     togetherDetailViewModel: TogetherDetailViewModel,
-    togetherParentsDetailViewModel: TogetherParentsDetailViewModel
+    togetherParentsDetailViewModel: TogetherParentsDetailViewModel,
+    togetherParentsDetailRejectViewModel: TogetherParentsDetailRejectViewModel,
 ) {
     println("Received togetherRunId: $togetherRunId")
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
@@ -208,15 +210,37 @@ fun ParentsDetailScreen(
             ){
                 LightGrayButton(
                     onClick = {
-//                        handleMissionViewModel.rejectMission(begId = id)
-                        navController.navigate("run")
+                        togetherRunId?.let { id ->
+                            val userId = storedUserData?.userId ?: 0 // 기본값 0을 제공하여 nullable 문제를 해결
+                            togetherParentsDetailRejectViewModel.rejectTogetherRun(
+                                togetherRunId = id,
+                                userId = userId,
+                                onSuccess = {
+                                    resultMessage.value = "거절이 완료되었습니다."
+                                    isSuccess.value = true
+                                    showResultDialog.value = true
+                                },
+                                onFailure = { errorMessage ->
+                                    resultMessage.value = "거절 중 오류가 발생했습니다. 다시 시도해주세요."
+                                    isSuccess.value = false
+                                    showResultDialog.value = true
+                                    Log.e("ParentsDetailScreen", errorMessage)
+                                }
+                            )
+                        } ?: run {
+                            resultMessage.value = "유효하지 않은 ID입니다."
+                            isSuccess.value = false
+                            showResultDialog.value = true
+                        }
                     },
                     text = "거절하기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
-                    height = 50,
-                    elevation = 4
+                        .width(130.dp), // 기존 너비 유지
+                    height = 50,      // 기존 높이 유지
+                    elevation = 4     // 기존 elevation 유지
                 )
+
+
                 BlueButton(
                     onClick = {
                         togetherRunId?.let { id ->
@@ -255,12 +279,12 @@ fun ParentsDetailScreen(
         }
     }
 
-    // 삭제 확인 다이얼로그
+    // 수락 다이얼로그
     if (showConfirmationDialog.value) {
         AlertDialog(
             onDismissRequest = { showConfirmationDialog.value = false },
-            title = { Text("그만 달리기 확인", fontWeight = FontWeight.Bold, color = Color.Red) },
-            text = { Text("같이 달리기를 정말로 그만하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
+            title = { Text("성공", fontWeight = FontWeight.Bold, color = Color.Red) },
+            text = { Text("거절 하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
             confirmButton = {
                 BlueButton(
                     onClick = {
@@ -307,7 +331,7 @@ fun ParentsDetailScreen(
             },
             title = {
                 Text(
-                    text = if (isSuccess.value) "그만 달리기" else "오류",
+                    text = if (isSuccess.value) "성공" else "오류",
                     color = if (isSuccess.value) Color(0xFF77DD77) else Color.Red,
                     fontWeight = FontWeight.Bold
                 )

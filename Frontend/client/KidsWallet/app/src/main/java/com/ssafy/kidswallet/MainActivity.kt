@@ -76,6 +76,7 @@ import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
 import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
+import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailRejectViewModel
 import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
@@ -90,6 +91,7 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
         private val stateRunMoneyViewModel: StateRunMoneyViewModel by viewModels()
         private val togetherDetailViewModel: TogetherDetailViewModel by viewModels()
         private val togetherParentsDetailViewModel: TogetherParentsDetailViewModel by viewModels()
+        private val togetherParentsDetailRejectViewModel: TogetherParentsDetailRejectViewModel by viewModels()
 
         @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -181,7 +183,8 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
                     navController = navController,
                     togetherRunId = togetherRunId,
                     togetherDetailViewModel = togetherDetailViewModel,
-                    togetherParentsDetailViewModel = togetherParentsDetailViewModel
+                    togetherParentsDetailViewModel = togetherParentsDetailViewModel,
+                    togetherParentsDetailRejectViewModel = togetherParentsDetailRejectViewModel
                 )
             }
             composable("runOthers") { RunOthersScreen(navController) }
