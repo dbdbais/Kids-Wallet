@@ -148,16 +148,6 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
         }
     }
 
-    LaunchedEffect(isRelationRegistered) {
-        while (refreshCount2 < maxRefreshCount) {
-            if (isRelationRegistered && userId != null) {
-                updateUserViewModel.updateUser(userId)
-            }
-            refreshCount2++ // 실행 횟수 증가
-            delay(5000) // 5초 대기
-        }
-    }
-
     // updateUser 성공 시 updatedUserData가 업데이트되면 실행
     LaunchedEffect(updatedUserData) {
         if (updatedUserData != null) {
