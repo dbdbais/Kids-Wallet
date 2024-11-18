@@ -54,6 +54,26 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    @Bean(name = "noticeRedisTemplate")
+    public RedisTemplate<String, Object> noticeRedisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+
+        // Custom ObjectMapper with JavaTimeModule for LocalDateTime support
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule()); // Java 8 date/time support
+
+        // JSON serializer with custom ObjectMapper
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+        // Set up serializers
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(serializer);  // This handles serialization of Object
+
+        return redisTemplate;
+    }
+
+
     //    @Bean(name = "transactionRedisTemplate")
 //    public RedisTemplate<String, Transaction> transactionRedisTemplate() {
 //        RedisTemplate<String, Transaction> redisTemplate = new RedisTemplate<>();

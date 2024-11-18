@@ -289,7 +289,7 @@ public class TogetherRunService {
             } catch (Exception e) {
                 return null;
             }
-        // 수락 후
+            // 수락 후
         } else {
             Long savingContractId = savingContract.getSavingContractId();
             try {

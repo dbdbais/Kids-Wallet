@@ -26,6 +26,9 @@ public enum StatusCode {
     TOKEN_IS_NULL(HttpStatus.BAD_REQUEST,"토큰 값이 NULL입니다."),
     INVALID_TOGETHERRUN(HttpStatus.BAD_REQUEST,"유효하지 않은 같이 달리기입니다."),
     INVALID_SAVING_CONTRACT(HttpStatus.BAD_REQUEST,"유효하지 않은 적금 계약입니다."),
+    NOTICE_REDIS(HttpStatus.BAD_REQUEST,"노티스 레디스 에러" ),
+    WRONG_INDEX(HttpStatus.BAD_REQUEST,"REDIS INDEX ERR"),
+    FAILURE_LOCK(HttpStatus.BAD_REQUEST,"락을 얻지 못함(NOTICE)"),
     FAILD_TRANSFER(HttpStatus.BAD_REQUEST,"이체에 실패하였습니다.");
 
     private final HttpStatus httpStatus;

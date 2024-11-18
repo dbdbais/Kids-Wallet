@@ -14,4 +14,5 @@ public class ParentChildResponseDTO {
     private Long userId;
     private String userName;
     private Gender userGender;
+    private String userRealName;
 }

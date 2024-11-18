@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 //연관관계의 주인
 @Table(name = "relation", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"parent_idparent_id", "children_id"})
+        @UniqueConstraint(columnNames = {"parent_id", "children_id"})
 })
 public class Relation {
     @Id

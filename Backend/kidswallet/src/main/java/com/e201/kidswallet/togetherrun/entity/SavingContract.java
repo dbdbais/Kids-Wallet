@@ -80,5 +80,3 @@ public class SavingContract {
     private List<SavingPayment> savingPayments = new ArrayList<>();
 
 }
-
-
