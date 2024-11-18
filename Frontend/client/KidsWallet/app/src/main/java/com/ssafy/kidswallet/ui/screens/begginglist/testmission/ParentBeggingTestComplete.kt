@@ -40,6 +40,7 @@ fun ParentBeggingTestCompleteScreen(
     begMoney: Int,
     begContent: String?
 ) {
+    val formattedNumber = NumberUtils.formatNumberWithCommas(begMoney)
     Column (
         modifier = Modifier
     ){
@@ -137,7 +138,7 @@ fun ParentBeggingTestCompleteScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$begMoney",
+                            text = formattedNumber,
                             style = FontSizes.h24,
                             fontWeight = FontWeight.Black,
                             color = Color(0xFF6DCEF5)

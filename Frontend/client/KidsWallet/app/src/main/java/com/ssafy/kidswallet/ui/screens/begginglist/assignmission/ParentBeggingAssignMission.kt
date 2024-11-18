@@ -67,6 +67,7 @@ fun ParentBeggingAssignMissionScreen(
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val relation = storedUserData?.relations
     val begId = relation?.find {it.userName == name}?.userId
+    val formattedNumber = NumberUtils.formatNumberWithCommas(begMoney)
 
     Column (
         modifier = Modifier
@@ -161,7 +162,7 @@ fun ParentBeggingAssignMissionScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$begMoney",
+                            text = formattedNumber,
                             style = FontSizes.h24,
                             fontWeight = FontWeight.Black,
                             color = Color(0xFF6DCEF5)

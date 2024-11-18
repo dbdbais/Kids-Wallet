@@ -69,6 +69,7 @@ fun BeggingRequestReasonScreen(
     val userId = storedUserData?.userId
 
     val context = LocalContext.current
+    val formattedNumber = amount?.let { NumberUtils.formatNumberWithCommas(it) }
 
     Column(
         modifier = Modifier
@@ -114,7 +115,7 @@ fun BeggingRequestReasonScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$amount",
+                    text = formattedNumber ?: "알 수 없음",
                     style = FontSizes.h32,
                     fontWeight = FontWeight.Black,
                     color = Color(0xFF6DCEF5)

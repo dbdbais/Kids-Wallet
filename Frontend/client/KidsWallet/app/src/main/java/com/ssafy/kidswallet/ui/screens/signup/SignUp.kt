@@ -48,6 +48,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
@@ -60,6 +61,10 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.viewmodel.SignUpViewModel
 import java.util.Calendar
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel()) {
@@ -82,6 +87,8 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
     var birthError by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
+
+    var isSubmitting by remember { mutableStateOf(false) }
 
     if (navigateToLogin) {
         navController.navigate("loginRouting")
@@ -232,14 +239,23 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
 
                     // 유효한 경우 회원가입 정보 저장 로직 추가
                     if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked) && password.length >= 8) {
-                        viewModel.registerUser(
-                            userName = id,
-                            userPassword = password,
-                            userBirth = birth,
-                            userGender = selectedGender,
-                            userRealName = name,
-                            userRole = selectedRole
-                        )
+                        if (!isSubmitting) {
+                            isSubmitting = true
+                            viewModel.registerUser(
+                                userName = id,
+                                userPassword = password,
+                                userBirth = birth,
+                                userGender = selectedGender,
+                                userRealName = name,
+                                userRole = selectedRole
+                            )
+
+                            // 일정 시간 후 상태 리셋 (예: 1초)
+                            CoroutineScope(Dispatchers.Main).launch {
+                                delay(1000) // 1초 대기 후
+                                isSubmitting = false
+                            }
+                        }
                     } else if (password.length < 8) {
                         Toast.makeText(context, "비밀번호는 8자리 이상이어야 합니다.", Toast.LENGTH_SHORT).show()
                     } else {

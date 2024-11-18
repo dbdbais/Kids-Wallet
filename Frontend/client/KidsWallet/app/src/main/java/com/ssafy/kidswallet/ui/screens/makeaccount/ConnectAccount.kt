@@ -1,5 +1,6 @@
 package com.ssafy.kidswallet.ui.screens.makeaccount
 
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -145,7 +146,7 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CustomLoadingIndicator()
+                    ImageLoadingIndicator()
                 }
             } else {
                 Row(
@@ -233,34 +234,29 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
 }
 
 @Composable
-fun CustomLoadingIndicator() {
+fun ImageLoadingIndicator() {
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1000),
+            animation = tween(durationMillis = 1000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         )
     )
 
     Box(
         modifier = Modifier
-            .size(150.dp)
+            .size(100.dp)
             .graphicsLayer {
                 rotationZ = rotation
-            }
-            .background(
-                brush = Brush.verticalGradient( // 수직 방향으로 그라데이션 적용
-                    colors = listOf(
-                        Color(0xFF99DDF8), // 시작 색상
-                        Color(0xFF6DCEF5)  // 끝 색상
-                    )
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ),
+            },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "로딩", color = Color.White, fontWeight = FontWeight.Bold)
+        Image(
+            painter = painterResource(id = R.drawable.loading), // 'loading.png' 리소스 사용
+            contentDescription = "로딩 중",
+            modifier = Modifier.size(100.dp) // 이미지 크기 조절
+        )
     }
 }

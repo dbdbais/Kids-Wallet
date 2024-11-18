@@ -43,6 +43,7 @@ fun BeggingRequestCompleteScreen(
     amount: Int,
     reason: String?
 ) {
+    val formattedNumber = NumberUtils.formatNumberWithCommas(amount)
     Column(
         modifier = Modifier
     ) {
@@ -159,7 +160,7 @@ fun BeggingRequestCompleteScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$amount",
+                            text = formattedNumber,
                             style = FontSizes.h24,
                             fontWeight = FontWeight.Black,
                             color = Color(0xFF6DCEF5)
