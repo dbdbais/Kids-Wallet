@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,10 +48,15 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import com.ssafy.kidswallet.ui.components.BlueButton
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.ui.components.LightBlueButton
@@ -121,7 +127,7 @@ fun BeggingRequestScreen(navController: NavController, name: String?, viewModel:
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            CircularSlider(amount = amount, onAmountChange = { newAmount -> viewModel.setAmount(newAmount) })
+            LineSlider(amount = amount, onAmountChange = { newAmount -> viewModel.setAmount(newAmount) })
         }
         Box(
             modifier = Modifier
@@ -138,6 +144,178 @@ fun BeggingRequestScreen(navController: NavController, name: String?, viewModel:
                 elevation = 4
             )
         }
+    }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Composable
+fun LineSlider(
+    amount: Int,
+    onAmountChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    maxAmount: Int = 50000,
+    maxInputAmount: Int = 10000000,
+    trackLength: Dp = 300.dp, // 슬라이더의 길이
+    handleRadius: Dp = 15.dp, // 핸들의 반지름
+    trackThickness: Dp = 4.dp // 트랙의 두께
+) {
+    val progress by derivedStateOf { (amount.toFloat() / maxAmount) } // 진행 비율
+    val formattedNumber = NumberUtils.formatNumberWithCommas(amount)
+    var showDialog by remember { mutableStateOf(false) } // 다이얼로그 표시 여부
+    var inputAmount by remember { mutableStateOf(TextFieldValue(amount.toString())) }
+
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .width(trackLength),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "${formattedNumber}원",
+            style = FontSizes.h32,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Box(
+            modifier = modifier
+                .padding(top = 16.dp, bottom = 16.dp)
+                .width(trackLength)
+                .height(handleRadius * 2)
+                .pointerInput(Unit) {
+                    detectDragGestures { change, _ ->
+                        // 슬라이더가 클릭되거나 드래그된 위치로 변경
+                        val offsetX = change.position.x.coerceIn(0f, trackLength.toPx())
+                        val newProgress = offsetX / trackLength.toPx()
+                        val newAmount = ((newProgress * maxAmount) / 1000).roundToInt() * 1000
+                        onAmountChange(newAmount)
+                    }
+                }
+        ) {
+            val density = LocalDensity.current
+            val handlePositionX = (with(density) { progress * trackLength.toPx() }).coerceIn(
+                0f,
+                with(density) { trackLength.toPx() }
+            )
+
+            // 트랙 (슬라이더 라인)
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val gradient = Brush.horizontalGradient(
+                    colors = listOf(Color(0xFFCCE6FF), Color(0xFF99DDF8), Color(0xFFCCE6FF)),
+                    startX = 0f,
+                    endX = size.width
+                )
+                drawLine(
+                    brush = gradient,
+                    start = Offset(0f, size.height / 2),
+                    end = Offset(size.width, size.height / 2),
+                    strokeWidth = trackThickness.toPx(),
+                    cap = StrokeCap.Round // 둥근 끝부분
+                )
+
+                // 추가된 스타일 요소 (눈금)
+                val tickSpacing = size.width / 20
+                for (i in 0..20) { // 20개의 눈금
+                    val x = i * tickSpacing
+                    val isMultipleOfFour = i % 4 == 0 // 4의 배수 여부 검사
+                    drawLine(
+                        color = Color(0xFFCCE6FF),
+                        start = Offset(x, size.height / 2 - if (isMultipleOfFour) 20.dp.toPx() else 12.dp.toPx()), // 4의 배수일 때 더 긴 선
+                        end = Offset(x, size.height / 2 + if (isMultipleOfFour) 20.dp.toPx() else 12.dp.toPx()), // 4의 배수일 때 더 긴 선
+                        strokeWidth = if (isMultipleOfFour) 6f else 3f // 4의 배수일 때 두꺼운 선
+                    )
+                }
+            }
+
+            Canvas(
+                modifier = Modifier
+                    .offset {
+                        IntOffset(
+                            (handlePositionX - handleRadius.toPx()).roundToInt(), // 기존 / 2를 제거하여 정확한 중심 위치로 보정
+                            0
+                        )
+                    }
+                    .size(handleRadius * 2)
+            ) {
+                // 테두리 그리기
+                drawCircle(
+                    color = Color(0xFF99DDF8),
+                    radius = handleRadius.toPx() * 1.7f,
+                    style = Stroke(width = 6f)
+                )
+
+                // 안쪽 채우기
+                drawCircle(
+                    color = Color.White,
+                    radius = handleRadius.toPx() * 1.55f
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        LightBlueButton(
+            onClick = { showDialog = true },
+            text = "직접입력",
+            height = 40,
+            elevation = 0
+        )
+
+    }
+
+    // 직접 입력을 위한 다이얼로그
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "금액 입력") },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = inputAmount,
+                        onValueChange = {
+                            val filteredInput = it.text.filter { char -> char.isDigit() } // 숫자만 허용
+                            if (filteredInput.length <= 8) { // 9자리 제한
+                                inputAmount = TextFieldValue(
+                                    text = filteredInput,
+                                    selection = TextRange(filteredInput.length) // 커서를 항상 텍스트 끝에 위치하도록 설정
+                                )
+                            }
+                        },
+                        label = { Text("금액") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            },
+            containerColor = Color.White,
+            confirmButton = {
+                BlueButton(
+                    onClick = {
+                        inputAmount.text.toIntOrNull()?.let {
+                            onAmountChange(it.coerceIn(0, maxInputAmount))
+                        }
+                        showDialog = false
+                    },
+                    height = 40,
+                    modifier = Modifier.width(130.dp), // 원하는 너비 설정
+                    elevation = 0,
+                    text = "확인"
+                )
+            },
+            dismissButton = {
+                GrayButton(
+                    onClick = { showDialog = false },
+                    height = 40,
+                    modifier = Modifier.width(130.dp), // 원하는 너비 설정
+                    elevation = 0,
+                    text = "취소"
+                )
+            }
+        )
     }
 }
 
@@ -172,15 +350,21 @@ fun CircularSlider(
                         val radius = minOf(size.width, size.height) / 2
 
                         // 터치가 핸들 근처에 있는지 확인 (핸들 위치 기준 반경 설정)
-                        val handleRadius = 30.dp.toPx() // 핸들 근처에 있는지 확인할 반경
+                        val handleRadius = 30.dp.toPx()
                         var angle = atan2(y, x) * (180 / PI).toFloat() + 180f - 90f
+
                         // 0 ~ 360 사이로 보정
                         if (angle < 0) angle += 360
                         angle %= 360
 
+                        // 각도 제한 설정 (최대 360도까지만 값 처리)
+                        if (angle > 360f) {
+                            angle = 360f
+                        }
+
                         if (distanceFromCenter in (radius - handleRadius)..(radius + handleRadius)) {
                             // 슬라이더 값을 1000 단위로 업데이트
-                            val newAmount = ((angle / 360f) * maxAmount)
+                            val newAmount = ((angle / 360f) * maxAmount) // 300도를 기준으로 값 변환
                                 .roundToInt()
                                 .coerceIn(0, maxAmount)
                             onAmountChange((newAmount / 1000) * 1000 + 1000)
@@ -293,6 +477,58 @@ fun CircularSlider(
         }
     }
 }
+
+//// 직접 입력을 위한 다이얼로그
+//if (showDialog) {
+//    AlertDialog(
+//        onDismissRequest = { showDialog = false },
+//        title = { Text(text = "금액 입력") },
+//        text = {
+//            Column {
+//                OutlinedTextField(
+//                    value = inputAmount,
+//                    onValueChange = {
+//                        val filteredInput = it.text.filter { char -> char.isDigit() } // 숫자만 허용
+//                        if (filteredInput.length <= 8) { // 9자리 제한
+//                            inputAmount = TextFieldValue(
+//                                text = filteredInput,
+//                                selection = TextRange(filteredInput.length) // 커서를 항상 텍스트 끝에 위치하도록 설정
+//                            )
+//                        }
+//                    },
+//                    label = { Text("금액") },
+//                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+//                    singleLine = true
+//                )
+//                Spacer(modifier = Modifier.height(16.dp))
+//            }
+//        },
+//        containerColor = Color.White,
+//        confirmButton = {
+//            BlueButton(
+//                onClick = {
+//                    inputAmount.text.toIntOrNull()?.let {
+//                        onAmountChange(it.coerceIn(0, maxInputAmount))
+//                    }
+//                    showDialog = false
+//                },
+//                height = 40,
+//                modifier = Modifier.width(130.dp), // 원하는 너비 설정
+//                elevation = 0,
+//                text = "확인"
+//            )
+//        },
+//        dismissButton = {
+//            GrayButton(
+//                onClick = { showDialog = false },
+//                height = 40,
+//                modifier = Modifier.width(130.dp), // 원하는 너비 설정
+//                elevation = 0,
+//                text = "취소"
+//            )
+//        }
+//    )
+//}
 
 @Preview(
     showBackground = true,
