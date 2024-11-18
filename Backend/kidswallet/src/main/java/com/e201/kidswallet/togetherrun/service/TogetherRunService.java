@@ -215,6 +215,9 @@ public class TogetherRunService {
                 savingPaymentRepository.save(childPayment);
                 savingPaymentRepository.save(parentsPayment);
 
+                savingContract.setCurrentAmount(savingContract.getChildDepositAmount().add(savingContract.getParentsDepositAmount()));
+                savingContractRepository.save(savingContract);
+
             } catch (Exception e) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return StatusCode.BAD_REQUEST;
