@@ -64,6 +64,7 @@ import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletTransferScreen
 import com.ssafy.kidswallet.ui.screens.mywallet.MyWalletWithdrawScreen
 import com.ssafy.kidswallet.ui.screens.run.RunScreen
 import com.ssafy.kidswallet.ui.screens.run.others.RunOthersScreen
+import com.ssafy.kidswallet.ui.screens.run.parents.ParentsDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishDetailScreen
 import com.ssafy.kidswallet.ui.screens.run.parents.RunParentsFinishScreen
@@ -75,6 +76,8 @@ import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.screens.signup.SignUp
 import com.ssafy.kidswallet.ui.splash.SplashScreen
 import com.ssafy.kidswallet.viewmodel.TogetherDetailViewModel
+import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailRejectViewModel
+import com.ssafy.kidswallet.viewmodel.TogetherParentsDetailViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateBeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 import kotlinx.coroutines.flow.first
@@ -87,6 +90,9 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
         private val stateBeggingMissionViewModel: StateBeggingMissionViewModel by viewModels()
         private val stateRunMoneyViewModel: StateRunMoneyViewModel by viewModels()
         private val togetherDetailViewModel: TogetherDetailViewModel by viewModels()
+        private val togetherParentsDetailViewModel: TogetherParentsDetailViewModel by viewModels()
+        private val togetherParentsDetailRejectViewModel: TogetherParentsDetailRejectViewModel by viewModels()
+
         @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -168,6 +174,19 @@ val Context.dataStore by preferencesDataStore(name = "FcmToken") // FcmToken을 
             composable("card3") { Card3Screen(navController) }
             // run
             composable("run") { RunScreen(navController) }
+            composable(
+                route = "parentsDetail/{togetherRunId}",
+                arguments = listOf(navArgument("togetherRunId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val togetherRunId = backStackEntry.arguments?.getInt("togetherRunId")
+                ParentsDetailScreen(
+                    navController = navController,
+                    togetherRunId = togetherRunId,
+                    togetherDetailViewModel = togetherDetailViewModel,
+                    togetherParentsDetailViewModel = togetherParentsDetailViewModel,
+                    togetherParentsDetailRejectViewModel = togetherParentsDetailRejectViewModel
+                )
+            }
             composable("runOthers") { RunOthersScreen(navController) }
             composable("runParentsFinish") { RunParentsFinishScreen(navController) }
             composable("runParentsFinishDetail") { RunParentsFinishDetailScreen(navController) }

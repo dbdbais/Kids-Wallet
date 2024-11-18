@@ -93,12 +93,12 @@ fun RunParentsMemberListScreen(
                     )
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = member.userName ?: "",
+                            text = member.userRealName ?: "",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = member.userGender ?: "",
+                            text = member.userName ?: "",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         )

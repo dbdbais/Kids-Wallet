@@ -132,39 +132,42 @@ fun RunScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(GoldenRatioUtils.goldenHeight(150f).dp)
-                            .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
-                            .background(Color.White)
-                            .border(1.dp, Color.White, RoundedCornerShape(8.dp))
-                            .padding(16.dp)
-                            .clickable {
-                                navController.navigate("runParents")
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                if (storedUserData?.userRole == "CHILD") {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(GoldenRatioUtils.goldenHeight(150f).dp)
+                                .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp))
+                                .background(Color.White)
+                                .border(1.dp, Color.White, RoundedCornerShape(8.dp))
+                                .padding(16.dp)
+                                .clickable {
+                                    navController.navigate("runParents")
+                                },
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = "새로운 달리기\n시작하기",
-                                style = FontSizes.h16,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Image(
-                                painter = painterResource(id = R.drawable.icon_plus_circle),
-                                contentDescription = "Add Run",
-                                modifier = Modifier.size(40.dp)
-                            )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = "새로운 달리기\n시작하기",
+                                    style = FontSizes.h16,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Image(
+                                    painter = painterResource(id = R.drawable.icon_plus_circle),
+                                    contentDescription = "Add Run",
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
                         }
                     }
                 }
+
 
                 items(togetherList.size) { index ->
                     val item = togetherList[index]
@@ -177,11 +180,20 @@ fun RunScreen(
                             .border(1.dp, Color(0xFF6DCEF5), RoundedCornerShape(16.dp))
                             .padding(16.dp)
                             .clickable {
-                                if (item.isAccept) {
-                                    navController.navigate("runParentsDetail/${item.togetherRunId}")
-                                } else {
-                                    showAlertDialog.value = true
+                                val route = when (storedUserData?.userRole) {
+                                    "CHILD" -> {
+                                        if (item.isAccept) {
+                                            "runParentsDetail/${item.togetherRunId}"
+                                        } else {
+                                            showAlertDialog.value = true
+                                            null
+                                        }
+                                    }
+                                    "PARENT" -> "parentsDetail/${item.togetherRunId}" // isAccept와 상관없이 라우팅
+                                    else -> null // 다른 경우를 대비한 처리
                                 }
+
+                                route?.let { navController.navigate(it) }
                             },
                         contentAlignment = Alignment.TopStart
                     ) {
@@ -219,6 +231,7 @@ fun RunScreen(
                         )
                     }
                 }
+
             }
         }
 
@@ -227,7 +240,7 @@ fun RunScreen(
         )
     }
 
-    if (showAlertDialog.value) {
+    if (storedUserData?.userRole == "CHILD" && showAlertDialog.value) {
         AlertDialog(
             onDismissRequest = { showAlertDialog.value = false },
             title = {
