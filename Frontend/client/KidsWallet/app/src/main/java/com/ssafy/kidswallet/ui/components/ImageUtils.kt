@@ -25,7 +25,7 @@ object ImageUtils {
 
             // Bitmap을 ByteArray로 변환
             val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
             val byteArray = byteArrayOutputStream.toByteArray()
 
             // ByteArray를 Base64 문자열로 변환
@@ -40,7 +40,7 @@ object ImageUtils {
         return try {
             val bitmap = BitmapFactory.decodeResource(context.resources, drawableResId)
             val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream)
             val byteArray = byteArrayOutputStream.toByteArray()
             Base64.encodeToString(byteArray, Base64.NO_WRAP)
         } catch (e: Exception) {
