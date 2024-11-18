@@ -95,7 +95,7 @@ fun MyWalletDepositScreen(navController: NavController) {
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                showDialog.value = false
+//                showDialog.value = false
             },
             title = {
                 Text(

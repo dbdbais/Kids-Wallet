@@ -203,38 +203,45 @@ fun RunParentsDetailScreen(
     // 삭제 확인 다이얼로그
     if (showConfirmationDialog.value) {
         AlertDialog(
-            onDismissRequest = { showConfirmationDialog.value = false },
+            onDismissRequest = {
+                showConfirmationDialog.value = false
+            },
             title = { Text("그만 달리기 확인", fontWeight = FontWeight.Bold, color = Color.Red) },
             text = { Text("같이 달리기를 정말로 그만하시겠습니까? 이 작업은 되돌릴 수 없습니다.", fontWeight = FontWeight.Bold, color = Color(0xFF8C8595)) },
             confirmButton = {
-                BlueButton(
-                    onClick = {
-                        showConfirmationDialog.value = false
-                        togetherDetail?.savingContractId?.let { id ->
-                            togetherDetailViewModel.deleteTogetherRun(
-                                id,
-                                onSuccess = {
-                                    resultMessage.value = "실패는 성공의 어머니! 또 다른 도전을 응원합니다!"
-                                    isSuccess.value = true
-                                    showResultDialog.value = true
-                                },
-                                onFailure = { errorMessage ->
-                                    resultMessage.value = "삭제 중 오류가 발생했습니다. 다시 시도해주세요."
-                                    isSuccess.value = false
-                                    showResultDialog.value = true
-                                    Log.e("RunParentsDetailScreen", errorMessage)
-                                }
-                            )
-                        }
-                    },
-                    text = "확인"
-                )
-            },
-            dismissButton = {
-                LightGrayButton(
-                    onClick = { showConfirmationDialog.value = false },
-                    text = "취소"
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    LightGrayButton(
+                        onClick = { showConfirmationDialog.value = false },
+                        text = "취소",
+                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                    )
+                    BlueButton(
+                        onClick = {
+                            showConfirmationDialog.value = false
+                            togetherDetail?.savingContractId?.let { id ->
+                                togetherDetailViewModel.deleteTogetherRun(
+                                    id,
+                                    onSuccess = {
+                                        resultMessage.value = "실패는 성공의 어머니! 또 다른 도전을 응원합니다!"
+                                        isSuccess.value = true
+                                        showResultDialog.value = true
+                                    },
+                                    onFailure = { errorMessage ->
+                                        resultMessage.value = "삭제 중 오류가 발생했습니다. 다시 시도해주세요."
+                                        isSuccess.value = false
+                                        showResultDialog.value = true
+                                        Log.e("RunParentsDetailScreen", errorMessage)
+                                    }
+                                )
+                            }
+                        },
+                        text = "확인",
+                        modifier = Modifier.weight(1f).padding(start = 8.dp)
+                    )
+                }
             }
         )
     }
@@ -243,7 +250,7 @@ fun RunParentsDetailScreen(
     if (showResultDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                showResultDialog.value = false
+//                showResultDialog.value = false
                 if (isSuccess.value) {
                     navController.navigate("run") {
                         popUpTo(0) { inclusive = true }

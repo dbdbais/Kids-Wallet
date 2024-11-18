@@ -322,7 +322,7 @@ fun ParentsDetailScreen(
     if (showResultDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                showResultDialog.value = false
+//                showResultDialog.value = false
                 if (isSuccess.value) {
                     navController.navigate("run") {
                         popUpTo(0) { inclusive = true }
