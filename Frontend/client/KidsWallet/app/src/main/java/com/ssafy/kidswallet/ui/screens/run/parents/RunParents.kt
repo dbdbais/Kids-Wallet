@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,15 +40,16 @@ import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale // `java.util.Locale`만 남김
+import java.util.Locale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel) {
     var text by remember { mutableStateOf("") }
-    val maxChar = 20
-
-    // AlertDialog state management for missing goal input
+    val maxChar = 15
     val showAlertDialog = remember { mutableStateOf(false) }
 
     // 사진 선택 및 날짜 설정 (기존 코드 유지)
@@ -71,10 +74,23 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
         datePicker.minDate = calendar.timeInMillis
     }
 
+    // FocusRequester와 KeyboardController 추가
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var isTextFieldFocused by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null // 클릭 시 기본 효과 제거
+            ) {
+                // TextField 외부를 클릭했을 때 포커스 해제 및 키보드 숨기기
+                keyboardController?.hide()
+                isTextFieldFocused = false
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Top(title = "같이 달리기", navController = navController)
@@ -132,7 +148,11 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
                         modifier = Modifier
                             .fillMaxWidth(0.85f)
                             .background(Color.Transparent)
-                            .padding(horizontal = 0.dp),
+                            .padding(horizontal = 0.dp)
+                            .focusRequester(focusRequester)
+                            .onFocusChanged { focusState ->
+                                isTextFieldFocused = focusState.isFocused
+                            },
                         textStyle = FontSizes.h16.copy(fontWeight = FontWeight.Bold),
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color.White,
@@ -284,4 +304,3 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
         )
     }
 }
-
