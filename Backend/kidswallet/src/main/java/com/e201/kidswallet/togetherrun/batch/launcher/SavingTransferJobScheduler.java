@@ -20,7 +20,7 @@ public class SavingTransferJobScheduler {
         this.savingTransferJob = savingTransferJob;
     }
 
-    @Scheduled(cron = "0 0 10 * * ?")
+    @Scheduled(cron = "0 00 11 * * ?")
     public void runSavingTransferJob() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
