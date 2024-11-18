@@ -25,6 +25,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +60,15 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
     }
     var showDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val apiResponseState by playMissionViewModel.apiResponseState.collectAsState()
+    LaunchedEffect(apiResponseState) {
+        if (apiResponseState == true) {
+            showDialog = true
+        } else if (apiResponseState == false) {
+
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -224,7 +235,6 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
 
                     val missionId = id
                     playMissionViewModel.sendMission(missionId, base64String ?: "")
-                    showDialog = true
                 },
                 text = "보내기",
                 modifier = Modifier
