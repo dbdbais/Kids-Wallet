@@ -101,8 +101,11 @@ fun RunParentsMemberListScreen(
                         .clickable {
                             member.userName?.let {
                                 // 선택된 member의 userRealName과 userName을 ViewModel에 설정
-                                viewModel.toggleMemberSelection(it, member.userRealName ?: "N/A")
-                                Log.d("RunParentsMemberListScreen", "Selected member: ${viewModel.selectedMember}, RealName: ${viewModel.selectedUserRealName}")
+                                viewModel.toggleMemberSelection(
+                                    member = it,
+                                    realName = member.userRealName ?: "N/A",
+                                    userId = member.userId
+                                )
                             }
                         },
                     verticalAlignment = Alignment.CenterVertically

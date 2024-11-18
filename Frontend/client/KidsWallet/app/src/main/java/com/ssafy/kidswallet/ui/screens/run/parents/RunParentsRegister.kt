@@ -52,6 +52,7 @@ fun RunParentsRegisterScreen(
 
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val selectedUserRealName = runMemberViewModel.selectedUserRealName
+    val selectedUserId = runMemberViewModel.selectedUserId
 
     // AlertDialog 상태 관리
     val showDialog = remember { mutableStateOf(false) }
@@ -174,7 +175,7 @@ fun RunParentsRegisterScreen(
                 val parentsContribute = stateRunMoneyViewModel.parentGoalMoney
                 val childContribute = stateRunMoneyViewModel.childGoalMoney
 
-                val parentsId = storedUserData?.relations?.getOrNull(0)?.userId ?: 0
+                val parentsId = selectedUserId ?: 0
                 val childId = storedUserData?.userId ?: 0
 
                 val requestModel = TogetherrunReisterModel(
