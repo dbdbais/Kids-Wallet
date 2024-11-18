@@ -51,6 +51,7 @@ import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.DeleteNoticeViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.NoticeListViewModel
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
@@ -97,8 +98,8 @@ fun AlertListBox(viewModel: NoticeListViewModel = viewModel(), loginViewModel: L
 
     LaunchedEffect(isNoticeDeleted) {
         if (isNoticeDeleted) {
-            userId?.let {
-                viewModel.fetchNotice(it.toString())
+            navController.navigate("alertList") {
+                popUpTo("alertList") { inclusive = true }
             }
         }
     }

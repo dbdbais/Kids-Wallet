@@ -85,7 +85,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
 
     var refreshCount1 by remember { mutableStateOf(0) }
     var refreshCount2 by remember { mutableStateOf(0) }
-    val maxRefreshCount = 12
+    val maxRefreshCount = 24
 
     BackHandler {
         backShowDialog = true

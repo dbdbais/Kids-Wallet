@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import com.ssafy.kidswallet.R
 import com.ssafy.kidswallet.ui.components.BottomNavigationBar
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.ui.components.TopToMain
 
 @Composable
 fun BeggingScreen(navController: NavController) {
@@ -56,7 +57,7 @@ fun BeggingScreen(navController: NavController) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Top(title = "조르기", navController = navController)
+            TopToMain(title = "조르기", navController = navController)
             Spacer(modifier = Modifier.height(32.dp))
             BeggingMoney(navController, boxHeight)
             Spacer(modifier = Modifier.height(48.dp))

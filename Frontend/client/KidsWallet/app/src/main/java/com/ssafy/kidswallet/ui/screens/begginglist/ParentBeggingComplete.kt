@@ -48,6 +48,7 @@ import com.ssafy.kidswallet.ui.components.FontSizes
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.ui.components.GreenButton
 import com.ssafy.kidswallet.ui.components.Top
+import com.ssafy.kidswallet.ui.components.TopToBegging
 import com.ssafy.kidswallet.ui.components.YellowButton
 import com.ssafy.kidswallet.viewmodel.BeggingMissionViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
@@ -61,7 +62,7 @@ fun ParentBeggingCompleteScreen(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Top(title = "조르기 요청 내역", navController = navController) // BackButton 사용
+        TopToBegging(title = "조르기 요청 내역", navController = navController) // BackButton 사용
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier

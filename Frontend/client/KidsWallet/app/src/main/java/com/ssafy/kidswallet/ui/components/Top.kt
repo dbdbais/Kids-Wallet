@@ -74,3 +74,31 @@ fun TopToMain(title: String, navController: NavController) {
         )
     }
 }
+
+@Composable
+fun TopToBegging(title: String, navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.icon_back),
+            contentDescription = "Back to Begging",
+            modifier = Modifier
+                .size(24.dp)
+                .clickable {
+                    navController.navigate("begging") {
+                        popUpTo("begging") { inclusive = true }
+                    }
+                }
+        )
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
