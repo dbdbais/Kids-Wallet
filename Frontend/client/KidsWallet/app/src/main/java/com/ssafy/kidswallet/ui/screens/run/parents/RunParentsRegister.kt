@@ -211,7 +211,7 @@ fun RunParentsRegisterScreen(
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                showDialog.value = false
+//                showDialog.value = false
                 if (isSuccess.value) {
                     navController.navigate("run") {
                         popUpTo(0) { inclusive = true }
