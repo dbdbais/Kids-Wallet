@@ -95,6 +95,7 @@ public class UserService {
                                 .userId(r.getChild().getUserId())
                                 .userName(r.getChild().getUserName())
                                 .userGender(r.getChild().getUserGender())
+                                .userRealName(r.getChild().getUserRealName())
                                 .build());
                     }
                 }
@@ -104,6 +105,7 @@ public class UserService {
                                 .userId(r.getParent().getUserId())
                                 .userName(r.getParent().getUserName())
                                 .userGender(r.getParent().getUserGender())
+                                .userRealName(r.getParent().getUserRealName())
                                 .build());
                     }
                 }
