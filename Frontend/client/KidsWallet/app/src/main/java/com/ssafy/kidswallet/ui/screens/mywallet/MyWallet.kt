@@ -36,6 +36,7 @@ import com.ssafy.kidswallet.ui.components.Top
 import com.ssafy.kidswallet.ui.components.TopToMain
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import com.ssafy.kidswallet.viewmodel.AccountTransactionViewModel
+import androidx.compose.foundation.interaction.MutableInteractionSource
 
 @Composable
 fun MyWalletScreen(
@@ -368,8 +369,6 @@ fun TransactionItem(transaction: TransactionModel) {
     }
 }
 
-
-
 @Composable
 fun ClickableIconWithText(
     navController: NavController,
@@ -381,7 +380,12 @@ fun ClickableIconWithText(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .clickable { navController.navigate(route) }
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() }, // 기본 애니메이션 제거
+                indication = null // 리플 효과 제거
+            ) {
+                navController.navigate(route)
+            }
             .padding(start = 16.dp, bottom = 16.dp)
     ) {
         Image(
@@ -395,14 +399,4 @@ fun ClickableIconWithText(
             color = Color.White
         )
     }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560",
-    showSystemUi = true
-)
-@Composable
-fun MyWalletScreenPreview() {
-    MyWalletScreen(navController = rememberNavController())
 }

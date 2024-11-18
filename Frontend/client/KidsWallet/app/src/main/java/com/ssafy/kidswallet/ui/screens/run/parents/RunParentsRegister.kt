@@ -35,6 +35,7 @@ import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
 import com.ssafy.kidswallet.ui.viewmodel.TogetherrunReisterViewModel
 import com.ssafy.kidswallet.ui.viewmodel.TogetherrunReisterViewModelFactory
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
+import com.ssafy.kidswallet.viewmodel.RunMemberViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 
 @Composable
@@ -42,13 +43,16 @@ fun RunParentsRegisterScreen(
     navController: NavController,
     viewModel: StateRunViewModel = viewModel(),
     loginViewModel: LoginViewModel = viewModel(),
-    stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel()
+    stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel(),
+    runMemberViewModel: RunMemberViewModel
 ) {
     val apiService = RetrofitClient.apiService
     val factory = TogetherrunReisterViewModelFactory(apiService)
     val togetherrunReisterViewModel: TogetherrunReisterViewModel = viewModel(factory = factory)
 
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
+    val selectedUserRealName = runMemberViewModel.selectedUserRealName
+    val selectedUserId = runMemberViewModel.selectedUserId
 
     // AlertDialog 상태 관리
     val showDialog = remember { mutableStateOf(false) }
@@ -150,7 +154,7 @@ fun RunParentsRegisterScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             ParticipantInfo(
-                name = "응애재훈",
+                name = selectedUserRealName ?: "N/A",
                 amount = "목표 " + NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.parentGoalMoney) + "원",
                 imageResId = R.drawable.character_run_member
             )
@@ -171,7 +175,7 @@ fun RunParentsRegisterScreen(
                 val parentsContribute = stateRunMoneyViewModel.parentGoalMoney
                 val childContribute = stateRunMoneyViewModel.childGoalMoney
 
-                val parentsId = storedUserData?.relations?.getOrNull(0)?.userId ?: 0
+                val parentsId = selectedUserId ?: 0
                 val childId = storedUserData?.userId ?: 0
 
                 val requestModel = TogetherrunReisterModel(
@@ -184,17 +188,6 @@ fun RunParentsRegisterScreen(
                     childContribute = childContribute,
                     targetImage = targetImage,
                 )
-
-                // Log each extracted value
-                println("Extracted Values:")
-                println("targetTitle: $targetTitle")
-                println("targetImage: $targetImage") // Important for base64 string
-                println("targetAmount: $targetAmount")
-                println("targetDate: $targetDate")
-                println("parentsContribute: $parentsContribute")
-                println("childContribute: $childContribute")
-
-                println("Request Model: $requestModel") // 생성된 요청 데이터 디버깅
 
                 togetherrunReisterViewModel.registerTogetherrun(requestModel) { success ->
                     if (success) {

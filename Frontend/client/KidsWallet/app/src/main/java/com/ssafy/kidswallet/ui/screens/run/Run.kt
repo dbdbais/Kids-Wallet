@@ -52,6 +52,8 @@ fun RunScreen(
         togetherListViewModel.fetchTogetherList(userId)
     }
 
+    // 최신순 정렬된 리스트
+    val sortedTogetherList = togetherList.sortedByDescending { it.togetherRunId }
     // Dialog 상태 관리
     val showAlertDialog = remember { mutableStateOf(false) }
 
@@ -168,9 +170,8 @@ fun RunScreen(
                     }
                 }
 
-
-                items(togetherList.size) { index ->
-                    val item = togetherList[index]
+                items(sortedTogetherList.size) { index ->
+                    val item = sortedTogetherList[index]
                     Box(
                         modifier = Modifier
                             .width(150.dp)
@@ -189,8 +190,8 @@ fun RunScreen(
                                             null
                                         }
                                     }
-                                    "PARENT" -> "parentsDetail/${item.togetherRunId}" // isAccept와 상관없이 라우팅
-                                    else -> null // 다른 경우를 대비한 처리
+                                    "PARENT" -> "parentsDetail/${item.togetherRunId}"
+                                    else -> null
                                 }
 
                                 route?.let { navController.navigate(it) }
@@ -269,4 +270,3 @@ fun RunScreen(
         )
     }
 }
-

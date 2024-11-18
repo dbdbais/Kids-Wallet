@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,13 @@ import com.ssafy.kidswallet.viewmodel.RunMemberViewModel
 import com.ssafy.kidswallet.viewmodel.LoginViewModel
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
+
 
 @Composable
 fun RunParentsMemberListScreen(
@@ -38,11 +46,21 @@ fun RunParentsMemberListScreen(
 ) {
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     var searchText by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var isTextFieldFocused by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null // 클릭 효과 제거
+            ) {
+                // TextField 외부를 클릭했을 때 포커스 해제 및 키보드 숨기기
+                keyboardController?.hide()
+                isTextFieldFocused = false
+            }
     ) {
         // 상단 제목 및 닫기 버튼
         Top(
@@ -80,7 +98,16 @@ fun RunParentsMemberListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
-                        .clickable { member.userName?.let { viewModel.toggleMemberSelection(it) } },
+                        .clickable {
+                            member.userName?.let {
+                                // 선택된 member의 userRealName과 userName을 ViewModel에 설정
+                                viewModel.toggleMemberSelection(
+                                    member = it,
+                                    realName = member.userRealName ?: "N/A",
+                                    userId = member.userId
+                                )
+                            }
+                        },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     // 캐릭터 이미지
@@ -146,12 +173,16 @@ fun SearchTextField(
     onValueChange: (String) -> Unit
 ) {
     var text by remember { mutableStateOf("") }
+    val maxChar = 15
 
     OutlinedTextField(
         value = text,
         onValueChange = { newText ->
-            text = newText
-            onValueChange(newText)
+            // 글자 수 제한을 적용
+            if (newText.length <= maxChar) {
+                text = newText
+                onValueChange(newText)
+            }
         },
         placeholder = {
             Text(text = placeholderText, color = Color(0x808C8595))
@@ -169,6 +200,16 @@ fun SearchTextField(
         ),
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(0xFFF7F7F7), shape = CircleShape)
+            .background(Color(0xFFF7F7F7), shape = CircleShape),
+        // 엔터 및 탭 키 입력을 막기 위한 키보드 옵션 및 필터링
+        singleLine = true, // 줄바꿈 방지
+        visualTransformation = VisualTransformation { textInput ->
+            // 탭 키 입력 방지 (탭 문자를 제거)
+            TransformedText(
+                text = AnnotatedString(textInput.text.replace("\t", "")),
+                offsetMapping = OffsetMapping.Identity
+            )
+        }
     )
 }
+

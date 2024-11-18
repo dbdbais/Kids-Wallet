@@ -1,6 +1,7 @@
 package com.ssafy.kidswallet.ui.screens.run.parents
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -53,6 +54,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import com.ssafy.kidswallet.ui.components.GrayButton
 import com.ssafy.kidswallet.ui.screens.run.viewmodel.state.StateRunViewModel
+import com.ssafy.kidswallet.viewmodel.RunMemberViewModel
 import com.ssafy.kidswallet.viewmodel.state.StateRunMoneyViewModel
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -65,13 +67,16 @@ import kotlin.math.sqrt
 fun RunParentsMoneyScreen(
     navController: NavController,
     amountViewModel: RunParentsAmountViewModel = viewModel(),
-    stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel()
+    stateRunMoneyViewModel: StateRunMoneyViewModel = viewModel(),
+    runMemberViewModel: RunMemberViewModel = viewModel()
 ) {
     val childGoalMoney = stateRunMoneyViewModel.childGoalMoney
     val parentGoalMoney = stateRunMoneyViewModel.parentGoalMoney
     val togetherGoalMoney = stateRunMoneyViewModel.togetherGoalMoney
 
     var showAlertDialog by remember { mutableStateOf(false) }
+    val selectedUserRealName = runMemberViewModel.selectedUserRealName
+    Log.d("RunParentsMoneyScreen", "Displayed RealName: $selectedUserRealName")
 
     Column(
         modifier = Modifier
@@ -166,7 +171,7 @@ fun RunParentsMoneyScreen(
 
                 // Display the selected member's name
                 Text(
-                    text = "응애재훈",
+                    text = selectedUserRealName ?: "N/A",
                     style = FontSizes.h16,
                     fontWeight = FontWeight.Bold
                 )
