@@ -76,7 +76,7 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
                         .background(Color(0xFF99DDF8), RoundedCornerShape(16.dp))
                         .padding(16.dp)
                 ) {
-                    // D-Day 배지를 좌측 상단에 위치시킴
+                    // D-Day 배지`를 좌측 상단에 위치시킴
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopStart) // 좌측 상단에 정렬

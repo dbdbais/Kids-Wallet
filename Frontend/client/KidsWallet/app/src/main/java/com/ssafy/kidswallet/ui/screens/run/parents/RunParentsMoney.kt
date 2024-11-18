@@ -166,7 +166,7 @@ fun RunParentsMoneyScreen(
 
                 // Display the selected member's name
                 Text(
-                    text = "응애재훈",
+                    text = "N/A",
                     style = FontSizes.h16,
                     fontWeight = FontWeight.Bold
                 )

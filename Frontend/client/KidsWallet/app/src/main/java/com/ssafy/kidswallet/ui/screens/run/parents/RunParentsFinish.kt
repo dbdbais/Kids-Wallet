@@ -120,8 +120,9 @@ fun RunParentsFinishScreen(
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Top
                 ) {
+                    Spacer(modifier = Modifier.height(50.dp))
                     Image(
                         painter = painterResource(id = R.drawable.icon_no_transaction), // Replace with your desired image resource
                         contentDescription = "No Data",

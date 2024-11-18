@@ -150,7 +150,7 @@ fun RunParentsRegisterScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             ParticipantInfo(
-                name = "응애재훈",
+                name = "N/A",
                 amount = "목표 " + NumberUtils.formatNumberWithCommas(stateRunMoneyViewModel.parentGoalMoney) + "원",
                 imageResId = R.drawable.character_run_member
             )
