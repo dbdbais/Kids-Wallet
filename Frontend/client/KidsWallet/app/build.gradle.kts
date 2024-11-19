@@ -1,6 +1,3 @@
-import java.util.Properties
-import java.io.FileInputStream
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,37 +5,9 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localProperties.load(FileInputStream(localPropertiesFile))
-}
-
-val baseUrl = localProperties.getProperty("BASE_URL") ?: "default-url"
-val storePassword = localProperties.getProperty("STORE_PASSWORD") ?: "default-password"
-val keyAlias = localProperties.getProperty("KEY_ALIAS") ?: "default-alias"
-val keyPassword = localProperties.getProperty("KEY_PASSWORD") ?: "default-password"
-
 android {
     namespace = "com.ssafy.kidswallet"
     compileSdk = 34
-
-    signingConfigs {
-        create("release") {
-            storeFile = file("C:\\Users\\SSAFY\\Desktop\\jayul\\S11P31E201\\Frontend\\client\\KidsWallet\\my-release-key.jks")
-            storePassword = "kidswallet"
-            keyAlias = "my-key-alias"
-            keyPassword = "kidswallet"
-        }
-
-//        // 배포서버
-//        create("release") {
-//            storeFile = file("/kidswallet-release-key.jks")
-//            storePassword = storePassword
-//            keyAlias = keyAlias
-//            keyPassword = keyPassword
-//        }
-    }
 
     defaultConfig {
         applicationId = "com.ssafy.kidswallet"
@@ -55,7 +24,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/\"")
         }
         release {
             isMinifyEnabled = false
@@ -63,8 +32,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
-            signingConfig = signingConfigs.getByName("release")
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/\"")
         }
     }
     compileOptions {
