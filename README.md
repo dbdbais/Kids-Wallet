@@ -54,7 +54,7 @@ coming soon
 ### ERD (click)
 ![Kid's Wallet_erd.png](/readme_img/Kid's%20Wallet_erd.png)
 ### 기능 명세서 (click)
-coming soon
+![Kid's Wallet_feature.png](/readme_img/Kid_s_Wallet_feature.png)
 ### API 명세서 (click)
 ![Kid's Wallet_api.png](/readme_img/Kid_s_Wallet_api.png)
 ### 목업 (click)
