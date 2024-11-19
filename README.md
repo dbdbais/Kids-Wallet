@@ -56,7 +56,7 @@ coming soon
 ### 기능 명세서 (click)
 coming soon
 ### API 명세서 (click)
-coming soon
+![Kid's Wallet_api.png](/readme_img/Kid's%20Wallet_api.png)
 ### 목업 (click)
 coming soon
 ### 7. 멤버 구성 및 팀원 역할
