@@ -142,7 +142,7 @@ fun ParentBeggingRequestCheckScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$begMoney",
+                            text = formattedNumber,
                             style = FontSizes.h24,
                             fontWeight = FontWeight.Black,
                             color = Color(0xFF6DCEF5)
