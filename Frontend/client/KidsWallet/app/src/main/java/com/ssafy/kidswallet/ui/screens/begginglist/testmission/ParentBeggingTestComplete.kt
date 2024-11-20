@@ -78,7 +78,7 @@ fun ParentBeggingTestCompleteScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "$begMoney",
+                    text = formattedNumber,
                     style = FontSizes.h32,
                     fontWeight = FontWeight.Black,
                     color = Color(0xFF6DCEF5)
