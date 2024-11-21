@@ -70,10 +70,10 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState())
                 .clickable(
-                    indication = null, // 터치 피드백을 제거
-                    interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
                 ) {
-                    // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+
                     focusManager.clearFocus()
                 },
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,7 +96,7 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
             OutlinedTextField(
                 value = id,
                 onValueChange = {
-                    if (it.length <= 15) { // 15자 입력 제한
+                    if (it.length <= 15) {
                         id = it
                     }
                 },
@@ -160,7 +160,7 @@ fun Login(navController: NavHostController, viewModel: LoginViewModel = viewMode
             BlueButton(
                 onClick = { viewModel.loginUser(userName = id, userPassword = password) },
                 text = "확인",
-                modifier = Modifier.width(400.dp), // 원하는 너비 설정
+                modifier = Modifier.width(400.dp),
                 height = 40,
                 elevation = 0
             )
@@ -195,8 +195,8 @@ fun ErrorBox(errorMessage: String) {
             .fillMaxWidth()
             .fillMaxHeight(0.1f)
             .background(
-                color = Color(0xFFFFCDD2).copy(alpha = 0.8f), // 연한 빨간색 배경으로 에러 박스 표시
-                shape = RoundedCornerShape(8.dp) // 모서리를 둥글게 설정
+                color = Color(0xFFFFCDD2).copy(alpha = 0.8f),
+                shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center
     ) {

@@ -33,11 +33,11 @@ fun RunOthersScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(16.dp))
         RunOtherHeaderSection()
         RunOtherContentSection()
-        // 이미지 섹션을 감싸는 Column에 weight 적용
+        
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f) // 남은 여백을 채우도록 설정
+                .weight(1f) 
         ) {
             RunOtherImage()
         }
@@ -115,16 +115,16 @@ fun RunOtherImage() {
             contentDescription = "후원",
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(0.5f) // 이미지에 투명도 적용
+                .alpha(0.5f) 
         )
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.LightGray.copy(alpha = 0.7f)) // 회색 반투명 오버레이
+                .background(Color.LightGray.copy(alpha = 0.7f)) 
         )
         Column(
             modifier = Modifier
-                .align(Alignment.Center) // Column을 중앙에 정렬
+                .align(Alignment.Center) 
                 .padding(bottom = 70.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -155,8 +155,8 @@ fun RunOtherImage() {
                 text = "현재 서비스 준비중입니다.\n이용에 불편을 드려 대단히 죄송합니다.\n빠른 시일 내에 준비하여 찾아뵙겠습니다.",
                 style = FontSizes.h16,
                 color = Color.Black,
-//                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center // 텍스트 중앙 정렬
+
+                textAlign = TextAlign.Center 
             )
 
             Spacer(modifier = Modifier.height(8.dp))

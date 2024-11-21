@@ -63,7 +63,6 @@ fun BeggingMoneyScreen(navController: NavController, loginViewModel: LoginViewMo
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val peopleList = storedUserData?.relations
 
-    // 선택된 사람을 관리하는 상태 추가
     var selectedPerson by remember { mutableStateOf<Relation?>(null) }
 
     Box(
@@ -76,7 +75,7 @@ fun BeggingMoneyScreen(navController: NavController, loginViewModel: LoginViewMo
                 .fillMaxSize()
                 .padding(16.dp),
         ) {
-            Top(title = "조르기", navController = navController) // BackButton 사용
+            Top(title = "조르기", navController = navController)
             Spacer(modifier = Modifier.height(24.dp))
             Column(
                 modifier = Modifier
@@ -112,7 +111,7 @@ fun BeggingMoneyScreen(navController: NavController, loginViewModel: LoginViewMo
                             navController.navigate("beggingRequest?name=${person.userName}")
                         }
                     },
-                    modifier = Modifier.width(400.dp), // 원하는 너비 설정
+                    modifier = Modifier.width(400.dp),
                     height = 50,
                     text = "선택하기",
                     elevation = 0
@@ -166,7 +165,7 @@ fun PeopleSelect(
             verticalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxSize()
         ) {
-            // 상단 텍스트와 밑줄
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "조르기 대상",
@@ -178,13 +177,12 @@ fun PeopleSelect(
                     color = Color(0xFFB2EBF2),
                     thickness = 2.dp,
                     modifier = Modifier.fillMaxWidth(0.8f)
-                ) // 밑줄 추가
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             if (peopleList.isEmpty()) {
-                // 리스트가 비어 있을 때 표시할 콘텐츠
                 Text(
                     text = "조를 어른이 없어요",
                     color = Color.Gray,
@@ -214,13 +212,12 @@ fun PeopleSelect(
                     )
                 }
             } else {
-                // 리스트가 비어있지 않을 때 LazyColumn으로 나열
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                    horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     items(peopleList) { person ->
                         Box(
@@ -265,8 +262,8 @@ fun PeopleSelect(
                                         ),
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(32.dp) // 이미지 크기 조정
-                                            .clip(CircleShape) // 이미지도 동그랗게 클립
+                                            .size(32.dp)
+                                            .clip(CircleShape)
                                     )
                                 }
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -296,12 +293,10 @@ fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel(), loginViewMode
         }
     }
 
-    // ViewModel의 데이터를 관찰
     val missionList = viewModel.missionList.collectAsState().value
     val completeMission = missionList.filter { it.mission?.missionStatus == "complete" }
 
     if (completeMission.isEmpty()) {
-        // 데이터가 비어 있을 때는 Empty 이미지를 표시
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter,
@@ -325,12 +320,11 @@ fun RecentlyList(viewModel: BeggingMissionViewModel = viewModel(), loginViewMode
             }
         }
     } else {
-        // 데이터가 있을 때는 가로로 아이템들을 나열
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp) // 항목 간 간격
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(completeMission) { mission ->
                 val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"

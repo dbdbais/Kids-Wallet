@@ -34,7 +34,7 @@ fun Top(title: String, navController: NavController) {
             modifier = Modifier
                 .size(24.dp)
                 .clickable {
-                    navController.popBackStack() // 이전 화면으로 돌아가기
+                    navController.popBackStack()
                 }
         )
         Text(

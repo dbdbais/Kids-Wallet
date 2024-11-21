@@ -24,7 +24,6 @@ class RelationViewModel : ViewModel() {
                 val response: Response<Any> = RetrofitClient.apiService.addRelation(relationModel)
                 if (response.isSuccessful && response.code() == 200) {
                     _relationState.value = true
-                    Log.d("RelationViewModel", "Relation added successfully.")
                     onSuccess()
                 } else {
                     _relationState.value = false

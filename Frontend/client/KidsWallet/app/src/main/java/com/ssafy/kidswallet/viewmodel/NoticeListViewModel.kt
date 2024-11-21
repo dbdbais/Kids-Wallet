@@ -21,9 +21,7 @@ class NoticeListViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     val messages = response.body() ?: emptyList()
                     _noticeMessage.value = messages
-                    Log.d("NoticeListViewModel", "Fetched notice messages: $messages")
                 } else {
-                    Log.e("NoticeListViewModel", "Error: ${response.code()} - ${response.message()}")
                 }
             } catch (e: Exception) {
                 Log.e("NoticeListViewModel", "Network error: ${e.message}")

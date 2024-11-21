@@ -19,7 +19,6 @@ class TogetherListViewModel : ViewModel() {
                 val response = apiService.togetherList(userId)
                 if (response.isSuccessful) {
                     _togetherList.value = response.body()?.data ?: emptyList()
-                    Log.d("TogetherListViewModel", "Fetched together list: ${_togetherList.value}")
                 } else {
                     Log.e("TogetherListViewModel", "Error: ${response.code()} - ${response.message()}")
                 }

@@ -65,7 +65,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Top(title = "미션 확인", navController = navController) // BackButton 사용
+        Top(title = "미션 확인", navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier
@@ -121,9 +121,9 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                 fontWeight = FontWeight.Black
             )
             Divider(
-                color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp) // 여백 추가 (선택 사항)
+                color = Color(0xFF6DCEF5),
+                thickness = 2.dp,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             )
             Text(
                 text = begContent,
@@ -163,9 +163,9 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                 fontWeight = FontWeight.Black
             )
             Divider(
-                color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp) // 여백 추가 (선택 사항)
+                color = Color(0xFF6DCEF5),
+                thickness = 2.dp,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             )
             Text(
                 text = missionContent,
@@ -191,7 +191,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(16.dp)),
-                    contentScale = ContentScale.Fit // 필요에 따라 조정 가능
+                    contentScale = ContentScale.Fit
                 )
             } else {
                 Text(text = "이미지를 불러올 수 없습니다.")
@@ -216,7 +216,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     },
                     text = "거절하기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
+                        .width(130.dp),
                     height = 50,
                     elevation = 4
                 )
@@ -227,7 +227,7 @@ fun ParentBeggingTestMissionScreen(navController: NavController, id: Int, name: 
                     },
                     text = "보내기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
+                        .width(230.dp),
                     height = 50,
                     elevation = 4
                 )

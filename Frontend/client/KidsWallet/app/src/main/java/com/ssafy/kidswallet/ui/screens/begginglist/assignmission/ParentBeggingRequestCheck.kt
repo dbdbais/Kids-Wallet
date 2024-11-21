@@ -99,8 +99,8 @@ fun ParentBeggingRequestCheckScreen(
                 painter = painterResource(id = R.drawable.logo_coin),
                 contentDescription = "Coin with Amount",
                 modifier = Modifier
-                    .width(80.dp) // 가로 크기 조절
-                    .height(80.dp) // 세로 크기 조절
+                    .width(80.dp)
+                    .height(80.dp)
             )
         }
 
@@ -161,7 +161,7 @@ fun ParentBeggingRequestCheckScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp)
         ) {
             Row (
                 modifier = Modifier
@@ -176,7 +176,7 @@ fun ParentBeggingRequestCheckScreen(
                     },
                     text = "거절하기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
+                        .width(130.dp),
                     height = 50,
                     elevation = 4
                 )
@@ -186,7 +186,7 @@ fun ParentBeggingRequestCheckScreen(
                     },
                     text = "미션주기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
+                        .width(230.dp),
                     height = 50,
                     elevation = 4
                 )

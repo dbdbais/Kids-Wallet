@@ -40,7 +40,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val _userData = MutableStateFlow<UserDataModel?>(null)
     val userData: StateFlow<UserDataModel?> = _userData
 
-    // DataStore key definitions
+
     private val USER_ID_KEY = intPreferencesKey("user_id")
     private val USER_NAME_KEY = stringPreferencesKey("user_name")
     private val USER_GENDER_KEY = stringPreferencesKey("user_gender")
@@ -55,7 +55,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val gson = Gson()
 
     private suspend fun saveUserDataToDataStore(userData: UserDataModel) {
-        Log.d("DataStoreSave", "Saving user data: $userData")
         getApplication<Application>().applicationContext.dataStore.edit { preferences ->
             preferences[USER_ID_KEY] = userData.userId
             preferences[USER_NAME_KEY] = userData.userName ?: ""
@@ -68,15 +67,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             if (userData.representAccountId != null) {
                 preferences[REPRESENT_ACCOUNT_ID_KEY] = userData.representAccountId
             } else {
-                preferences.remove(REPRESENT_ACCOUNT_ID_KEY) // null 값일 경우 key를 제거
+                preferences.remove(REPRESENT_ACCOUNT_ID_KEY)
             }
-            preferences[RELATIONS_KEY] = gson.toJson(userData.relations) // Convert Relations list to JSON string
+            preferences[RELATIONS_KEY] = gson.toJson(userData.relations)
         }
-        Log.d("DataStoreSave", "User data saved successfully.")
-        Log.d("SecondDataStoreSave", "Saving user data: $userData")
     }
 
-    // Deserialize Relations field from JSON string
     private fun getRelationsFromString(json: String?): List<Relation>? {
         return if (json.isNullOrEmpty()) {
             null
@@ -94,7 +90,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     val fcmTokenKey = stringPreferencesKey("fcm_token")
     suspend fun getFcmToken(): String? {
-        // DataStore에서 fcm_token 값을 동기적으로 가져기
+        // DataStore에서 fcm_token 값을 동기적으로 가져가기
         val buffer = getApplication<Application>().applicationContext.dataStore.data.first()
         return  buffer[fcmTokenKey]
     }
@@ -118,7 +114,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
         val userDataStateFlow = MutableStateFlow<UserDataModel?>(null)
         viewModelScope.launch {
-            val userData = dataFlow.first() // Flow에서 첫 값을 읽어옴
+            val userData = dataFlow.first()
             userDataStateFlow.value = userData
         }
         return userDataStateFlow
@@ -141,10 +137,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         saveUserData(userData)
                     }
 
-                    Log.d("LoginSuccess", "Response Body: ${response.body()}")
-                    Log.d("FullResponse", "Response: $response")
-                    Log.d("UserDataState", "Current user data: ${_userData.value}")
-
                     //fcm
                     //TODO: userData에서 token을 받아 레트로핏으로 save 요청
                     Log.d("getFcmToken","FcmToken: "+getFcmToken())
@@ -158,7 +150,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     val errorMessage = errorBody?.let {
                         try {
                             val jsonObject = JSONObject(it)
-                            jsonObject.getString("message") // "message" 필드의 값을 추출
+                            jsonObject.getString("message")
                         } catch (e: Exception) {
                             "An error occurred"
                         }

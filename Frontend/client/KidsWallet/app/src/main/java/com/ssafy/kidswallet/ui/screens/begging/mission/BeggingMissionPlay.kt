@@ -76,7 +76,7 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Top(title = "미션 수행하기", navController = navController) // BackButton 사용
+        Top(title = "미션 수행하기", navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier
@@ -132,9 +132,9 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
                 fontWeight = FontWeight.Black
             )
             Divider(
-                color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp) // 여백 추가 (선택 사항)
+                color = Color(0xFF6DCEF5),
+                thickness = 2.dp,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             )
             Text(
                 text = begContent,
@@ -174,9 +174,9 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
                 fontWeight = FontWeight.Black
             )
             Divider(
-                color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp) // 여백 추가 (선택 사항)
+                color = Color(0xFF6DCEF5),
+                thickness = 2.dp,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
             )
             Text(
                 text = missionContent,
@@ -224,22 +224,22 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp)
         ) {
             BlueButton(
                 onClick = {
                     // 이미지가 있는 경우와 없는 경우를 처리
                     val base64String = imageUri?.let { uri ->
                         getBase64FromUri(context, uri)
-                    } ?: getBase64FromDrawable(context, R.drawable.app_logo) // 기본 이미지를 처리할 경우
+                    } ?: getBase64FromDrawable(context, R.drawable.app_logo)
 
                     val missionId = id
                     playMissionViewModel.sendMission(missionId, base64String ?: "")
                 },
                 text = "보내기",
                 modifier = Modifier
-                    .width(400.dp) // 원하는 너비 설정
-                    .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
+                    .width(400.dp)
+                    .align(Alignment.BottomCenter),
                 height = 50,
                 elevation = 4
             )
@@ -278,7 +278,7 @@ fun BeggingMissionPlayScreen(navController: NavController, id: Int, name: String
                             fontWeight = FontWeight.Black,
                             style = FontSizes.h20
                         )
-                        Spacer(modifier = Modifier.height(16.dp)) // 여백 추가
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 },
                 containerColor = Color.White,

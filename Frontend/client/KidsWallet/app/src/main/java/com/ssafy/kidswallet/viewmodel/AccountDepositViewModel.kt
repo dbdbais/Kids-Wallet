@@ -28,7 +28,6 @@ class AccountDepositViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.apiService.accountDeposit(depositModel)
                 if (response.isSuccessful) {
-                    Log.d("AccountDepositViewModel", "Request successful: ${response.body()}") // 성공 로그
                     _depositSuccess.value = true
                 } else {
                     val errorMessage = response.errorBody()?.string() ?: "Unknown error"

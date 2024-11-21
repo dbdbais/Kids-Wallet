@@ -31,7 +31,6 @@ class BeggingRequestViewModel : ViewModel() {
             try {
                 val response = apiService.beggingRequest(request)
                 if (response.isSuccessful) {
-                    Log.d("BeggingRequestViewModel", "Request successful: ${response.body()}")
                     onSuccess(response)
                 } else {
                     val errorMessage = "API Error: ${response.code()} - ${response.message()}"

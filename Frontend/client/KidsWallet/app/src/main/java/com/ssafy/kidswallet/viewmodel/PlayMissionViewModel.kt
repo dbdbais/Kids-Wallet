@@ -26,13 +26,10 @@ class PlayMissionViewModel : ViewModel() {
                     base64Image = base64Image
                 )
 
-                Log.d("PlayMissionViewModel", "Sending mission: missionId=$missionId, base64Image=${base64Image.take(100)}...") // Limit base64 log length for readability
-
                 val response: Response<Unit> = RetrofitClient.apiService.playMission(playMissionModel)
 
                 if (response.isSuccessful) {
                     _apiResponseState.value = true
-                    Log.d("PlayMission", "Mission completed successfully")
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     _errorState.value = "Failed to complete mission: $errorBody"

@@ -55,13 +55,13 @@ fun RunParentsDetailScreen(
     val togetherDetail = togetherDetailViewModel.togetherDetail.collectAsState().value
     val formattedDate = togetherDetail?.expiredAt?.joinToString(separator = ".") ?: "N/A"
 
-    // 다이얼로그 상태 관리
+    
     val showConfirmationDialog = remember { mutableStateOf(false) }
     val showResultDialog = remember { mutableStateOf(false) }
     val resultMessage = remember { mutableStateOf("") }
     val isSuccess = remember { mutableStateOf(false) }
 
-    // 데이터 로드
+    
     togetherRunId?.let { id ->
         togetherDetailViewModel.fetchTogetherDetail(id)
     }
@@ -80,16 +80,16 @@ fun RunParentsDetailScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF6DCEF5)) // 배경색 설정
+                .background(Color(0xFF6DCEF5)) 
                 .padding(16.dp)
-                .padding(top = 30.dp, bottom = 14.dp), // 상하 패딩 추가
+                .padding(top = 30.dp, bottom = 14.dp), 
             contentAlignment = Alignment.TopCenter
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 목표 이미지 및 정보 박스
+                
                 Box(
                     modifier = Modifier
                         .shadow(
@@ -99,10 +99,10 @@ fun RunParentsDetailScreen(
                         .background(Color(0xFF99DDF8), RoundedCornerShape(16.dp))
                         .padding(16.dp)
                 ) {
-                    // D-Day 배지를 좌측 상단에 위치
+                    
                     Box(
                         modifier = Modifier
-                            .align(Alignment.TopStart) // 좌측 상단 정렬
+                            .align(Alignment.TopStart) 
                             .padding(8.dp)
                     ) {
                         DdayBadge(remainingDays = togetherDetail?.dDay ?: 0)
@@ -112,7 +112,7 @@ fun RunParentsDetailScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Base64 이미지 변환 및 표시
+                        
                         togetherDetail?.targetImage?.let { base64Image ->
                             val bitmap = base64ToBitmap(base64Image)
                             if (bitmap != null) {
@@ -140,7 +140,7 @@ fun RunParentsDetailScreen(
                     }
                 }
 
-                // 추가 정보 텍스트
+                
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,7 +160,7 @@ fun RunParentsDetailScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 참여자 정보
+        
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -187,7 +187,7 @@ fun RunParentsDetailScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 그만하기 버튼
+        
         LightGrayButton(
             onClick = {
                 showConfirmationDialog.value = true
@@ -200,7 +200,7 @@ fun RunParentsDetailScreen(
         )
     }
 
-    // 삭제 확인 다이얼로그
+    
     if (showConfirmationDialog.value) {
         AlertDialog(
             onDismissRequest = {
@@ -246,11 +246,11 @@ fun RunParentsDetailScreen(
         )
     }
 
-    // 결과 다이얼로그
+    
     if (showResultDialog.value) {
         AlertDialog(
             onDismissRequest = {
-//                showResultDialog.value = false
+
                 if (isSuccess.value) {
                     navController.navigate("run") {
                         popUpTo(0) { inclusive = true }
@@ -314,7 +314,7 @@ fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResI
         }
 
         Column(horizontalAlignment = Alignment.End) {
-            // 현재 금액
+            
             Text(
                 text = "현재 ${NumberUtils.formatNumberWithCommas(currentAmount)}원",
                 style = FontSizes.h16,
@@ -322,7 +322,7 @@ fun ParticipantInfo(name: String, currentAmount: Int, goalAmount: Int, imageResI
                 color = Color(0xFF6DCEF5)
             )
 
-            // 목표 금액
+            
             Text(
                 text = "목표 ${NumberUtils.formatNumberWithCommas(goalAmount)}원",
                 style = FontSizes.h16,

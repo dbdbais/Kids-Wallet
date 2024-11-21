@@ -83,10 +83,6 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
 
     var isRelationRegistered by remember { mutableStateOf(false) }
 
-    var refreshCount1 by remember { mutableStateOf(0) }
-    var refreshCount2 by remember { mutableStateOf(0) }
-    val maxRefreshCount = 24
-
     BackHandler {
         backShowDialog = true
     }
@@ -131,28 +127,16 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
         }
     }
 
-    // isCardRegistered가 true로 바뀌면 updateUser 호출
+    
     LaunchedEffect(isRelationRegistered) {
         if (isRelationRegistered && userId != null) {
             updateUserViewModel.updateUser(userId)
         }
     }
 
-    LaunchedEffect(Unit) {
-        while (refreshCount1 < maxRefreshCount) {
-            storedUserData?.representAccountId?.let { accountId ->
-                accountTransactionViewModel.getTransactionData(accountId)
-            }
-            refreshCount1++ // 실행 횟수 증가
-            delay(5000) // 5초 대기
-        }
-    }
-
-    // updateUser 성공 시 updatedUserData가 업데이트되면 실행
+    
     LaunchedEffect(updatedUserData) {
         if (updatedUserData != null) {
-            // updatedUserData가 업데이트된 후 처리
-            Log.d("Hello", updatedUserData.toString())
             loginViewModel.saveUserData(updatedUserData!!)
             navController.navigate("mainPage") {
                 popUpTo(navController.graph.startDestinationId) { inclusive = true }
@@ -161,7 +145,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
     }
 
     Log.d("MainPageScreen", "Stored User Data: ${storedUserData?.toString() ?: "No Data"}")
-    // 직접 입력을 위한 다이얼로그
+    
     if (showDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -173,14 +157,14 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                     OutlinedTextField(
                         value = input,
                         onValueChange = {
-                            val filteredInput = it.filter { char -> char.isLetterOrDigit() } // 영문자와 숫자만 허용
-                            if (filteredInput.length <= 15) { // 15자 입력 제한
+                            val filteredInput = it.filter { char -> char.isLetterOrDigit() } 
+                            if (filteredInput.length <= 15) { 
                                 input = filteredInput
                             }
                         },
                         label = { Text("아이의 ID") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        singleLine = true // 한 줄 제한
+                        singleLine = true 
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -210,7 +194,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                         }
                     },
                     height = 40,
-                    modifier = Modifier.width(130.dp), // 원하는 너비 설정
+                    modifier = Modifier.width(130.dp), 
                     elevation = 0,
                     text = "확인"
                 )
@@ -222,7 +206,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                         showDialog = false
                         },
                     height = 40,
-                    modifier = Modifier.width(130.dp), // 원하는 너비 설정
+                    modifier = Modifier.width(130.dp), 
                     elevation = 0,
                     text = "취소"
                 )
@@ -234,7 +218,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
         modifier = Modifier
             .fillMaxSize()
     ) {
-        // 배경 이미지
+        
         Image(
             painter = painterResource(id = R.drawable.main_background),
             contentDescription = "Main Background",
@@ -244,7 +228,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 .offset(y = (-135).dp)
         )
 
-        // 콘텐츠 레이아웃
+        
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -252,7 +236,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 코인 이미지와 금액 텍스트가 포함된 이미지
+            
             Row (
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -261,16 +245,16 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
             ){
                 Row(
                     modifier = Modifier
-                        .padding(top = 8.dp, bottom = 32.dp, start = 16.dp), // 아래쪽 여백 추가
-                    horizontalArrangement = Arrangement.Start, // Row 내부 요소를 왼쪽으로 정렬
+                        .padding(top = 8.dp, bottom = 32.dp, start = 16.dp), 
+                    horizontalArrangement = Arrangement.Start, 
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.logo_coin),
                         contentDescription = "Coin with Amount",
                         modifier = Modifier
-                            .width(50.dp) // 가로 크기 조절
-                            .height(50.dp) // 세로 크기 조절
+                            .width(50.dp) 
+                            .height(50.dp) 
                     )
 
                     Text(
@@ -286,9 +270,9 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                     contentDescription = "Logout",
                     modifier = Modifier
                         .padding(end = 16.dp)
-                        .width(50.dp) // 가로 크기 조절
-                        .height(50.dp) // 세로 크기 조절
-                        .zIndex(1f) // 요소를 앞으로 가져오기 위해 zIndex 사용
+                        .width(50.dp) 
+                        .height(50.dp) 
+                        .zIndex(1f) 
                         .offset(y= -5.dp)
                         .clickable {
                             navController.navigate("loginRouting") {
@@ -300,11 +284,11 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 )
             }
 
-            // 안내 문구 이미지 (왼쪽 정렬)
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 30.dp, start = 16.dp), // 아래쪽 여백 추가
+                    .padding(bottom = 30.dp, start = 16.dp), 
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -326,12 +310,12 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                                 items(storedUserData.relations ?: emptyList()) { relation ->
                                     Box(
                                         modifier = Modifier
-                                            .padding(4.dp) // 각 항목의 외부 여백
+                                            .padding(4.dp) 
                                             .background(
                                                 color = if (relation.userGender == "MALE") Color(0xFFF4FBFE) else Color(0xFFFFF4F5),
-                                                shape = RoundedCornerShape(40.dp) // 둥근 모서리 처리
+                                                shape = RoundedCornerShape(40.dp) 
                                             )
-                                            .padding(8.dp) // 내부 여백
+                                            .padding(8.dp) 
                                     ) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
@@ -353,8 +337,8 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                                                     ),
                                                     contentDescription = null,
                                                     modifier = Modifier
-                                                        .size(32.dp) // 이미지 크기 조정
-                                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                                        .size(32.dp) 
+                                                        .clip(CircleShape) 
                                                 )
                                             }
                                             Spacer(modifier = Modifier.width(8.dp))
@@ -376,7 +360,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                         painter = painterResource(id = R.drawable.icon_add),
                         contentDescription = "Waiting Message",
                         modifier = Modifier
-                            .size(60.dp) // 이미지 크기 조절 (80 x 80)
+                            .size(60.dp) 
                             .clickable { showDialog = true }
                     )
                     if (storedUserData?.relations?.isEmpty() == true) {
@@ -396,12 +380,12 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                                 items(storedUserData?.relations ?: emptyList()) { relation ->
                                     Box(
                                         modifier = Modifier
-                                            .padding(4.dp) // 각 항목의 외부 여백
+                                            .padding(4.dp) 
                                             .background(
                                                 color = if (relation.userGender == "MALE") Color(0xFFF4FBFE) else Color(0xFFFFF4F5),
-                                                shape = RoundedCornerShape(40.dp) // 둥근 모서리 처리
+                                                shape = RoundedCornerShape(40.dp) 
                                             )
-                                            .padding(8.dp) // 내부 여백
+                                            .padding(8.dp) 
                                     ) {
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically
@@ -423,8 +407,8 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                                                     ),
                                                     contentDescription = null,
                                                     modifier = Modifier
-                                                        .size(32.dp) // 이미지 크기 조정
-                                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                                        .size(32.dp) 
+                                                        .clip(CircleShape) 
                                                 )
                                             }
                                             Spacer(modifier = Modifier.width(8.dp))
@@ -445,7 +429,7 @@ fun MainPageScreen(navController: NavController, loginViewModel: LoginViewModel 
                 }
             }
 
-            // 네 개의 아이콘 박스 (2x2 Grid)
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

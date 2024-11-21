@@ -61,7 +61,7 @@ fun ParentBeggingWaitingScreen(navController: NavController, viewModel: StateBeg
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TopToBegging(title = "조르기 요청 내역", navController = navController) // BackButton 사용
+        TopToBegging(title = "조르기 요청 내역", navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier
@@ -133,7 +133,7 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                 if (lastVisibleIndex == missionList.size - 1) {
                     if (userId != null) {
                         viewModel.fetchMissionList(userId = userId)
-                    } // 사용자 ID는 실제 데이터에 맞게 설정하세요
+                    }
                 }
             }
     }
@@ -178,8 +178,8 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 items(ongoingMission) {mission ->
                     val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
@@ -271,8 +271,8 @@ fun WaitingMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginVi
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(32.dp) // 이미지 크기 조정
-                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                        .size(32.dp)
+                                        .clip(CircleShape)
                                 )
                             }
                             Spacer(modifier = Modifier.width(8.dp))

@@ -36,7 +36,6 @@ fun BottomNavigationBar(modifier: Modifier = Modifier, navController: NavControl
             .drawBehind {
                 val shadowHeight = 4.dp.toPx()
 
-                // 상단 그림자
                 withTransform({
                     translate(top = -shadowHeight)
                 }) {

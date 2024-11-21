@@ -6,7 +6,7 @@ import com.ssafy.kidswallet.data.network.ApiService
 
 // 팩토리 클래스 정의
 class TogetherrunReisterViewModelFactory(
-    private val apiService: ApiService // ViewModel에 필요한 매개변수
+    private val apiService: ApiService
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TogetherrunReisterViewModel::class.java)) {

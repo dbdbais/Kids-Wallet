@@ -143,7 +143,7 @@ fun RunParentsRegisterScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Members list
+
         Column(modifier = Modifier.fillMaxWidth()) {
             ParticipantInfo(
                 name = "나",
@@ -162,12 +162,12 @@ fun RunParentsRegisterScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 신청 버튼
+
         BlueButton(
             onClick = {
-                println("신청 버튼 클릭 후 로직 실행 시작") // 디버깅 로그
+                println("신청 버튼 클릭 후 로직 실행 시작")
 
-                // 필요한 데이터 추출
+
                 val targetTitle = viewModel.goalText
                 val targetImage = viewModel.runImageText
                 val targetAmount = stateRunMoneyViewModel.togetherGoalMoney
@@ -207,11 +207,11 @@ fun RunParentsRegisterScreen(
         )
     }
 
-    // 성공 및 실패 메시지를 위한 AlertDialog
+
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = {
-//                showDialog.value = false
+
                 if (isSuccess.value) {
                     navController.navigate("run") {
                         popUpTo(0) { inclusive = true }

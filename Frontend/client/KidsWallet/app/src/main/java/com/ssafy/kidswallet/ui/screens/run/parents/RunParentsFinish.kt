@@ -42,7 +42,7 @@ fun RunParentsFinishScreen(
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val togetherCompleteList = togetherCompleteListViewModel.togetherCompleteList.collectAsState().value
 
-    // API 호출을 통해 데이터 로드
+    
     storedUserData?.userId?.let { userId ->
         togetherCompleteListViewModel.fetchTogetherCompleteList(userId)
     }
@@ -56,14 +56,14 @@ fun RunParentsFinishScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Header
+            
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Top(title = "같이 달리기", navController = navController)
             }
 
-            // Tabs
+            
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -115,7 +115,7 @@ fun RunParentsFinishScreen(
                 )
             }
 
-            // Check if the list is empty and display an image if true
+            
             if (togetherCompleteList.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -124,7 +124,7 @@ fun RunParentsFinishScreen(
                 ) {
                     Spacer(modifier = Modifier.height(50.dp))
                     Image(
-                        painter = painterResource(id = R.drawable.icon_no_transaction), // Replace with your desired image resource
+                        painter = painterResource(id = R.drawable.icon_no_transaction), 
                         contentDescription = "No Data",
                         modifier = Modifier.size(150.dp)
                     )
@@ -173,12 +173,12 @@ fun RunParentsFinishScreen(
                                 horizontalAlignment = Alignment.Start,
                                 verticalArrangement = Arrangement.Top
                             ) {
-                                // 성공 여부 배지
+                                
                                 SuccessBadge(successOrFail = if (item.isAccept) "성공" else "실패")
 
                                 Spacer(modifier = Modifier.height(8.dp))
 
-                                // 목표 제목
+                                
                                 Text(
                                     text = item.targetTitle,
                                     style = FontSizes.h16,
@@ -189,7 +189,7 @@ fun RunParentsFinishScreen(
 
                                 Spacer(modifier = Modifier.height(8.dp))
 
-                                // 목표 금액
+                                
                                 Text(
                                     text = "${NumberUtils.formatNumberWithCommas(item.targetAmount)}원",
                                     style = FontSizes.h20,
@@ -199,7 +199,7 @@ fun RunParentsFinishScreen(
                                 )
                             }
 
-                            // 이미지
+                            
                             Image(
                                 painter = painterResource(id = R.drawable.icon_bundle),
                                 contentDescription = "목표 이미지 $index",
@@ -215,7 +215,7 @@ fun RunParentsFinishScreen(
             }
         }
 
-        // Bottom navigation
+        
         BottomNavigationBar(
             modifier = Modifier.align(Alignment.BottomCenter), navController
         )

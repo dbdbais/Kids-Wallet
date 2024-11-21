@@ -22,13 +22,11 @@ class AccountWithdrawViewModel : ViewModel() {
             accountId = accountId,
             amount = amount
         )
-        Log.d("AccountWithdrawViewModel", "Sending PATCH request: $withdrawModel") // 요청 전송 로그
 
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.accountWithdraw(withdrawModel)
                 if (response.isSuccessful) {
-                    Log.d("AccountWithdrawViewModel", "Request successful: ${response.body()}") // 성공 로그
                     _withdrawSuccess.value = true
                 } else {
                     val errorMessage = response.errorBody()?.string() ?: "Unknown error"

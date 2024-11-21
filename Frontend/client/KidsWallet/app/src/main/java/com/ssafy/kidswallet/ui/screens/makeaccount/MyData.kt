@@ -39,7 +39,7 @@ import com.ssafy.kidswallet.viewmodel.UpdateUserViewModel
 
 @Composable
 fun MyDataScreen(navController: NavController) {
-    // 약관 동의 상태를 관리하는 변수들
+    
     val checkedStates = remember { mutableStateListOf(*Array(4) { false }) }
     val expandedStates = remember { mutableStateListOf(*Array(4) { false }) }
     var allChecked by remember { mutableStateOf(false) }
@@ -51,12 +51,12 @@ fun MyDataScreen(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // 상단 고정된 헤더 부분
+        
         Top(title = "이용약관동의", navController = navController)
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // "모두 동의합니다" 카드
+        
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,12 +93,12 @@ fun MyDataScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 약관 내용 부분을 LazyColumn으로 구현하여 개별 항목이 확장되도록 설정
+        
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f) // 스크롤 가능한 공간을 확보
-                .padding(bottom = 32.dp) // 아래 버튼 공간 확보
+                .weight(1f) 
+                .padding(bottom = 32.dp) 
         ) {
             itemsIndexed(listOf(
                 "마이데이터 이용 약관" to """
@@ -149,7 +149,7 @@ fun MyDataScreen(navController: NavController) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            // (필수) 부분을 빨간색으로 스타일링
+                            
                             Text(
                                 text = buildAnnotatedString {
                                     withStyle(style = SpanStyle(color = Color.Red)) {
@@ -169,7 +169,7 @@ fun MyDataScreen(navController: NavController) {
                             )
                         }
 
-                        // 개별 약관 내용 확장
+                        
                         if (expandedStates[index]) {
                             Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
                                 Divider(color = Color(0xFF8C8595))
@@ -185,7 +185,7 @@ fun MyDataScreen(navController: NavController) {
             }
         }
 
-        // 하단 고정된 버튼 부분
+        
         Button(
             onClick = {
                 navController.navigate("connectAccount")
@@ -217,10 +217,10 @@ fun Button(
     val backgroundBrush = if (enabled) {
         Brush.linearGradient(colors = listOf(Color(0xFF99DDF8), Color(0xFF6DCEF5)))
     } else {
-        Brush.linearGradient(colors = listOf(Color(0xFFF7F7F7), Color(0xFFF7F7F7))) // 비활성화된 색상
+        Brush.linearGradient(colors = listOf(Color(0xFFF7F7F7), Color(0xFFF7F7F7))) 
     }
 
-    // enabled 상태에 따른 elevation과 텍스트 색상 및 fontWeight
+    
     val buttonElevation = if (enabled) elevation else 0
     val textColor = if (enabled) Color.White else Color.Black
     val buttonFontWeight = if (enabled) FontWeight.Bold else FontWeight.Normal
@@ -236,7 +236,7 @@ fun Button(
                 shape = RoundedCornerShape(45.dp)
             )
             .height(height.dp)
-            .clickable(enabled = enabled, onClick = onClick), // enabled에 따라 클릭 가능 여부 설정
+            .clickable(enabled = enabled, onClick = onClick), 
         contentAlignment = Alignment.Center
     ) {
         Text(

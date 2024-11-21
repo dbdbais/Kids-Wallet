@@ -117,8 +117,8 @@ fun BeggingRequestCompleteScreen(
                 painter = painterResource(id = R.drawable.logo_coin),
                 contentDescription = "Coin with Amount",
                 modifier = Modifier
-                    .width(80.dp) // 가로 크기 조절
-                    .height(80.dp) // 세로 크기 조절
+                    .width(80.dp) 
+                    .height(80.dp) 
             )
         }
 
@@ -179,7 +179,7 @@ fun BeggingRequestCompleteScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp) 
         ) {
             Row (
                 modifier = Modifier
@@ -195,7 +195,7 @@ fun BeggingRequestCompleteScreen(
                     },
                     text = "홈으로 가기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
+                        .width(130.dp), 
                     height = 50,
                     elevation = 4
                 )
@@ -207,7 +207,7 @@ fun BeggingRequestCompleteScreen(
                     },
                     text = "조르기로 가기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
+                        .width(230.dp), 
                     height = 50,
                     elevation = 4
                 )
@@ -218,12 +218,12 @@ fun BeggingRequestCompleteScreen(
 
 @Preview(
     showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560", // Galaxy S24 Ultra 해상도에 맞추기
+    device = "spec:width=1440px,height=3120px,dpi=560", 
     showSystemUi = true
 )
 @Composable
 fun BeggingRequestCompleteScreenPreview() {
-    // 임시 NavController를 생성하여 프리뷰에서 사용
+    
     val navController = rememberNavController()
-    BeggingRequestReasonScreen(navController = navController, name = "테스트 사용자", amount = 50000) // 테스트용 이름 전달
+    BeggingRequestReasonScreen(navController = navController, name = "테스트 사용자", amount = 50000) 
 }

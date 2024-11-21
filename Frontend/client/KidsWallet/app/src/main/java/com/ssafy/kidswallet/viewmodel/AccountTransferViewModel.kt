@@ -22,13 +22,11 @@ class AccountTransferViewModel : ViewModel() {
             message = if (message.isNullOrBlank()) null else message, // 빈 문자열일 경우 null로 설정
             amount = amount
         )
-        Log.d("AccountTransferViewModel", "Sending PATCH request: $transferModel") // 요청 전송 로그
 
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.apiService.accountTransfer(transferModel)
                 if (response.isSuccessful) {
-                    Log.d("AccountTransferViewModel", "Request successful: ${response.body()}") // 성공 로그
                     _transferSuccess.value = true
                 } else {
                     val errorMessage = response.errorBody()?.string() ?: "Unknown error"

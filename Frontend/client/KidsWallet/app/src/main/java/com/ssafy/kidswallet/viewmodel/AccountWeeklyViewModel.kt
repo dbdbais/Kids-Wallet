@@ -19,7 +19,6 @@ class AccountWeeklyViewModel : ViewModel() {
                 val response = apiService.getAccountWeekly(accountId)
                 if (response.isSuccessful) {
                     _accountWeeklyData.value = response.body()?.data
-                    Log.d("AccountWeeklyViewModel", "Fetched account weekly data: ${_accountWeeklyData.value}")
                 } else {
                     Log.e("AccountWeeklyViewModel", "Error: ${response.code()} - ${response.message()}")
                 }

@@ -22,7 +22,6 @@ class MakeAccountViewModel : ViewModel() {
                 val response = RetrofitClient.apiService.registerAccount(userId)
                 if (response.isSuccessful && response.code() == 200) {
                     _apiResponseState.value = true
-                    Log.d("AccountRegister", "Account registered successfully")
                     onSuccess()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"

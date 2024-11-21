@@ -55,9 +55,9 @@ fun MyWalletScreen(
         }
     }
 
-    // 캘린더 초기화
+
     val calendar = Calendar.getInstance()
-    var currentMonth by remember { mutableStateOf(calendar.get(Calendar.MONTH) + 1) } // 0-based month, +1 for display
+    var currentMonth by remember { mutableStateOf(calendar.get(Calendar.MONTH) + 1) }
     var currentYear by remember { mutableStateOf(calendar.get(Calendar.YEAR)) }
     val startMonth = 11
     val startYear = 2023
@@ -74,7 +74,7 @@ fun MyWalletScreen(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        // Main Card Section
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,7 +214,7 @@ fun MyWalletScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // Calendar Section
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -381,8 +381,8 @@ fun ClickableIconWithText(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .clickable(
-                interactionSource = remember { MutableInteractionSource() }, // 기본 애니메이션 제거
-                indication = null // 리플 효과 제거
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
             ) {
                 navController.navigate(route)
             }

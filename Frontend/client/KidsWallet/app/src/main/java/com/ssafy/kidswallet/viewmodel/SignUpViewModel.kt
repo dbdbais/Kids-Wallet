@@ -35,12 +35,12 @@ class SignUpViewModel : ViewModel() {
     ) {
 
         viewModelScope.launch {
-            // 데이터 검증 로직 (예시)
+            // 데이터 검증 로직
             val formattedBirthDate = try {
                 val inputFormat = SimpleDateFormat("yyyy-M-d", Locale.getDefault())
                 val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val date: Date = inputFormat.parse(userBirth)!!
-                outputFormat.format(date) // 변환된 문자열
+                outputFormat.format(date)
             } catch (e: Exception) {
                 _errorState.value = "Invalid date format: ${e.message}"
                 return@launch

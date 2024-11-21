@@ -68,7 +68,7 @@ class UpdateUserViewModel(application: Application) : AndroidViewModel(applicati
             }
         val userDataStateFlow = MutableStateFlow<UserDataModel?>(null)
         viewModelScope.launch {
-            val userData = dataFlow.first() // Flow에서 첫 값을 읽어옴
+            val userData = dataFlow.first()
             userDataStateFlow.value = userData
         }
         return userDataStateFlow
@@ -78,14 +78,13 @@ class UpdateUserViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch {
             try {
                 val response: Response<ApiResponse> = RetrofitClient.apiService.updateUser(userId)
-                Log.d("Response", "Response Body: ${response.body()}")
+
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
                     val updatedUserData = apiResponse?.data
                     if (updatedUserData != null) {
-                        // Response 처리만 수행
                         _updatedUserData.value = updatedUserData
-                        Log.d("UpdateUserSuccess", "User data retrieved successfully: $updatedUserData")
+
                         _updateUserState.value = true
                     } else {
                         _errorState.value = "Failed to retrieve updated user data."

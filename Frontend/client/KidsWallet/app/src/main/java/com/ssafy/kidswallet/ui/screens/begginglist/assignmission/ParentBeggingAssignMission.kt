@@ -73,10 +73,10 @@ fun ParentBeggingAssignMissionScreen(
         modifier = Modifier
             .fillMaxSize()
             .clickable(
-                indication = null, // 터치 피드백을 제거
-                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
             ) {
-                focusManager.clearFocus() // 화면을 터치하면 포커스를 해제하여 키보드를 닫음
+                focusManager.clearFocus()
             }
     ){
         Column(
@@ -124,8 +124,8 @@ fun ParentBeggingAssignMissionScreen(
                 painter = painterResource(id = R.drawable.logo_coin),
                 contentDescription = "Coin with Amount",
                 modifier = Modifier
-                    .width(80.dp) // 가로 크기 조절
-                    .height(80.dp) // 세로 크기 조절
+                    .width(80.dp)
+                    .height(80.dp)
             )
         }
 
@@ -216,7 +216,7 @@ fun ParentBeggingAssignMissionScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp)
         ) {
             Row (
                 modifier = Modifier
@@ -230,7 +230,7 @@ fun ParentBeggingAssignMissionScreen(
                     },
                     text = "돌아가기",
                     modifier = Modifier
-                        .width(130.dp), // 원하는 너비 설정
+                        .width(130.dp),
                     height = 50,
                     elevation = 4
                 )
@@ -247,7 +247,7 @@ fun ParentBeggingAssignMissionScreen(
                     },
                     text = "미션 보내기",
                     modifier = Modifier
-                        .width(230.dp), // 원하는 너비 설정
+                        .width(230.dp),
                     height = 50,
                     elevation = 4
                 )

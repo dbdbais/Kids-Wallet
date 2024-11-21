@@ -55,14 +55,14 @@ fun RunParentsMemberListScreen(
             .padding(16.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null // 클릭 효과 제거
+                indication = null 
             ) {
-                // TextField 외부를 클릭했을 때 포커스 해제 및 키보드 숨기기
+                
                 keyboardController?.hide()
                 isTextFieldFocused = false
             }
     ) {
-        // 상단 제목 및 닫기 버튼
+        
         Top(
             title = "멤버 목록",
             navController = navController
@@ -70,7 +70,7 @@ fun RunParentsMemberListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 검색창
+        
         SearchTextField(
             placeholderText = "이름 또는 번호로 검색 할 수 있어요",
             modifier = Modifier.fillMaxWidth(),
@@ -81,12 +81,12 @@ fun RunParentsMemberListScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // storedUserData.relations 기반으로 필터링
+        
         val filteredMembers = storedUserData?.relations?.filter {
             (it.userName?.contains(searchText, ignoreCase = true) ?: false)
         } ?: emptyList()
 
-        // LazyColumn을 사용하여 필터링된 멤버 리스트 표시
+        
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -100,7 +100,7 @@ fun RunParentsMemberListScreen(
                         .padding(vertical = 8.dp)
                         .clickable {
                             member.userName?.let {
-                                // 선택된 member의 userRealName과 userName을 ViewModel에 설정
+                                
                                 viewModel.toggleMemberSelection(
                                     member = it,
                                     realName = member.userRealName ?: "N/A",
@@ -110,7 +110,7 @@ fun RunParentsMemberListScreen(
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // 캐릭터 이미지
+                    
                     Image(
                         painter = painterResource(id = R.drawable.character_run_member),
                         contentDescription = "멤버",
@@ -130,13 +130,13 @@ fun RunParentsMemberListScreen(
                             color = Color.Gray
                         )
                     }
-                    // 체크 아이콘 (상태에 따라 다르게 표시)
+                    
                     Image(
                         painter = painterResource(
                             id = if (viewModel.selectedMember == member.userName) {
-                                R.drawable.icon_check_active // 선택된 상태
+                                R.drawable.icon_check_active 
                             } else {
-                                R.drawable.icon_check // 선택되지 않은 상태
+                                R.drawable.icon_check 
                             }
                         ),
                         contentDescription = "선택 상태",
@@ -151,9 +151,9 @@ fun RunParentsMemberListScreen(
         BlueButton(
             onClick = {
                 val selectedUserName = viewModel.selectedMember ?: "응애재훈"
-//                navController.popBackStack(route = "runParentsMoney", inclusive = true)
-//                Log.d("NavigationDebug", "Navigating to runParentsMoney/$selectedUserName")
-//                navController.navigate("runParentsMoney/$selectedUserName")
+
+
+
                 navController.navigate("runParentsMoney")
             },
             text = "선택 완료",
@@ -178,7 +178,7 @@ fun SearchTextField(
     OutlinedTextField(
         value = text,
         onValueChange = { newText ->
-            // 글자 수 제한을 적용
+            
             if (newText.length <= maxChar) {
                 text = newText
                 onValueChange(newText)
@@ -201,10 +201,10 @@ fun SearchTextField(
         modifier = modifier
             .fillMaxWidth()
             .background(Color(0xFFF7F7F7), shape = CircleShape),
-        // 엔터 및 탭 키 입력을 막기 위한 키보드 옵션 및 필터링
-        singleLine = true, // 줄바꿈 방지
+        
+        singleLine = true, 
         visualTransformation = VisualTransformation { textInput ->
-            // 탭 키 입력 방지 (탭 문자를 제거)
+            
             TransformedText(
                 text = AnnotatedString(textInput.text.replace("\t", "")),
                 offsetMapping = OffsetMapping.Identity
