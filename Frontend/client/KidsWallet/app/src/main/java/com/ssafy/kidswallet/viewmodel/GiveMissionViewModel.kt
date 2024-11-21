@@ -25,7 +25,6 @@ class GiveMissionViewModel : ViewModel() {
                     begId = begId,
                     missionMessage = missionMessage
                 )
-                Log.d("SendMission", "Sending mission data - begId: ${requestBody.begId}, missionMessage: ${requestBody.missionMessage}")
 
                 val response: Response<Unit> = RetrofitClient.apiService.giveMission(requestBody)
                 handleApiResponse(response)
@@ -40,7 +39,6 @@ class GiveMissionViewModel : ViewModel() {
     private fun handleApiResponse(response: Response<Unit>) {
         if (response.isSuccessful) {
             _apiResponseState.value = true
-            Log.d("GiveMission", "Mission sent successfully")
         } else {
             val errorBody = response.errorBody()?.string() ?: "Unknown error"
             _errorState.value = "Failed to send mission: $errorBody"

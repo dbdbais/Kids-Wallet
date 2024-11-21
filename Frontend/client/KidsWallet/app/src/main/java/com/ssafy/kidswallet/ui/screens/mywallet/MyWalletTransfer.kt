@@ -133,11 +133,11 @@ fun MyWalletTransferScreen(
             }
         )
 
-        // Customized AlertDialog for Transfer Success or Error
+
         if (showDialog.value) {
             AlertDialog(
                 onDismissRequest = {
-//                    showDialog.value = false
+
                 },
                 title = {
                     Text(
@@ -278,7 +278,7 @@ fun FormSection(
         OutlinedTextField(
             value = amount,
             onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() } && newValue.length <= 8) {  // 8자리 제한
+                if (newValue.all { it.isDigit() } && newValue.length <= 8) {
                     onAmountChange(newValue)
                 }
             },
@@ -308,7 +308,7 @@ fun FormSection(
         OutlinedTextField(
             value = message,
             onValueChange = {
-                if (it.length <= 15) { // 15자 이하로 제한
+                if (it.length <= 15) {
                     onMessageChange(it)
                 }
             },

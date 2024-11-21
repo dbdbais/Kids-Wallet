@@ -62,10 +62,10 @@ fun MyWalletWithdrawScreen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .clickable(
-                indication = null, // 터치 피드백을 제거
-                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
             ) {
-                // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+
                 focusManager.clearFocus()
             },
     ) {
@@ -95,7 +95,7 @@ fun MyWalletWithdrawScreen(navController: NavController) {
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = {
-//                showDialog.value = false
+
             },
             title = {
                 Text(
@@ -217,7 +217,7 @@ fun WFormSection(
         OutlinedTextField(
             value = amount,
             onValueChange = { newValue ->
-                // 숫자만 포함된 입력값만 업데이트
+
                 if (newValue.all { it.isDigit() } && newValue.length <= 8) {
                     amount = newValue
                 }

@@ -27,7 +27,7 @@ class TogetherParentsDetailRejectViewModel : ViewModel() {
                 val requestBody = TogetherParentsDetailRejectModel(userId)
                 val response = apiService.togetherParentsDetailReject(togetherRunId, requestBody)
                 if (response.isSuccessful) {
-                    _togetherDetailResponse.value = response.body() // 필요 시 UI에서 사용
+                    _togetherDetailResponse.value = response.body()
                     onSuccess()
                 } else {
                     onFailure("요청 실패: ${response.code()} - ${response.message()}")

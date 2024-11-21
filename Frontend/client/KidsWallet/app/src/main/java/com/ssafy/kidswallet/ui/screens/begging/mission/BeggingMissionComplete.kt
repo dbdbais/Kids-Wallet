@@ -59,7 +59,7 @@ fun BeggingMissionCompleteScreen(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        TopToBegging(title = "미션", navController = navController) // BackButton 사용
+        TopToBegging(title = "미션", navController = navController) 
         Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier
@@ -109,8 +109,8 @@ fun BeggingMissionCompleteScreen(navController: NavController) {
                     painter = painterResource(R.drawable.logo_flag),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(32.dp) // 이미지 크기 조정
-                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                        .size(32.dp) 
+                        .clip(CircleShape) 
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -121,9 +121,9 @@ fun BeggingMissionCompleteScreen(navController: NavController) {
                 )
             }
             Divider(
-                color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                modifier = Modifier.padding(vertical = 8.dp) // 여백 추가 (선택 사항)
+                color = Color(0xFF6DCEF5), 
+                thickness = 2.dp, 
+                modifier = Modifier.padding(vertical = 8.dp) 
             )
 
             Column(
@@ -161,7 +161,7 @@ fun CompleteMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginV
                 if (lastVisibleIndex == missionList.size - 1) {
                     if (userId != null) {
                         viewModel.fetchMissionList(userId = userId)
-                    } // 사용자 ID는 실제 데이터에 맞게 설정하세요
+                    } 
                 }
             }
     }
@@ -196,8 +196,8 @@ fun CompleteMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginV
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+                verticalArrangement = Arrangement.Top, 
+                horizontalAlignment = Alignment.CenterHorizontally, 
             ) {
                 items(completeMission) {mission ->
                     val formattedDate = "${mission.begDto.createAt[0]}.${mission.begDto.createAt[1]}.${mission.begDto.createAt[2]}"
@@ -256,8 +256,8 @@ fun CompleteMissionList(viewModel: BeggingMissionViewModel = viewModel(), loginV
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(32.dp) // 이미지 크기 조정
-                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                        .size(32.dp) 
+                                        .clip(CircleShape) 
                                 )
                             }
                             Spacer(modifier = Modifier.width(8.dp))

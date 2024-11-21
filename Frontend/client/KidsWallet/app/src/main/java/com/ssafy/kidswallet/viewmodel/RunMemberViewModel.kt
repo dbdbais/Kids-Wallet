@@ -21,11 +21,11 @@ class RunMemberViewModel : ViewModel() {
     fun toggleMemberSelection(member: String, realName: String, userId: Int) {
         if (selectedMember == member) {
             selectedMember = null
-            selectedUserRealName = null // 선택 해제 시 초기화
+            selectedUserRealName = null
             selectedUserId = null
         } else {
             selectedMember = member
-            selectedUserRealName = realName // 선택된 멤버의 realName 설정
+            selectedUserRealName = realName
             selectedUserId = userId
         }
     }

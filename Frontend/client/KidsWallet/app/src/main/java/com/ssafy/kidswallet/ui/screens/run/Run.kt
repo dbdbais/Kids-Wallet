@@ -47,14 +47,14 @@ fun RunScreen(
     val storedUserData = loginViewModel.getStoredUserData().collectAsState().value
     val togetherList = togetherListViewModel.togetherList.collectAsState().value
 
-    // API 호출을 통해 데이터 로드
+    
     storedUserData?.userId?.let { userId ->
         togetherListViewModel.fetchTogetherList(userId)
     }
 
-    // 최신순 정렬된 리스트
+    
     val sortedTogetherList = togetherList.sortedByDescending { it.togetherRunId }
-    // Dialog 상태 관리
+    
     val showAlertDialog = remember { mutableStateOf(false) }
 
     Box(
@@ -63,14 +63,14 @@ fun RunScreen(
         Column(
             modifier = Modifier.fillMaxSize().padding(16.dp)
         ) {
-            // Header
+            
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TopToMain(title = "같이 달리기", navController = navController)
             }
 
-            // Tabs
+            
             Row(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween

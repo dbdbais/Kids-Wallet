@@ -75,17 +75,17 @@ fun BeggingRequestReasonScreen(
         modifier = Modifier
             .fillMaxSize()
             .clickable(
-                indication = null, // 터치 피드백을 제거
-                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+                indication = null, 
+                interactionSource = remember { MutableInteractionSource() } 
             ) {
-                focusManager.clearFocus() // 화면을 터치하면 포커스를 해제하여 키보드를 닫음
+                focusManager.clearFocus() 
             }
     ) {
         Column(
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
         ) {
-            Top(title = "조르기", navController = navController) // BackButton 사용
+            Top(title = "조르기", navController = navController) 
         }
         Column(
             modifier = Modifier
@@ -131,8 +131,8 @@ fun BeggingRequestReasonScreen(
                 painter = painterResource(id = R.drawable.logo_coin),
                 contentDescription = "Coin with Amount",
                 modifier = Modifier
-                    .width(80.dp) // 가로 크기 조절
-                    .height(80.dp) // 세로 크기 조절
+                    .width(80.dp) 
+                    .height(80.dp) 
             )
         }
 
@@ -207,16 +207,16 @@ fun BeggingRequestReasonScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) 
         ) {
             BlueButton(
-//                onClick = {
-//                    if (textState.value.text.isNotBlank()) {
-//                        navController.navigate(
-//                            "beggingRequestComplete?name=$name&amount=$amount&reason=${textState.value.text}"
-//                        )
-//                    }
-//                },
+
+
+
+
+
+
+
                 onClick = {
                     if (textState.value.text.isNotBlank() && userId != null && toUserId != null && amount != null) {
                         beggingRequestViewModel.sendBeggingRequest(
@@ -225,7 +225,7 @@ fun BeggingRequestReasonScreen(
                             message = textState.value.text,
                             amount = amount,
                             onSuccess = { response ->
-                                // 성공 시 처리
+                                
                                 navController.navigate("beggingRequestComplete?name=$name&amount=$amount&reason=${textState.value.text}")
                             },
                             onError = {
@@ -236,8 +236,8 @@ fun BeggingRequestReasonScreen(
                 },
                 text = "확인",
                 modifier = Modifier
-                    .width(400.dp) // 원하는 너비 설정
-                    .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
+                    .width(400.dp) 
+                    .align(Alignment.BottomCenter), 
                 elevation = 4
             )
         }
@@ -246,12 +246,12 @@ fun BeggingRequestReasonScreen(
 
 @Preview(
     showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560", // Galaxy S24 Ultra 해상도에 맞추기
+    device = "spec:width=1440px,height=3120px,dpi=560", 
     showSystemUi = true
 )
 @Composable
 fun BeggingRequestReasonScreenPreview() {
-    // 임시 NavController를 생성하여 프리뷰에서 사용
+    
     val navController = rememberNavController()
-    BeggingRequestReasonScreen(navController = navController, name = "테스트 사용자", amount = 50000) // 테스트용 이름 전달
+    BeggingRequestReasonScreen(navController = navController, name = "테스트 사용자", amount = 50000) 
 }

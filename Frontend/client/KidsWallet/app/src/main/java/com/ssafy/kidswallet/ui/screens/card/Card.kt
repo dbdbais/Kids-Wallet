@@ -52,7 +52,7 @@ fun CardScreen(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp),
     ) {
-        Top(title = "카드", navController = navController) // BackButton 사용
+        Top(title = "카드", navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
         // 진행바
         Row(
@@ -97,7 +97,7 @@ fun CardScreen(navController: NavController) {
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        // 텍스트
+
         Column (
             modifier = Modifier
                 .fillMaxWidth(),
@@ -129,10 +129,10 @@ fun CardScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.card3),
                 contentDescription = "그린 카드",
                 modifier = Modifier
-                    .size(200.dp) // 조금 더 작은 크기
-                    .offset(x = (-120).dp, y = 15.dp) // 왼쪽으로 이동
-                    .rotate(-30f) // 왼쪽으로 기울이기
-                    .zIndex(1f) // 블랙카드보다 아래
+                    .size(200.dp)
+                    .offset(x = (-120).dp, y = 15.dp)
+                    .rotate(-30f)
+                    .zIndex(1f)
             )
 
             // 중앙의 블랙 카드
@@ -140,8 +140,8 @@ fun CardScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.card5),
                 contentDescription = "블랙 카드",
                 modifier = Modifier
-                    .size(270.dp) // 가장 크게 설정
-                    .zIndex(2f) // 가장 위에 위치
+                    .size(270.dp)
+                    .zIndex(2f)
             )
 
             // 오른쪽의 핑크 카드
@@ -149,10 +149,10 @@ fun CardScreen(navController: NavController) {
                 painter = painterResource(id = R.drawable.card7),
                 contentDescription = "핑크 카드",
                 modifier = Modifier
-                    .size(200.dp) // 조금 더 작은 크기
-                    .offset(x = 120.dp, y = 15.dp) // 오른쪽으로 이동
-                    .rotate(30f) // 오른쪽으로 기울이기
-                    .zIndex(1f) // 블랙카드보다 아래
+                    .size(200.dp)
+                    .offset(x = 120.dp, y = 15.dp)
+                    .rotate(30f)
+                    .zIndex(1f)
             )
         }
 
@@ -172,28 +172,28 @@ fun CardScreen(navController: NavController) {
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.width(8.dp)) // 간격 조절
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "없음",
                 color = Color(0xFF8C8595).copy(alpha = 0.5f),
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.width(8.dp)) // "|"와의 간격
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "|",
                 color = Color(0xFF8C8595),
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.width(8.dp)) // "브랜드"와의 간격
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "브랜드",
                 color = Color(0xFF8C8595),
                 style = FontSizes.h16,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.width(8.dp)) // 간격 조절
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "국내 전용",
                 color = Color(0xFF8C8595).copy(alpha = 0.5f),
@@ -208,8 +208,8 @@ fun CardScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp) // 스크롤 박스 높이 지정
-                .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(8.dp)) // 배경 및 모서리 둥글게
+                .height(150.dp)
+                .background(Color(0xFFFFFFFF), shape = RoundedCornerShape(8.dp))
                 .border(width = 1.dp, color = Color(0xFFFFFFFF), shape = RoundedCornerShape(8.dp))
                 .verticalScroll(rememberScrollState())
         ) {
@@ -264,7 +264,7 @@ fun CardScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 버튼
+
         BlueButton(
             onClick = { navController.navigate("card2") },
             text = "다음",
@@ -273,7 +273,7 @@ fun CardScreen(navController: NavController) {
                 .padding(bottom = 20.dp)
         )
 
-        // 하단바
+
     }
 }
 
@@ -295,12 +295,12 @@ fun GradientWalletText() {
 
 @Preview(
     showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560", // Galaxy S24 Ultra 해상도에 맞추기
+    device = "spec:width=1440px,height=3120px,dpi=560",
     showSystemUi = true
 )
 @Composable
 fun CardScreenPreview() {
-    // 임시 NavController를 생성하여 프리뷰에서 사용
+
     val navController = rememberNavController()
     CardScreen(navController = navController)
 }

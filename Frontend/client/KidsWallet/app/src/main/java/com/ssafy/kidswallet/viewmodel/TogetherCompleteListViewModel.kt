@@ -19,7 +19,6 @@ class TogetherCompleteListViewModel : ViewModel() {
                 val response = apiService.togetherCompleteList(userId)
                 if (response.isSuccessful) {
                     _togetherCompleteList.value = response.body()?.data ?: emptyList()
-                    Log.d("TogetherCompleteListViewModel", "Fetched complete together list: ${_togetherCompleteList.value}")
                 } else {
                     Log.e("TogetherCompleteListViewModel", "Error: ${response.code()} - ${response.message()}")
                 }

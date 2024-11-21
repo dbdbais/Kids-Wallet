@@ -99,8 +99,8 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
                     ),
                     contentDescription = "Character",
                     modifier = Modifier
-                        .size(180.dp) // 이미지 크기 조정
-                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                        .size(180.dp)
+                        .clip(CircleShape)
                 )
             }
 
@@ -187,8 +187,8 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
                         painter = painterResource(R.drawable.logo_chat),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(32.dp) // 이미지 크기 조정
-                            .clip(CircleShape) // 이미지도 동그랗게 클립
+                            .size(32.dp)
+                            .clip(CircleShape)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -199,9 +199,9 @@ fun RegularListScreen(navController: NavController, loginViewModel: LoginViewMod
                     )
                 }
                 Divider(
-                    color = Color(0xFF6DCEF5), // 원하는 색상 적용
-                    thickness = 2.dp, // 두께 설정 (원하는 값으로 조정 가능)
-                    modifier = Modifier.padding(vertical = 8.dp) // 여백 추가 (선택 사항)
+                    color = Color(0xFF6DCEF5),
+                    thickness = 2.dp,
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
                 Column(
                     modifier = Modifier
@@ -250,8 +250,8 @@ fun Together1List(togetherList: List<RegularListModel>) {
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(bottom = 50.dp),
-                 verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                 horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+                 verticalArrangement = Arrangement.Top,
+                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 items(togetherList) {together ->
                     val startDate = "${together.startDate[0]}.${together.startDate[1]}.${together.startDate[2]}"
@@ -265,7 +265,7 @@ fun Together1List(togetherList: List<RegularListModel>) {
                         5 -> "금요일"
                         6 -> "토요일"
                         7 -> "일요일"
-                        else -> "알 수 없음" // 예외 처리
+                        else -> "알 수 없음"
                     }
 
                     Row(

@@ -89,16 +89,16 @@ fun ParentsDetailScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF6DCEF5)) // 배경색 설정
+                .background(Color(0xFF6DCEF5))
                 .padding(16.dp)
-                .padding(top = 30.dp, bottom = 14.dp), // 상하 패딩 추가
+                .padding(top = 30.dp, bottom = 14.dp),
             contentAlignment = Alignment.TopCenter
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 목표 이미지 및 정보 박스
+
                 Box(
                     modifier = Modifier
                         .shadow(
@@ -111,7 +111,7 @@ fun ParentsDetailScreen(
                     // D-Day 배지를 좌측 상단에 위치
                     Box(
                         modifier = Modifier
-                            .align(Alignment.TopStart) // 좌측 상단 정렬
+                            .align(Alignment.TopStart)
                             .padding(8.dp)
                     ) {
                         DdayBadge(remainingDays = togetherDetail?.dDay ?: 0)
@@ -149,7 +149,7 @@ fun ParentsDetailScreen(
                     }
                 }
 
-                // 추가 정보 텍스트
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -196,11 +196,11 @@ fun ParentsDetailScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 그만하기 버튼
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 20.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 20.dp)
         ) {
             Row (
                 modifier = Modifier
@@ -211,7 +211,7 @@ fun ParentsDetailScreen(
                 LightGrayButton(
                     onClick = {
                         togetherRunId?.let { id ->
-                            val userId = storedUserData?.userId ?: 0 // 기본값 0을 제공하여 nullable 문제를 해결
+                            val userId = storedUserData?.userId ?: 0
                             togetherParentsDetailRejectViewModel.rejectTogetherRun(
                                 togetherRunId = id,
                                 userId = userId,
@@ -235,18 +235,18 @@ fun ParentsDetailScreen(
                     },
                     text = "거절하기",
                     modifier = Modifier
-                        .width(130.dp), // 기존 너비 유지
-                    height = 50,      // 기존 높이 유지
-                    elevation = 4     // 기존 elevation 유지
+                        .width(130.dp),
+                    height = 50,
+                    elevation = 4
                 )
 
 
                 BlueButton(
                     onClick = {
                         togetherRunId?.let { id ->
-                            // `userId`는 필요에 따라 가져와야 합니다 (예: ViewModel에서 가져오는 등)
-                            val userId = storedUserData?.userId ?: 0 // 기본값 0을 제공하여 nullable 문제를 해결
-                            // 예시로 임의의 userId를 사용. 실제로는 로그인 데이터 등에서 가져와야 합니다.
+
+                            val userId = storedUserData?.userId ?: 0
+
                             togetherParentsDetailViewModel.acceptTogetherRun(
                                 togetherRunId = id,
                                 userId = userId,
@@ -322,7 +322,6 @@ fun ParentsDetailScreen(
     if (showResultDialog.value) {
         AlertDialog(
             onDismissRequest = {
-//                showResultDialog.value = false
                 if (isSuccess.value) {
                     navController.navigate("run") {
                         popUpTo(0) { inclusive = true }

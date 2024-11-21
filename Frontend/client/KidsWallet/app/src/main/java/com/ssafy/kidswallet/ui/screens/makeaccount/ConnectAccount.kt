@@ -61,7 +61,7 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
     val isActive = remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        delay(2500) // 로딩 시간 조절
+        delay(2500) 
         isLoading = false
     }
 
@@ -73,7 +73,7 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
         ) {
-            Top(title = "통장 조회", navController = navController) // BackButton 사용
+            Top(title = "통장 조회", navController = navController) 
         }
         Column(
             modifier = Modifier
@@ -113,8 +113,8 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
                 painter = painterResource(id = R.drawable.icon_bankbook),
                 contentDescription = "bankbook",
                 modifier = Modifier
-                    .width(80.dp) // 가로 크기 조절
-                    .height(80.dp) // 세로 크기 조절
+                    .width(80.dp) 
+                    .height(80.dp) 
             )
         }
 
@@ -204,7 +204,7 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) // 원하는 절대 거리 설정
+                .padding(bottom = 54.dp, start = 16.dp, end = 16.dp) 
         ) {
             if (isActive.value == true) {
                 BlueButton(
@@ -213,8 +213,8 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
                     },
                     text = "연동하기",
                     modifier = Modifier
-                        .width(400.dp) // 원하는 너비 설정
-                        .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
+                        .width(400.dp) 
+                        .align(Alignment.BottomCenter), 
                     elevation = 4
                 )
             } else {
@@ -224,8 +224,8 @@ fun ConnectAccountScreen(navController: NavController, loginViewModel: LoginView
                     },
                     text = "연동하기",
                     modifier = Modifier
-                        .width(400.dp) // 원하는 너비 설정
-                        .align(Alignment.BottomCenter), // 화면 하단 중앙에 정렬
+                        .width(400.dp) 
+                        .align(Alignment.BottomCenter), 
                     elevation = 4
                 )
             }
@@ -254,9 +254,9 @@ fun ImageLoadingIndicator() {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.loading), // 'loading.png' 리소스 사용
+            painter = painterResource(id = R.drawable.loading), 
             contentDescription = "로딩 중",
-            modifier = Modifier.size(100.dp) // 이미지 크기 조절
+            modifier = Modifier.size(100.dp) 
         )
     }
 }

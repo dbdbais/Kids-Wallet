@@ -50,13 +50,11 @@ fun SplashScreen(navController: NavController) {
     var startTextAnimation by remember { mutableStateOf(false) }
     var startImageAnimation by remember { mutableStateOf(false) }
 
-    // 텍스트 애니메이션
     val textAlpha by animateFloatAsState(
         targetValue = if (startTextAnimation) 1f else 0f,
         animationSpec = tween(durationMillis = 1100)
     )
 
-    // 이미지 애니메이션
     val imageAlpha by animateFloatAsState(
         targetValue = if (startImageAnimation) 1f else 0f,
         animationSpec = tween(durationMillis = 1100)
@@ -68,7 +66,6 @@ fun SplashScreen(navController: NavController) {
         startImageAnimation = true
     }
 
-    // 로고나 이미지 표시
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -100,9 +97,9 @@ fun SplashScreen(navController: NavController) {
                         text = "의",
                         style = FontSizes.h32,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                        modifier = Modifier.padding(top = 8.dp)
                     )
-                    Spacer(modifier = Modifier.width(8.dp)) // 간격 추가
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "가치",
                         style = FontSizes.h40,
@@ -113,7 +110,7 @@ fun SplashScreen(navController: NavController) {
                         text = "를",
                         style = FontSizes.h32,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 8.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                 }
 
@@ -135,7 +132,6 @@ fun SplashScreen(navController: NavController) {
             )
         }
 
-        // 하단의 스폰서 텍스트 추가
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -144,11 +140,11 @@ fun SplashScreen(navController: NavController) {
             horizontalAlignment = Alignment.Start
         ) {
             Divider(
-                color = Color(0xFFD9D9D9), // 구분선 색상 설정
-                thickness = 1.dp, // 구분선 두께 설정
+                color = Color(0xFFD9D9D9),
+                thickness = 1.dp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp) // 구분선 아래에 약간의 간격 추가
+                    .padding(bottom = 16.dp)
             )
 
             Row(
@@ -158,9 +154,9 @@ fun SplashScreen(navController: NavController) {
                 Text(
                     text = "Supported by",
                     style = FontSizes.h16,
-                    modifier = Modifier.padding(top = 6.dp) // 베이스라인을 맞추기 위해 위쪽 padding 추가
+                    modifier = Modifier.padding(top = 6.dp)
                 )
-                Spacer(modifier = Modifier.width(8.dp)) // 간격 추가
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "아이와 함께 춤을",
                     style = FontSizes.h20,
@@ -170,9 +166,8 @@ fun SplashScreen(navController: NavController) {
             }
         }
 
-        // 일정 시간 후 이동하는 타이머
         LaunchedEffect(Unit) {
-            delay(2000) // 2초 동안 대기
+            delay(2000)
             navController.navigate("loginRouting") {
                 popUpTo("splash") { inclusive = true }
             }

@@ -22,8 +22,6 @@ class MakeCardViewModel : ViewModel() {
                 val response = RetrofitClient.apiService.registerCard(userId)
                 if (response.isSuccessful && response.code() == 200) {
                     _apiResponseState.value = true
-                    Log.d("CardRegister", "Card registered successfully")
-                    Log.d("CardRegister", "HTTP Status Code: ${response.code()}")
                     onSuccess()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"

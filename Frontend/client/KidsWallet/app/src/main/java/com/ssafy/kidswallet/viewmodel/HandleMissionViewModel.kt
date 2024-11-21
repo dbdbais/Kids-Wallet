@@ -25,7 +25,6 @@ class HandleMissionViewModel : ViewModel() {
                     begId = begId,
                     isAccept = false
                 )
-                Log.d("HandleMission", "Sending data to server - begId: ${handleMissionModel.begId}, isAccept: ${handleMissionModel.isAccept}")
                 val response: Response<Unit> = RetrofitClient.apiService.handleMission(handleMissionModel)
                 handleApiResponse(response)
             } catch (e: Exception) {
@@ -56,7 +55,6 @@ class HandleMissionViewModel : ViewModel() {
     private fun handleApiResponse(response: Response<Unit>) {
         if (response.isSuccessful) {
             _apiResponseState.value = true
-            Log.d("HandleMission", "Mission handled successfully")
         } else {
             val errorBody = response.errorBody()?.string() ?: "Unknown error"
             _errorState.value = "Failed to handle mission: $errorBody"

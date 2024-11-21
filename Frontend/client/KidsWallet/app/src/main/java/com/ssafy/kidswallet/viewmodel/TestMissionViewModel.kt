@@ -26,13 +26,10 @@ class TestMissionViewModel : ViewModel() {
                     isComplete = isComplete
                 )
 
-                Log.d("TestMissionViewModel", "Sending data to API: missionId = $missionId, isComplete = $isComplete")
-
                 val response: Response<Unit> = RetrofitClient.apiService.testMission(testMissionModel)
 
                 if (response.isSuccessful) {
                     _apiResponseState.value = true
-                    Log.d("TestMission", "Mission status changed successfully")
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     _errorState.value = "Failed to change mission status: $errorBody"

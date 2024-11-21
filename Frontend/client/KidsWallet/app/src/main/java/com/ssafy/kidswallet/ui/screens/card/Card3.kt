@@ -83,9 +83,9 @@ fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = v
             .fillMaxSize()
             .padding(16.dp),
     ) {
-        Top(title = "카드", navController = navController) // BackButton 사용
+        Top(title = "카드", navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
-        // 진행바
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +129,7 @@ fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = v
 
         Spacer(modifier = Modifier.height(80.dp))
 
-        // 카드
+
         Box(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -145,22 +145,22 @@ fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = v
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // 텍스트
+
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally // Column 내부 요소를 가운데 정렬
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "멋진 선택이에요!\n선택한 카드를\n빨리 보내드릴게요",
                 style = FontSizes.h32,
                 fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center // 텍스트 줄바꿈 시 중앙 정렬
+                textAlign = TextAlign.Center
             )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 버튼
+
         BlueButton(
             onClick = {
                 if (userId != null) {
@@ -181,12 +181,12 @@ fun Card3Screen(navController: NavController, loginViewModel: LoginViewModel = v
 
 @Preview(
     showBackground = true,
-    device = "spec:width=1440px,height=3120px,dpi=560", // Galaxy S24 Ultra 해상도에 맞추기
+    device = "spec:width=1440px,height=3120px,dpi=560",
     showSystemUi = true
 )
 @Composable
 fun Card3ScreenPreview() {
-    // 임시 NavController를 생성하여 프리뷰에서 사용
+
     val navController = rememberNavController()
     Card3Screen(navController = navController)
 }

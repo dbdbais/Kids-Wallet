@@ -52,7 +52,7 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
     val maxChar = 15
     val showAlertDialog = remember { mutableStateOf(false) }
 
-    // 사진 선택 및 날짜 설정 (기존 코드 유지)
+    
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         imageUri = uri
@@ -74,7 +74,7 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
         datePicker.minDate = calendar.timeInMillis
     }
 
-    // FocusRequester와 KeyboardController 추가
+    
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
     var isTextFieldFocused by remember { mutableStateOf(false) }
@@ -85,9 +85,9 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
             .padding(16.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null // 클릭 시 기본 효과 제거
+                indication = null 
             ) {
-                // TextField 외부를 클릭했을 때 포커스 해제 및 키보드 숨기기
+                
                 keyboardController?.hide()
                 isTextFieldFocused = false
             },
@@ -118,7 +118,7 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            // 목표 입력 및 날짜 선택 (기존 코드 유지)
+            
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -253,11 +253,11 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 목표와 날짜를 ViewModel에 저장 하고 runParentsMoney로 이동
+        
         BlueButton(
             onClick = {
                 if (text.isBlank()) {
-                    showAlertDialog.value = true // Show alert if no goal is entered
+                    showAlertDialog.value = true 
                 } else {
                     val selectedDateText = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date(selectedDate))
                     val base64String = imageUri?.let { uri ->
@@ -274,7 +274,7 @@ fun RunParentsScreen(navController: NavController, viewModel: StateRunViewModel)
         )
     }
 
-    // AlertDialog for missing goal input
+    
     if (showAlertDialog.value) {
         AlertDialog(
             onDismissRequest = { showAlertDialog.value = false },

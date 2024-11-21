@@ -19,7 +19,6 @@ class DeleteNoticeViewModel : ViewModel() {
                 val response = apiService.deleteNotice(userId, noticeNum)
                 if (response.isSuccessful) {
                     _isNoticeDeleted.value = true
-                    Log.d("DeleteNoticeViewModel", "Notice deleted successfully")
                 } else {
                     _isNoticeDeleted.value = false
                     Log.e("DeleteNoticeViewModel", "Error: ${response.code()} - ${response.message()}")

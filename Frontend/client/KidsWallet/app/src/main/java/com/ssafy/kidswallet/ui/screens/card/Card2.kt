@@ -44,7 +44,7 @@ import com.ssafy.kidswallet.ui.components.LightGrayButton
 
 @Composable
 fun Card2Screen(navController: NavController) {
-    val selectedCardIndex = remember { mutableStateOf(0) } // 초기 선택된 카드 인덱스
+    val selectedCardIndex = remember { mutableStateOf(0) }
 
     // 카드 리스트
     val cards = listOf(
@@ -68,7 +68,7 @@ fun Card2Screen(navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally // 텍스트를 가운데 정렬
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Top(title = "카드", navController = navController)
         Spacer(modifier = Modifier.height(16.dp))
@@ -113,10 +113,10 @@ fun Card2Screen(navController: NavController) {
                 val isSelected = selectedCardIndex.value == index
                 val cardWidth by animateDpAsState(targetValue = if (isSelected) 180.dp else 160.dp,
                     label = ""
-                ) // 애니메이션 적용
+                )
                 val cardHeight by animateDpAsState(targetValue = if (isSelected) 280.dp else 250.dp,
                     label = ""
-                ) // 애니메이션 적용
+                )
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -124,17 +124,17 @@ fun Card2Screen(navController: NavController) {
                         .padding(horizontal = 8.dp)
                         .clickable(
                             onClick = { selectedCardIndex.value = index },
-                            indication = null, // 클릭 애니메이션 제거
-                            interactionSource = remember { MutableInteractionSource() } // 기본 상호작용 제거
-                        ) // 클릭 시 해당 카드 선택
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
                 ) {
-                    // 카드 이미지
+
                     Image(
                         painter = painterResource(id = cardRes),
                         contentDescription = description,
                         modifier = Modifier
-                            .width(cardWidth) // 애니메이션된 너비
-                            .height(cardHeight) // 애니메이션된 높이
+                            .width(cardWidth)
+                            .height(cardHeight)
                             .background(
                                 color = if (isSelected) Color.LightGray.copy(alpha = 0.3f) else Color.Transparent,
                                 shape = RoundedCornerShape(8.dp)
@@ -144,7 +144,7 @@ fun Card2Screen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // 체크 아이콘, 선택된 카드만 체크된 아이콘 표시
+
                     Image(
                         painter = painterResource(
                             id = if (isSelected) R.drawable.icon_card_check else R.drawable.icon_card_noncheck
@@ -152,7 +152,7 @@ fun Card2Screen(navController: NavController) {
                         contentDescription = if (isSelected) "카드 체크 됨" else "카드 체크 안됨",
                         modifier = Modifier
                             .size(40.dp)
-                            .clickable { selectedCardIndex.value = index } // 아이콘 클릭 시에도 선택 가능
+                            .clickable { selectedCardIndex.value = index }
                     )
                 }
             }
@@ -160,7 +160,7 @@ fun Card2Screen(navController: NavController) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // 선택 여부에 따라 버튼 표시
+
         if (selectedCardIndex.value != -1) {
             BlueButton(
                 onClick = { navController.navigate("card3") },

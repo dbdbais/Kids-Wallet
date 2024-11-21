@@ -50,7 +50,7 @@ import kotlin.random.Random
 fun QuizScreen(navController: NavController) {
     var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
-        delay(1500) // 로딩 시간 조절
+        delay(1500) 
         isLoading = false
     }
     val quiz = listOf(
@@ -477,7 +477,7 @@ fun QuizScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // 4개의 보기 그리드
+                    
                     Column {
                         options?.chunked(2)?.forEachIndexed { rowIndex, rowOptions ->
                             Row(
@@ -486,7 +486,7 @@ fun QuizScreen(navController: NavController) {
                             ) {
                                 rowOptions.forEachIndexed { index, option ->
                                     val optionText = option as? String ?: ""
-                                    val globalIndex = rowIndex * 2 + index // 전체 인덱스를 추적
+                                    val globalIndex = rowIndex * 2 + index 
 
                                     Box(
                                         modifier = Modifier
@@ -506,11 +506,11 @@ fun QuizScreen(navController: NavController) {
                                                 interactionSource = remember { MutableInteractionSource() }
                                             ),
                                         contentAlignment = Alignment.Center
-                                        // contentAlignment = if (index == 0) Alignment.CenterStart else Alignment.CenterEnd
+                                        
                                     ) {
                                         Text(
                                             text = optionText,
-                                            color = if (selectedOptionIndex.value == globalIndex) Color(0xFF0000FF) else Color.Black, // 선택된 경우 파란색으로 변경
+                                            color = if (selectedOptionIndex.value == globalIndex) Color(0xFF0000FF) else Color.Black, 
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -524,7 +524,7 @@ fun QuizScreen(navController: NavController) {
 
             }
             if (selectedOptionIndex.value == -1) {
-                // LightGrayButton을 표시하는 경우
+                
                 LightGrayButton(
                     onClick = {
 
@@ -534,7 +534,7 @@ fun QuizScreen(navController: NavController) {
                     text = "제출하기"
                 )
             } else {
-                // BlueButton을 표시하는 경우
+                
                 BlueButton(
                     onClick = {
                         val selectedOption = options?.getOrNull(selectedOptionIndex.value)
@@ -551,11 +551,11 @@ fun QuizScreen(navController: NavController) {
                 )
             }
             Image(
-                painter = painterResource(id = R.drawable.logo_full), // 이미지 리소스를 불러옵니다.
+                painter = painterResource(id = R.drawable.logo_full), 
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally) // 원하는 위치에 배치할 수 있도록 설정
-                    .size(258.dp), // 원하는 크기 설정
+                    .align(Alignment.CenterHorizontally) 
+                    .size(258.dp), 
             )
 
         }
@@ -574,7 +574,7 @@ fun QuizScreen(navController: NavController) {
                 Text(
                     text = dialogMessage.value,
                     color = if (dialogMessage.value == "정답입니다!") Color(0xFF77DD77) else Color(0xFFFFA1B0),
-                    fontWeight = FontWeight.Bold // Makes the text bold
+                    fontWeight = FontWeight.Bold 
                 )
             },
             text = {
@@ -593,11 +593,11 @@ fun QuizScreen(navController: NavController) {
                     onClick = {
                         showDialog.value = false
                         if (dialogMessage.value == "정답입니다!") {
-                            navController.navigate("mainPage") // Navigate to the main page
+                            navController.navigate("mainPage") 
                         }
                     },
                     height = 40,
-                    modifier = Modifier.width(260.dp), // 원하는 너비 설정
+                    modifier = Modifier.width(260.dp), 
                     elevation = 0,
                     text = "확인"
                 )
@@ -627,9 +627,9 @@ fun ImageLoadingIndicator() {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.loading), // 'loading.png' 리소스 사용
+            painter = painterResource(id = R.drawable.loading), 
             contentDescription = "로딩 중",
-            modifier = Modifier.size(100.dp) // 이미지 크기 조절
+            modifier = Modifier.size(100.dp) 
         )
     }
 }

@@ -20,16 +20,14 @@ class BeggingMissionViewModel : ViewModel() {
 
     fun fetchMissionList(userId: Int, reset: Boolean = false) {
         if (reset) {
-            currentStart = 1 // currentStart 초기화
-            _missionList.value = emptyList() // 기존 데이터 초기화
+            currentStart = 1
+            _missionList.value = emptyList()
         }
         viewModelScope.launch {
             try {
                 val response = apiService.beggingMissionList(userId, currentStart, currentStart + itemsPerPage - 1)
                 if (response.isSuccessful) {
                     val newMissions = response.body()?.data ?: emptyList()
-                    Log.d("BeggingMissionViewModel", "Fetched missions: $newMissions $currentStart")
-                    // currentStart가 1이면 기존 데이터를 초기화
                     _missionList.value = if (currentStart == 1) {
                         newMissions
                     } else {

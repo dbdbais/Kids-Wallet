@@ -100,10 +100,10 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
             .clickable(
-                indication = null, // 터치 피드백을 제거
-                interactionSource = remember { MutableInteractionSource() } // 터치 상호작용 상태 관리
+                indication = null, 
+                interactionSource = remember { MutableInteractionSource() } 
             ) {
-                // 화면 외부를 터치할 때 포커스를 해제하여 키보드를 닫음
+                
                 focusManager.clearFocus()
             },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -125,10 +125,10 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             OutlinedTextField(
                 value = id,
                 onValueChange = {
-                    val filteredInput = it.filter { char -> char.isLetterOrDigit() } // 특수문자 필터링 (영문자와 숫자만 허용)
-                    if (filteredInput.length <= 15) { // 15자 입력 제한
+                    val filteredInput = it.filter { char -> char.isLetterOrDigit() } 
+                    if (filteredInput.length <= 15) { 
                         id = filteredInput
-                        idError = filteredInput.isEmpty() // 이름이 비었는지 체크
+                        idError = filteredInput.isEmpty() 
                     }
                 },
                 label = { Text("아이디", color = if (idError) Color.Red else Color(0xFF8C8595)) },
@@ -147,7 +147,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                 onValueChange = {
                     if (it.length <= 40) {
                         password = it
-                        passwordError = it.isEmpty() // 비밀번호가 비었는지 체크
+                        passwordError = it.isEmpty() 
                         passwordMismatchError = passwordChecked.isNotEmpty() && it != passwordChecked
                     }
                 },
@@ -182,7 +182,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                     unfocusedBorderColor = if (passwordMismatchError) Color.Red else Color(0xFFD3D0D7)
                 ),
                 singleLine = true,
-                isError = passwordMismatchError // 에러 상태 반영
+                isError = passwordMismatchError 
             )
             if (passwordMismatchError) {
                 Text(
@@ -197,10 +197,10 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
             OutlinedTextField(
                 value = name,
                 onValueChange = {
-                    val filteredInput = it.filter { char -> char.isLetterOrDigit() } // 특수문자 필터링 (영문자, 숫자, 공백만 허용)
+                    val filteredInput = it.filter { char -> char.isLetterOrDigit() } 
                     if (filteredInput.length <= 15) {
                         name = filteredInput
-                        nameError = filteredInput.isEmpty() // 이름이 비었는지 체크
+                        nameError = filteredInput.isEmpty() 
                     }
                 },
                 label = { Text("이름", color = if (nameError) Color.Red else Color(0xFF8C8595)) },
@@ -229,7 +229,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
 
             BlueButton(
                 onClick = {
-                    // 모든 필드가 유효한지 검증 - 비어있으면 true고, 비어있지 않아야 !로 true가 됨
+                    
                     idError = id.isEmpty()
                     passwordError = password.isEmpty()
 
@@ -237,7 +237,7 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                     birthError = birth.isEmpty()
 
 
-                    // 유효한 경우 회원가입 정보 저장 로직 추가
+                    
                     if (!idError && !passwordError && !passwordMismatchError && !nameError && !birthError && (password == passwordChecked) && password.length >= 8) {
                         if (!isSubmitting) {
                             isSubmitting = true
@@ -250,9 +250,9 @@ fun SignUp(navController: NavController, viewModel: SignUpViewModel = viewModel(
                                 userRole = selectedRole
                             )
 
-                            // 일정 시간 후 상태 리셋 (예: 1초)
+                            
                             CoroutineScope(Dispatchers.Main).launch {
-                                delay(1000) // 1초 대기 후
+                                delay(1000) 
                                 isSubmitting = false
                             }
                         }
@@ -296,13 +296,13 @@ fun GenderSelection(selectedGender: String, onGenderSelected: (String) -> Unit) 
 fun GenderButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .width(160.dp) // 버튼 너비 설정
+            .width(160.dp) 
             .background(
                 color = if (isSelected) Color(0xFF6DCEF5) else Color(0xFFD3D0D7),
-                shape = RoundedCornerShape(10.dp) // 둥근 모서리
+                shape = RoundedCornerShape(10.dp) 
             )
-            .clickable(onClick = onClick) // 클릭 이벤트 추가
-            .padding(vertical = 8.dp), // 텍스트 여백 조정
+            .clickable(onClick = onClick) 
+            .padding(vertical = 8.dp), 
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -335,9 +335,9 @@ fun RoleSelection(selectedRole: String, onRoleSelected: (String) -> Unit) {
                 painter = painterResource(id = R.drawable.icon_search),
                 contentDescription = "부모 설명 아이콘",
                 modifier = Modifier
-                    // .padding(top = 8.dp)
-                    .clickable { showParentHelp.value = true } // 아이콘을 터치했을 때 도움말 표시
-                    .size(24.dp) // 아이콘 크기 조절
+                    
+                    .clickable { showParentHelp.value = true } 
+                    .size(24.dp) 
             )
         }
         Column (
@@ -353,12 +353,12 @@ fun RoleSelection(selectedRole: String, onRoleSelected: (String) -> Unit) {
                 contentDescription = "아이 설명 아이콘",
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .clickable { showKidHelp.value = true } // 아이콘을 터치했을 때 도움말 표시
-                    .size(24.dp) // 아이콘 크기 조절
+                    .clickable { showKidHelp.value = true } 
+                    .size(24.dp) 
             )
         }
     }
-    // 팝업은 Row 외부에 두어 레이아웃에 영향을 미치지 않음
+    
     if (showParentHelp.value) {
         PopupHelp(
             text1 = "아이에게 미션을 주고 용돈을 줄 수 있어요!",
@@ -380,13 +380,13 @@ fun RoleSelection(selectedRole: String, onRoleSelected: (String) -> Unit) {
 fun RoleButton(text: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .width(160.dp) // 버튼 너비 설정
+            .width(160.dp) 
             .background(
                 color = if (isSelected) Color(0xFF6DCEF5) else Color(0xFFD3D0D7),
-                shape = RoundedCornerShape(10.dp) // 둥근 모서리
+                shape = RoundedCornerShape(10.dp) 
             )
-            .clickable(onClick = onClick) // 클릭 이벤트 추가
-            .padding(vertical = 8.dp), // 텍스트 여백 조정
+            .clickable(onClick = onClick) 
+            .padding(vertical = 8.dp), 
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -404,19 +404,19 @@ fun BirthdayInputField(birth: String, onDateSelected: (String) -> Unit) {
 
     OutlinedTextField(
         value = birthText,
-        onValueChange = { birthText = it }, // 직접 텍스트 입력은 막아둠
+        onValueChange = { birthText = it }, 
         label = { Text("생년월일", color = Color(0xFF8C8595)) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 8.dp)
             .clickable {
                 showDatePicker(context) { date ->
-                    birthText = date // 선택된 날짜로 텍스트 업데이트
+                    birthText = date 
                     onDateSelected(date)
                 }
             },
         shape = RoundedCornerShape(15.dp),
-        enabled = false, // 직접 입력을 막음
+        enabled = false, 
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color(0xFF6DCEF5),
             unfocusedBorderColor = Color(0xFFD3D0D7)
@@ -433,7 +433,7 @@ fun showDatePicker(context: Context, onDateSelected: (String) -> Unit) {
     DatePickerDialog(
         context,
         { _, selectedYear, selectedMonth, selectedDay ->
-            // 선택된 날짜를 형식에 맞춰 전달
+            
             val formattedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
             onDateSelected(formattedDate)
         },
@@ -444,8 +444,8 @@ fun showDatePicker(context: Context, onDateSelected: (String) -> Unit) {
 @Composable
 fun PopupHelp(text1: String, text2: String, onDismiss: () -> Unit) {
     Box(
-        modifier = Modifier.fillMaxSize(), // 화면 전체를 덮도록 설정
-        contentAlignment = Alignment.Center // 중앙 정렬
+        modifier = Modifier.fillMaxSize(), 
+        contentAlignment = Alignment.Center 
     ) {
         Popup(
             alignment = Alignment.Center,

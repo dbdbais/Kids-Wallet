@@ -1,7 +1,5 @@
 package com.ssafy.kidswallet.data.model
 
-import java.time.LocalDateTime
-
 // 응답 데이터를 나타내는 최상위 클래스
 data class MissionResponse(
     val data: List<MissionModel>?,

@@ -40,7 +40,7 @@ import com.ssafy.kidswallet.ui.components.Top
 
 @Composable
 fun RunParentsFinishDetailScreen(navController: NavController) {
-    val collectedAmount = 25000 // You can change this value dynamically as needed
+    val collectedAmount = 25000 
     val formattedAmount = NumberUtils.formatNumberWithCommas(collectedAmount)
 
     Column(
@@ -57,16 +57,16 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF6DCEF5)) // 배경색
+                .background(Color(0xFF6DCEF5)) 
                 .padding(16.dp)
-                .padding(top = 30.dp, bottom = 14.dp), // 상하 패딩을 추가하여 크기를 늘림
+                .padding(top = 30.dp, bottom = 14.dp), 
             contentAlignment = Alignment.TopCenter
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 목표 이미지 및 정보 박스
+                
                 Box(
                     modifier = Modifier
                         .shadow(
@@ -76,11 +76,11 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
                         .background(Color(0xFF99DDF8), RoundedCornerShape(16.dp))
                         .padding(16.dp)
                 ) {
-                    // D-Day 배지`를 좌측 상단에 위치시킴
+                    
                     Box(
                         modifier = Modifier
-                            .align(Alignment.TopStart) // 좌측 상단에 정렬
-                            .padding(8.dp) // 추가 패딩 적용 (필요 시)
+                            .align(Alignment.TopStart) 
+                            .padding(8.dp) 
                     ) {
                         SuccessBadge(successOrFail = "성공")
                     }
@@ -89,7 +89,7 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // 목표 이미지와 금액 정보
+                        
                         Image(
                             painter = painterResource(id = R.drawable.icon_labtop),
                             contentDescription = "목표 이미지",
@@ -107,7 +107,7 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
                     }
                 }
 
-                // 목표 금액과 마감 기한 텍스트
+                
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -133,7 +133,7 @@ fun RunParentsFinishDetailScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 참여자 정보
+        
         Column(
             modifier = Modifier
                 .fillMaxWidth()

@@ -65,7 +65,7 @@ fun AlertListScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Top(title = "알림", navController = navController) // BackButton 사용
+            Top(title = "알림", navController = navController)
             Spacer(modifier = Modifier.height(16.dp))
 
             Column(
@@ -135,8 +135,8 @@ fun AlertListBox(viewModel: NoticeListViewModel = viewModel(), loginViewModel: L
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(bottom = 80.dp),
-                verticalArrangement = Arrangement.Top, // 세로 중앙 정렬
-                horizontalAlignment = Alignment.CenterHorizontally, // 가로 중앙 정렬
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 itemsIndexed(noticeMessage) { index, notice ->
                     val noticeMessage = notice.message
@@ -206,8 +206,8 @@ fun AlertListBox(viewModel: NoticeListViewModel = viewModel(), loginViewModel: L
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(32.dp) // 이미지 크기 조정
-                                        .clip(CircleShape) // 이미지도 동그랗게 클립
+                                        .size(32.dp)
+                                        .clip(CircleShape)
                                 )
                             }
                             Spacer(modifier = Modifier.width(8.dp))

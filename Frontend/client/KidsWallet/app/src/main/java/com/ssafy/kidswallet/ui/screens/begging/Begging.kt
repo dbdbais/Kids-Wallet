@@ -76,29 +76,29 @@ fun BeggingMoney(navController: NavController, boxHeight: androidx.compose.ui.un
             .fillMaxWidth(0.9f)
             .height(boxHeight)
             .shadow(
-                elevation = 12.dp, // 그림자 높이 조절
+                elevation = 12.dp,
                 shape = RoundedCornerShape(8.dp),
                 clip = false
             )
-            .background(Color(0xFFE9F8FE), shape = RoundedCornerShape(16.dp)) // 파란색 배경과 둥근 모서리 적용
-            .clickable { navController.navigate("beggingMoney") } // 클릭 시 화면 이동
+            .background(Color(0xFFE9F8FE), shape = RoundedCornerShape(16.dp))
+            .clickable { navController.navigate("beggingMoney") }
     ) {
-        // 오른쪽 하단 이미지
+
         Image(
             painter = painterResource(id = R.drawable.character_young_man),
             contentDescription = "Character",
             modifier = Modifier
-                .size(150.dp) // 이미지 크기 조절
-                .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
+                .size(150.dp)
+                .align(Alignment.BottomEnd)
                 .alpha(0.8f)
         )
-        // 가운데 텍스트
+
         Text(
             text = "용돈 조르기",
             fontSize = 40.sp,
             fontWeight = FontWeight.W900,
             color = Color.Black,
-            modifier = Modifier.align(Alignment.Center) // 가운데 정렬
+            modifier = Modifier.align(Alignment.Center)
         )
 
     }
@@ -111,29 +111,29 @@ fun BeggingMission(navController: NavController, boxHeight: androidx.compose.ui.
             .fillMaxWidth(0.9f)
             .height(boxHeight)
             .shadow(
-                elevation = 12.dp, // 그림자 높이 조절
+                elevation = 12.dp,
                 shape = RoundedCornerShape(8.dp),
                 clip = false
             )
-            .background(Color(0xFFFFEDEF), shape = RoundedCornerShape(16.dp)) // 파란색 배경과 둥근 모서리 적용
-            .clickable { navController.navigate("beggingMissionCheck") } // 클릭 시 화면 이동
+            .background(Color(0xFFFFEDEF), shape = RoundedCornerShape(16.dp))
+            .clickable { navController.navigate("beggingMissionCheck") }
     ) {
-        // 오른쪽 하단 이미지
+
         Image(
             painter = painterResource(id = R.drawable.character_young_girl),
             contentDescription = "Character",
             modifier = Modifier
-                .size(150.dp) // 이미지 크기 조절
-                .align(Alignment.BottomEnd) // 오른쪽 하단에 배치
+                .size(150.dp)
+                .align(Alignment.BottomEnd)
                 .alpha(0.8f)
         )
-        // 가운데 텍스트
+
         Text(
             text = "미션 관리",
             fontSize = 40.sp,
             fontWeight = FontWeight.W900,
             color = Color.Black,
-            modifier = Modifier.align(Alignment.Center) // 가운데 정렬
+            modifier = Modifier.align(Alignment.Center)
         )
     }
 }
