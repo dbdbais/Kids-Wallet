@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    //TODO: 1. append fcm plugin(app)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -21,12 +23,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"https://k11e201.p.ssafy.io/api/v1/\"")
         }
     }
     compileOptions {
@@ -37,6 +43,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -51,6 +58,9 @@ android {
 
 dependencies {
 
+    implementation("androidx.privacysandbox.tools:tools-core:1.0.0-alpha10")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     val nav_version = "2.7.4"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
@@ -67,8 +77,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("com.google.code.gson:gson:2.8.8")
+    //runBlocking
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
@@ -77,4 +92,14 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //TODO: 2. append fcm dependency(app)
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ("androidx.work:work-runtime-ktx:2.8.0")
+    //runBlocking
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
 }
