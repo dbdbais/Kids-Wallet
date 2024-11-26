@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KidsWallet</string>
+    <!--TODO: 4. fcm msg token format append-->
+    <string name="msg_token_fmt">FCM Token: %1$s</string>
+</resources>
