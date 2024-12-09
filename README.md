@@ -50,9 +50,15 @@
     <i>미션 수행</i><br>
   <img src="./readme_gif/doing_mission.gif" alt="미션 수행">
 </div>
+<br>
 <div align="center">
-    <i>미션 수행 여부 확인</i><br>
-  <img src="./readme_gif/checking_doing_mission.gif" alt="미션 수행 여부 확인">
+    <i>미션 수행 여부 확인 (실패)</i><br>
+  <img src="./readme_gif/checking_doing_mission.gif" alt="미션 수행 여부 확인(실패)">
+</div>
+<br>
+<div align="center">
+    <i>미션 수행 여부 확인 (성공)</i><br>
+  <img src="./readme_gif/mission_success.gif" alt="미션 수행 여부 확인(성공)">
 </div>
 
 ### 2. 같이 달리기<br>
@@ -63,20 +69,88 @@
 -   최소 목표금액은 만원입니다.<br>
 -   기존의 월 단위 적금 시스템과 다르게 아이들의 특성을 고려하여 주 단위 적금 시스템을 제공합니다. 최소 목표 설정 기간 4주입니다. (서비스 확장 시, 월단위도 가능) <br>
 -   사회공헌으로 고아원, 저소득층 등 아이들이 원하는 제품을 외부 사람들도 함께 달리기(펀딩)기능을 사용할 수 있습니다.<br>
+<br>
+<div align="center">
+    <i>목표 설정</i><br>
+  <img src="./readme_gif/setting_goal.gif" alt="목표 설정">
+</div>
+<br>
+<div align="center">
+    <i>금액 설정 및 같이 달리기 유저 설정</i><br>
+  <img src="./readme_gif/setting_goal2.gif" alt="금액 설정 및 같이 달리기 유저 설정">
+</div>
+<br>
+<div align="center">
+    <i>같이 달리기 거절</i><br>
+  <img src="./readme_gif/refuse_to_run together.gif" alt="같이 달리기 거절">
+</div>
+<br>
+<div align="center">
+    <i>같이 달리기 수락</i><br>
+  <img src="./readme_gif/Accept_running_together.gif" alt="같이 달리기 수락">
+</div>
+<br>
+<div align="center">
+    <i>같이 달리기 해제</i><br>
+  <img src="./readme_gif/stop_together_run.gif" alt="같이 달리기 해제">
+</div>
+<br>
+<div align="center">
+    <i>함께달리기 캠페인</i><br>
+  <img src="./readme_gif/together_campaign.gif" alt="함께 달리기 캠페인">
+</div>
+<br>
 
 ### 3. 내 지갑<br>
 
 -   사용자는 랜덤 계좌번호로 통장을 발급받을 수 있습니다.<br>
 -   계좌의 거래내역을 조회할 수 있습니다.<br>
 -   계좌에서 입금, 출금, 이체를 이용할 수 있습니다.<br>
--   계좌의 지출 통계를 그래프로 확인할 수 있습니다.<br>
+-   계좌의 지출 통계를 그래프로 확인할 수 있습니다.<br><br>
+
+  <div align="center">
+      <i>통장 개설</i><br>
+    <img src="./readme_gif/create_account.gif" alt="통장 개설">
+  </div>
+  <br>
+  
+  <div align="center">
+      <i>카드 발급</i><br>
+    <img src="./readme_gif/create_creditcard.gif" alt="카드 발급">
+  </div>
+  <br>
+
+  <div align="center">
+      <i>입금 (지정된 계좌에서 입금)</i><br>
+    <img src="./readme_gif/push_money.gif" alt="입금">
+  </div>
+  <br>
+
+  <div align="center">
+      <i>출금 (지정된 계좌에서 출금)</i><br>
+    <img src="./readme_gif/pop_money.gif" alt="출금">
+  </div>
+  <br>
+  
+  <div align="center">
+      <i>지출 통계</i><br>
+    <img src="./readme_gif/spending_statistics.gif" alt="지출 통계">
+  </div>
+  <br>
 
 ### 4. 금융 퀴즈<br>
 
 -   아이들이 금융 관련 상식을 퀴즈 형식으로 배우며 흥미를 느낄 수 있도록 구성된 퀴즈 기능입니다.<br>
 -   부모와 자녀가 함께 참여할 수 있어 금융 지식 학습에 있어 자연스러운 소통의 기회를 제공합니다.<br>
 -   이를 통해 아이는 금융의 기본 개념을 쉽게 이해하고, 올바른 소비 습관과 책임감 있는 자금 관리를 익힐 수 있습니다.<br>
--   퀴즈를 맞출때마다 포인트를 얻고 일정 포인트를 모으면 기프티콘을 얻을 수 있습니다.<br>
+-   퀴즈를 맞출때마다 포인트를 얻고 일정 포인트를 모으면 기프티콘을 얻을 수 있습니다.<br><br>
+
+  <div align="center">
+      <i>퀴즈</i><br>
+    <img src="./readme_gif/quiz.gif" alt="퀴즈">
+  </div><br><br>
+
+---
 
 # 3. 기술 스택
 
