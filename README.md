@@ -182,22 +182,24 @@ Jira, Gitlab, Postman, MatterMost, Notion, Figma, Android Studio, IntelliJ, wsl
 
 # 4. 산출물
 
-### ERD (click)
+### ERD <a href="https://www.erdcloud.com/d/JciLNL2kwmfEG8hR6">(click)</a>
 
-![alt text](readme_img/Kid's%20Wallet_erd.png)
+![erd](readme_img/Kid's%20Wallet_erd.png)
 
-### 기능 명세서 (click)
+### 기능 명세서 <a href="https://huggy99.notion.site/11fed38460a3814fbc42ccd5c4e37624">(click)</a>
 
-coming soon
+![func](./readme_img/Functional%20specification_1.png)
+![func](./readme_img/Functional%20specification_2.png)
 
-### API 명세서 (click)
+### API 명세서 <a href="https://huggy99.notion.site/API-d11031132c3f4c96aa8d4fa8efac18af">(click)</a>
 
-coming soon
+![api](./readme_img/Api_specification_1.png)
+![api](./readme_img/Api_specification_2.png)
 
-### 목업 (click)
+### 목업 <a href="https://www.figma.com/design/tMTmGR8Fg9NNlvpCERksIz/Kid's-Wallet?node-id=0-1&t=P14XDT972xTAYbvy-1">(click)</a>
 
-coming soon
+![mockup](./readme_img/mockup.png)
 
 ### 7. 멤버 구성 및 팀원 역할
 
-![alt text](readme_img/member.png)
+![member](readme_img/member.png)
